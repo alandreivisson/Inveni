@@ -1,0 +1,61 @@
+﻿@model Inveni.Models.Categoria
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Categorias</h1>
+
+<h4>Cadastro</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Descricao" class="control-label"></label>
+                <input asp-for="Descricao" class="form-control" />
+                <span asp-validation-for="Descricao" class="text-danger"></span>
+                <span id="msg"></span>
+            </div>
+            <div class="form-group mt-3">
+                <input type="submit" id="botao" disabled="disabled" value="Cadastrar" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Categorias Cadastradas</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+}
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script>
+    $("#Descricao").focusout(function () {
+        var descricao = $(this).val();
+        $.ajax({
+            dataType: "json",
+            type: "POST",
+            url: "/Categorias/ValidaCadastro/",
+            data: { descricao },
+            success: function (retorno) { // Corrigir "sucess" para "success"
+                if (retorno === "s") {
+                    $("#botao").attr('disabled', 'disabled');
+                    $("#msg").text("Categoria já cadastrada");
+                    $("#msg").removeAttr("class");
+                    $("#msg").attr("class", "text-danger");
+                } else {
+                    $("#botao").removeAttr("disabled");
+                    $("#msg").text("Categoria validada!");
+                    $("#msg").removeAttr("class");
+                    $("#msg").attr("class", "text-success");
+                }
+            },
+        });
+    });
+</script>

@@ -1,4 +1,6 @@
 using Inveni.Persistence;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -10,6 +12,23 @@ builder.Services.AddDbContext<Contexto>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
+
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(options =>
+    {
+        options.LoginPath = "/Usuarios/Acesso";
+        options.AccessDeniedPath = "/Usuarios/Acesso";
+        options.Cookie.Name = "Credencial";
+    });
+
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("Administrador", policy =>
+    {
+        policy.RequireClaim("Permissoes", "1");
+    });
+});
+
 
 var app = builder.Build();
 
@@ -26,6 +45,7 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(

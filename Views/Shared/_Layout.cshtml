@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿@using System.Security.Claims;
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -21,10 +22,45 @@
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
+                            @*</li>
+                            <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
+                            </li>*@
+                            @if (User.Identity.IsAuthenticated)
+                            {
+                                var permissoes = User.Claims.First(c => c.Type == "Permissoes").Value;
+                                @if (permissoes == "1")
+                                {
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Tematicas" asp-action="Index">Temática</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Categorias" asp-action="Index">Categoria</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Usuarios" asp-action="Index">Usuarios</a>
+                                </li>
+                                }
+                            }
+
+                            @if (User.Identity.IsAuthenticated)
+                            {
+                            <li>
+                                <a asp-action="Sair" asp-controller="Home" class="nav-link">
+                                        @User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value - Sair
+                                </a>
+                            </li>
+                            }
+                            else
+                            {
+                            <li>
+                                <a href="@Url.Action("Acesso","Usuarios")" class="nav-link">
+                                    Entrar
+                                </a>
+                            </li>
+                            }
+
+
                     </ul>
                 </div>
             </div>

@@ -7,7 +7,7 @@ namespace Inveni.Models
         [Key]
         public int Id { get; set; }
 
-        [Display (Name ="Descrição")]
+        [Display (Name ="Categoria")]
         public required string Descricao { get; set; }
 
         public ICollection <Tematica>? Tematicas { get; set; }

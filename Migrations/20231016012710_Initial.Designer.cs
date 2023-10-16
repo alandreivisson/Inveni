@@ -11,15 +11,15 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Inveni.Migrations
 {
     [DbContext(typeof(Contexto))]
-    [Migration("20231012031515_Restartando-Banco")]
-    partial class RestartandoBanco
+    [Migration("20231016012710_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "7.0.11")
+                .HasAnnotation("ProductVersion", "7.0.12")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -81,6 +81,37 @@ namespace Inveni.Migrations
                     b.ToTable("Tematica");
                 });
 
+            modelBuilder.Entity("Inveni.Models.TematicaMestre", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<bool>("Ativo")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Biografia")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<int>("TematicaId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UsuarioId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TematicaId");
+
+                    b.HasIndex("UsuarioId");
+
+                    b.ToTable("TematicaMestre");
+                });
+
             modelBuilder.Entity("Inveni.Models.Usuario", b =>
                 {
                     b.Property<int>("Id")
@@ -113,18 +144,23 @@ namespace Inveni.Migrations
 
             modelBuilder.Entity("Inveni.Models.UsuarioPerfil", b =>
                 {
-                    b.Property<int>("UsuarioId")
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int>("PerfilId")
                         .HasColumnType("int");
 
-                    b.Property<int>("Id")
+                    b.Property<int>("UsuarioId")
                         .HasColumnType("int");
 
-                    b.HasKey("UsuarioId", "PerfilId");
+                    b.HasKey("Id");
 
                     b.HasIndex("PerfilId");
+
+                    b.HasIndex("UsuarioId");
 
                     b.ToTable("UsuarioPerfil");
                 });
@@ -138,6 +174,25 @@ namespace Inveni.Migrations
                         .IsRequired();
 
                     b.Navigation("Categoria");
+                });
+
+            modelBuilder.Entity("Inveni.Models.TematicaMestre", b =>
+                {
+                    b.HasOne("Inveni.Models.Tematica", "Tematica")
+                        .WithMany("TematicaMestre")
+                        .HasForeignKey("TematicaId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Inveni.Models.Usuario", "Usuario")
+                        .WithMany("TematicaMestre")
+                        .HasForeignKey("UsuarioId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Tematica");
+
+                    b.Navigation("Usuario");
                 });
 
             modelBuilder.Entity("Inveni.Models.UsuarioPerfil", b =>
@@ -169,8 +224,15 @@ namespace Inveni.Migrations
                     b.Navigation("UsuarioPerfil");
                 });
 
+            modelBuilder.Entity("Inveni.Models.Tematica", b =>
+                {
+                    b.Navigation("TematicaMestre");
+                });
+
             modelBuilder.Entity("Inveni.Models.Usuario", b =>
                 {
+                    b.Navigation("TematicaMestre");
+
                     b.Navigation("UsuarioPerfil");
                 });
 #pragma warning restore 612, 618

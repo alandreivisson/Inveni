@@ -26,19 +26,25 @@
                             <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                             </li>*@
-                            @if (User.Identity.IsAuthenticated)
+                            @if (User.Identity.IsAuthenticated) 
                             {
                                 var permissoes = User.Claims.First(c => c.Type == "Permissoes").Value;
                                 @if (permissoes == "1")
                                 {
+                                    <li class="nav-item">
+                                        <a class="nav-link text-dark" asp-area="" asp-controller="Tematicas" asp-action="Index">Temática</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link text-dark" asp-area="" asp-controller="Categorias" asp-action="Index">Categoria</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link text-dark" asp-area="" asp-controller="Usuarios" asp-action="Index">Usuarios</a>
+                                    </li>
+                                }
+                                @if (permissoes == "2")
+                                {
                                 <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-area="" asp-controller="Tematicas" asp-action="Index">Temática</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-area="" asp-controller="Categorias" asp-action="Index">Categoria</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-area="" asp-controller="Usuarios" asp-action="Index">Usuarios</a>
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="TematicaMestres" asp-action="Index">Minhas Temáticas</a>
                                 </li>
                                 }
                             }

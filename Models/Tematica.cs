@@ -11,5 +11,7 @@ namespace Inveni.Models
         [Display (Name ="Categoria")]
         public required int CategoriaId { get; set; }
         public required virtual Categoria? Categoria { get; set;}
+
+        public virtual ICollection<TematicaMestre>? TematicaMestre { get; set; }
     }
 }

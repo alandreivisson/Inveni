@@ -27,6 +27,10 @@ builder.Services.AddAuthorization(options =>
     {
         policy.RequireClaim("Permissoes", "1");
     });
+    options.AddPolicy("Mestre", policy =>
+    {
+        policy.RequireClaim("Permissoes", "2");
+    });
 });
 
 

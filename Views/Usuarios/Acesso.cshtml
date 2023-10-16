@@ -17,5 +17,16 @@
         <input asp-for="Senha" type="password" class="form-control" />
         <span asp-validation-for="Senha" class="text-danger"></span>
     </div>
+    <div class="form-group">
+        <label>Quem é você?</label>
+        <div>
+            <input type="radio" asp-for="Opcoes" value="2" />
+            <label>Mestre</label>
+        </div>
+        <div>
+            <input type="radio" asp-for="Opcoes" value="3" />
+            <label>Aprendiz</label>
+        </div>
+    </div>
     <button type="submit" class="btn btn-primary">Login</button>
 </form>

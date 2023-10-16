@@ -1,0 +1,21 @@
+﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
+
+namespace Inveni.Models
+{
+    public class TematicaMestre
+    {
+        [Key]
+        public int Id { get; set; }
+        [MaxLength(500)]
+        [Display (Name ="Biografia")]
+        public required string Biografia { get; set; }
+        [Display (Name = "Temática")]
+        public required int TematicaId { get; set; }
+        public required int UsuarioId { get; set; }
+        [Required(ErrorMessage = "Selecione uma opção das opções entre ativo ou inativo!")]
+        public required bool Ativo { get; set; }
+        public required virtual Tematica? Tematica { get; set; }
+        public required virtual Usuario? Usuario { get; set; }
+    }
+}

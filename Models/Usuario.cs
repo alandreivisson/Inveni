@@ -5,6 +5,7 @@ namespace Inveni.Models
 {
     public class Usuario
     {
+        [Key]
         public int Id { get; set; }
         
         [MaxLength(200)]
@@ -20,5 +21,7 @@ namespace Inveni.Models
         public required bool Ativo { get; set; }
 
         public ICollection<UsuarioPerfil>? UsuarioPerfil;
+
+        public virtual ICollection<TematicaMestre>? TematicaMestre { get; set; }
     }
 }

@@ -4,10 +4,8 @@
 
 namespace Inveni.Migrations
 {
-    /// <inheritdoc />
-    public partial class RestartandoBanco : Migration
+    public partial class Initial : Migration
     {
-        /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
@@ -16,11 +14,24 @@ namespace Inveni.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Descricao = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Descricao = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Categoria", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Perfil",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Descricao = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Perfil", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -29,7 +40,7 @@ namespace Inveni.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Descricao = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Descricao = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     CategoriaId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -42,23 +53,6 @@ namespace Inveni.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Tematica_CategoriaId",
-                table: "Tematica",
-                column: "CategoriaId");
-            migrationBuilder.CreateTable(
-               name: "Perfil",
-               columns: table => new
-               {
-                   Id = table.Column<int>(type: "int", nullable: false)
-                       .Annotation("SqlServer:Identity", "1, 1"),
-                   Descricao = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false)
-               },
-               constraints: table =>
-               {
-                   table.PrimaryKey("PK_Perfil", x => x.Id);
-               });
 
             migrationBuilder.CreateTable(
                 name: "Usuario",
@@ -102,21 +96,43 @@ namespace Inveni.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
-            migrationBuilder.CreateIndex(
-                name: "IX_UsuarioPerfil_PerfilId",
-                table: "UsuarioPerfil",
-                column: "PerfilId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_UsuarioPerfil_UsuarioId",
-                table: "UsuarioPerfil",
-                column: "UsuarioId");
+            migrationBuilder.CreateTable(
+                name: "TematicaMestre",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Biografia = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
+                    TematicaId = table.Column<int>(type: "int", nullable: false),
+                    UsuarioId = table.Column<int>(type: "int", nullable: false),
+                    Ativo = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_TematicaMestre", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_TematicaMestre_Tematica_TematicaId",
+                        column: x => x.TematicaId,
+                        principalTable: "Tematica",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_TematicaMestre_Usuario_UsuarioId",
+                        column: x => x.UsuarioId,
+                        principalTable: "Usuario",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
         }
 
-        /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-
+            migrationBuilder.DropTable(name: "TematicaMestre");
+            migrationBuilder.DropTable(name: "UsuarioPerfil");
+            migrationBuilder.DropTable(name: "Tematica");
+            migrationBuilder.DropTable(name: "Usuario");
+            migrationBuilder.DropTable(name: "Perfil");
+            migrationBuilder.DropTable(name: "Categoria");
         }
     }
 }

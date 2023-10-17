@@ -30,7 +30,9 @@ namespace Inveni.Controllers
                 .Include(t => t.Tematica)
                 .ThenInclude(t => t.Categoria) // Inclua a Categoria
                 .Include(t => t.Usuario)
-                .Where(t => t.Usuario.Id == userId);
+                .Include(t => t.Modelo)
+                .Where(t => t.Usuario.Id == userId)
+                .OrderBy(t => t.Tematica.Descricao);
 
             return View(await contexto.ToListAsync());
         }
@@ -46,6 +48,7 @@ namespace Inveni.Controllers
             var tematicaMestre = await _context.TematicaMestre
                 .Include(t => t.Tematica)
                 .Include(t => t.Usuario)
+                .Include(t => t.Modelo)
                 .FirstOrDefaultAsync(m => m.UsuarioId == id);
             if (tematicaMestre == null)
             {
@@ -60,6 +63,7 @@ namespace Inveni.Controllers
         {
             ViewData["TematicaId"] = new SelectList(_context.Tematica, "Id", "Descricao");
             ViewData["UsuarioId"] = new SelectList(_context.Usuario, "Id", "Nome");
+            ViewData["ModeloId"] = new SelectList(_context.Modelo, "Id", "Descricao");
             return View();
         }
 
@@ -68,7 +72,7 @@ namespace Inveni.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Biografia,TematicaId,UsuarioId,Ativo")] TematicaMestre tematicaMestre)
+        public async Task<IActionResult> Create([Bind("Id,Biografia,TematicaId,UsuarioId,ModeloId,Ativo")] TematicaMestre tematicaMestre)
         {
             if (ModelState.IsValid)
             {
@@ -80,6 +84,7 @@ namespace Inveni.Controllers
             }
             ViewData["TematicaId"] = new SelectList(_context.Tematica, "Id", "Descricao", tematicaMestre.TematicaId);
             ViewData["UsuarioId"] = new SelectList(_context.Usuario, "Id", "Nome", tematicaMestre.UsuarioId);
+            ViewData["ModeloId"] = new SelectList(_context.Modelo, "Id", "Descricao", tematicaMestre.ModeloId);
             return View(tematicaMestre);
         }
 
@@ -99,6 +104,7 @@ namespace Inveni.Controllers
 
             ViewData["TematicaId"] = new SelectList(_context.Tematica, "Id", "Id", tematicaMestre.TematicaId);
             ViewData["UsuarioId"] = new SelectList(_context.Usuario, "Id", "Id", tematicaMestre.UsuarioId);
+            ViewData["ModeloId"] = new SelectList(_context.Modelo, "Id", "Descricao", tematicaMestre.ModeloId);
             return View(tematicaMestre);
         }
 
@@ -107,7 +113,7 @@ namespace Inveni.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Biografia,TematicaId,UsuarioId,Ativo")] TematicaMestre tematicaMestre)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Biografia,TematicaId,UsuarioId,ModeloId,Ativo")] TematicaMestre tematicaMestre)
         {
             if (id != tematicaMestre.Id)
             {
@@ -136,6 +142,7 @@ namespace Inveni.Controllers
             }
             ViewData["TematicaId"] = new SelectList(_context.Tematica, "Id", "Id", tematicaMestre.TematicaId);
             ViewData["UsuarioId"] = new SelectList(_context.Usuario, "Id", "Id", tematicaMestre.UsuarioId);
+            ViewData["ModeloId"] = new SelectList(_context.Modelo, "Id", "Descricao", tematicaMestre.ModeloId);
             return View(tematicaMestre);
         }
 
@@ -150,6 +157,7 @@ namespace Inveni.Controllers
             var tematicaMestre = await _context.TematicaMestre
                 .Include(t => t.Tematica)
                 .Include(t => t.Usuario)
+                .Include(t => t.Modelo)
                 .FirstOrDefaultAsync(m => m.UsuarioId == id);
             if (tematicaMestre == null)
             {

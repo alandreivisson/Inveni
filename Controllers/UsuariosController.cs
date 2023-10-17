@@ -171,13 +171,15 @@ namespace Inveni.Controllers
         {
             return (_context.Usuario?.Any(e => e.Id == id)).GetValueOrDefault();
         }
-
+        
+        [Authorize(Policy = "Anonimo")]
         public IActionResult Acesso()
         {
             return View();
         }
 
         [HttpPost]
+        [Authorize (Policy = "Anonimo")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Acesso(UsuarioVM login)
         {
@@ -286,6 +288,13 @@ namespace Inveni.Controllers
                 return View();
             }
         }
-
+        public IActionResult ErrorPermissaoAcesso()
+        {
+            return View();
+        }
+        public IActionResult ErrorPaginaNaoEncontrada()
+        {
+            return View();
+        }
     }
 }

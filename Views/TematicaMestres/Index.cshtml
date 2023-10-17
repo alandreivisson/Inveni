@@ -4,18 +4,54 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Minhas Temáticas</h1>
 
-<p>
-    <a asp-action="Create">Cadastrar Nova</a>
-</p>
+
+<div class="d-flex flex-column align-items-center mt-4">
+    <h1>Minhas Temáticas</h1>
+</div>
+
+
+<div class="d-flex flex-column align-items-center mt-2 mb-2">
+    <p class="d-flex align-items-center">
+        <a asp-action="Create" class="ml-2 me-2 text-black" style="text-decoration: none; font-size: 25px;">Cadastrar Nova</a>
+        <img id="cadastrar-imagem"
+             width="30"
+             height="30"
+             src="https://img.icons8.com/color/48/plus--v1.png"
+             alt="plus--v1"
+             style="cursor: pointer;" />
+    </p>
+</div>
 <div class="row">
     @foreach (var item in Model)
     {
         <div class="col-md-3 mb-3">
             <div class="card d-flex flex-column h-100">
-                <div class="mt-auto card-header d-flex justify-content-end">
-                    
+                @if (item.Ativo)
+                {
+                    <div class="mt-auto card-header d-flex justify-content-start bg-success text-white">
+                        <span>Ativo</span>
+                    </div>
+                }
+                else
+                {
+                    <div class="mt-auto card-header d-flex justify-content-start bg-danger text-white">
+                        <span>Inativo</span>
+                    </div>
+                }
+
+                <div class="card-body">
+                    <h5 class="card-title">
+                        @Html.DisplayFor(modelItem => item.Tematica.Descricao)
+                        | @Html.DisplayFor(modelItem => item.Modelo.Descricao)
+                    </h5>
+                    <h6 class="card-subtitle mb-3 text-muted">@Html.DisplayFor(modelItem => item.Tematica.Categoria.Descricao)</h6>
+                    <div class="accept-policyaccept-policy" style="text-align:justify;">
+                        <p class="card-text">@Html.DisplayFor(modelItem => item.Biografia)</p>
+                    </div>
+                </div>
+                <div class="mt-auto card-footer d-flex justify-content-end">
+
                     <a asp-action="Edit" asp-route-id="@item.Id" class="mx-3">
                         <img width="20" height="20" src="https://img.icons8.com/ios-glyphs/30/edit--v1.png" alt="edit--v1" />
                     </a>
@@ -24,25 +60,14 @@
                         <img width="20" height="20" src="https://img.icons8.com/ios-glyphs/30/000000/filled-trash.png" alt="filled-trash" />
                     </a>
                 </div>
-                <div class="card-body">
-                    <h5 class="card-title">@Html.DisplayFor(modelItem => item.Tematica.Descricao) 
-                            |
-                            @if (item.Ativo)
-                            {
-                                <span>Ativo</span>
-                            }
-                            else
-                            {
-                                <span>Inativo</span>
-                            }
-                        
-                    </h5>
-                    <h6 class="card-subtitle mb-2 text-muted">@Html.DisplayFor(modelItem => item.Tematica.Categoria.Descricao)</h6>
-                    <p class="card-text">@Html.DisplayFor(modelItem => item.Biografia)</p>
-                    
-                </div>
-               
             </div>
         </div>
     }
 </div>
+
+<script>
+    document.getElementById("cadastrar-imagem").addEventListener("click", function () {
+        // Quando a imagem for clicada, redirecionar para a ação "Create"
+        window.location.href = "/TematicaMestres/Create"; // Substitua "ControllerName" pelo nome real do seu controlador
+    });
+</script>

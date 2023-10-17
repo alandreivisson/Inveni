@@ -1,6 +1,8 @@
+using Inveni.Models;
 using Inveni.Persistence;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -17,7 +19,7 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
     .AddCookie(options =>
     {
         options.LoginPath = "/Usuarios/Acesso";
-        options.AccessDeniedPath = "/Usuarios/Acesso";
+        options.AccessDeniedPath = "/Usuarios/ErrorPermissaoAcesso";
         options.Cookie.Name = "Credencial";
     });
 
@@ -31,16 +33,79 @@ builder.Services.AddAuthorization(options =>
     {
         policy.RequireClaim("Permissoes", "2");
     });
+    options.AddPolicy("Anonimo", policy =>
+    {
+        policy.RequireAssertion(context =>
+        {
+            return !context.User.Identity.IsAuthenticated;
+        });
+    });
 });
 
 
 var app = builder.Build();
 
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    var contexto = services.GetRequiredService<Contexto>();
+
+    if (!contexto.Modelo.Any(m => m.Descricao == "Híbrido"))
+    {
+        contexto.Modelo.Add(new Modelo { Descricao = "Híbrido" });
+    }
+
+    if (!contexto.Modelo.Any(m => m.Descricao == "Presencial"))
+    {
+        contexto.Modelo.Add(new Modelo { Descricao = "Presencial" });
+    }
+
+    if (!contexto.Modelo.Any(m => m.Descricao == "Remoto"))
+    {
+        contexto.Modelo.Add(new Modelo { Descricao = "Remoto" });
+    }
+
+    if (!contexto.Modelo.Any(m => m.Descricao == "Híbrido-Presencial"))
+    {
+        contexto.Modelo.Add(new Modelo { Descricao = "Híbrido-Presencial" });
+    }
+
+    if (!contexto.Modelo.Any(m => m.Descricao == "Híbrido-Remoto"))
+    {
+        contexto.Modelo.Add(new Modelo { Descricao = "Híbrido-Remoto" });
+    }
+
+    if (!contexto.Modelo.Any(m => m.Descricao == "Híbrido-Presencial"))
+    {
+        contexto.Modelo.Add(new Modelo { Descricao = "Híbrido-Presencial" });
+    }
+
+    if (!contexto.Modelo.Any(m => m.Descricao == "Presencial-Remoto"))
+    {
+        contexto.Modelo.Add(new Modelo { Descricao = "Presencial-Remoto" });
+    }
+
+    if (!contexto.Perfil.Any(p => p.Descricao == "Administrador")) 
+    {
+        contexto.Perfil.Add(new Perfil { Descricao = "Administrador" });
+    }
+
+    if (!contexto.Perfil.Any(p => p.Descricao == "Mestre"))
+    {
+        contexto.Perfil.Add(new Perfil { Descricao = "Mestre" });
+    }
+
+    if (!contexto.Perfil.Any(p => p.Descricao == "Aprendiz"))
+    {
+        contexto.Perfil.Add(new Perfil { Descricao = "Aprendiz" });
+    }
+    contexto.SaveChanges();
+}
+
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
-    app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+    app.UseStatusCodePagesWithReExecute("/Usuarios/ErrorPaginaNaoEncontrada"); // Redireciona para a ação PaginaNaoEncontrada do controller ErrorPaginaNaoEncontrada em caso de erro 404
     app.UseHsts();
 }
 

@@ -299,6 +299,7 @@ namespace Inveni.Controllers
 
 
         [HttpGet]
+        [Authorize]
         public async Task<IActionResult> Alterar()
         {
             var usuarioLogado = await _context.Usuario.FindAsync(int.Parse(User.Identity.Name));
@@ -320,6 +321,7 @@ namespace Inveni.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public async Task<IActionResult> Alterar([FromForm] AlterarPerfilVM usuario)
         {
             if (!ModelState.IsValid)

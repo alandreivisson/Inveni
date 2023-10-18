@@ -296,5 +296,54 @@ namespace Inveni.Controllers
         {
             return View();
         }
+
+
+        [HttpGet]
+        public async Task<IActionResult> Alterar()
+        {
+            var usuarioLogado = await _context.Usuario.FindAsync(int.Parse(User.Identity.Name));
+
+            if (usuarioLogado == null)
+            {
+                return NotFound();
+            }
+
+            var usuario = new AlterarPerfilVM()
+            {
+                Nome = usuarioLogado.Nome,
+                Email = usuarioLogado.Email,
+                Telefone = usuarioLogado.Telefone,
+                Biografia = usuarioLogado.Biografia
+            };
+
+            return View(usuario);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Alterar([FromForm] AlterarPerfilVM usuario)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(usuario);
+            }
+
+            var usuarioBD = await _context.Usuario.FindAsync(int.Parse(User.Identity.Name));
+
+            if (usuarioBD == null)
+            {
+                return NotFound();
+            }
+
+            usuarioBD.Nome = usuario.Nome;
+            usuarioBD.Email = usuario.Email;
+            usuarioBD.Telefone = usuario.Telefone;
+            usuarioBD.Biografia = usuario.Biografia;
+
+            _context.Update(usuarioBD);
+            await _context.SaveChangesAsync();
+
+            // Redireciona para a página inicial
+            return RedirectToAction("Index", "Home");
+        }
     }
 }

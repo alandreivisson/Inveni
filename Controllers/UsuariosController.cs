@@ -337,7 +337,6 @@ namespace Inveni.Controllers
             }
 
             usuarioBD.Nome = usuario.Nome;
-            usuarioBD.Email = usuario.Email;
             usuarioBD.Telefone = usuario.Telefone;
             usuarioBD.Biografia = usuario.Biografia;
 

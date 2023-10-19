@@ -16,10 +16,10 @@ namespace Inveni.Models
         public required string Email { get; set; }
 
         [MaxLength(200)]
-        public required string Biografia { get; set; }
+        public string? Biografia { get; set; }
 
         [MaxLength(200)]
-        public required string Telefone { get; set; }
+        public string? Telefone { get; set; }
 
         [PasswordPropertyText]
         public required string Senha { get; set; }

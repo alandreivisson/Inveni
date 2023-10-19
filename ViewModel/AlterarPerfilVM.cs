@@ -12,8 +12,7 @@ namespace Inveni.ViewModel
 
         [Display(Name = "E-mail")]
         [DataType(DataType.EmailAddress)]
-        [Required(ErrorMessage = "O campo {0} é de preenchimento obrigatório.")]
-        public required string Email { get; set; }
+        public string? Email { get; set; }
 
         [DataType(DataType.PhoneNumber)]
         [Required(ErrorMessage = "O campo {0} é de preenchimento obrigatório.")]

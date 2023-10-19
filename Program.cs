@@ -74,12 +74,7 @@ using (var scope = app.Services.CreateScope())
     {
         contexto.Modelo.Add(new Modelo { Descricao = "Híbrido-Remoto" });
     }
-
-    if (!contexto.Modelo.Any(m => m.Descricao == "Híbrido-Presencial"))
-    {
-        contexto.Modelo.Add(new Modelo { Descricao = "Híbrido-Presencial" });
-    }
-
+   
     if (!contexto.Modelo.Any(m => m.Descricao == "Presencial-Remoto"))
     {
         contexto.Modelo.Add(new Modelo { Descricao = "Presencial-Remoto" });

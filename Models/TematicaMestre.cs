@@ -8,7 +8,7 @@ namespace Inveni.Models
         [Key]
         public int Id { get; set; }
         [MaxLength(500)]
-        [Display (Name ="Biografia")]
+        [Display (Name ="Descrição")]
         public required string Biografia { get; set; }
         [Display (Name = "Temática")]
         public required int TematicaId { get; set; }

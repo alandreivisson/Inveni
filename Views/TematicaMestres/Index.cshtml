@@ -5,22 +5,30 @@
 }
 
 
-
-<div class="d-flex flex-column align-items-center mt-4">
-    <h1>Minhas Temáticas</h1>
-</div>
-
-
-<div class="d-flex flex-column align-items-center mt-2 mb-2">
-    <p class="d-flex align-items-center">
-        <a asp-action="Create" class="ml-2 me-2 text-black" style="text-decoration: none; font-size: 25px;">Cadastrar Nova</a>
-        <img id="cadastrar-imagem"
-             width="30"
-             height="30"
-             src="https://img.icons8.com/color/48/plus--v1.png"
-             alt="plus--v1"
-             style="cursor: pointer;" />
-    </p>
+<div class="row">
+    <div class="col-3"></div>
+    <div class="col-6">
+        <div class="d-flex flex-column align-items-center mt-4">
+            <h1>Minhas Temáticas</h1>
+        </div>
+    </div>
+    <div class="col-3"></div>
+    <div class="col-3"></div>
+    <div class="col-6">
+        <div class="d-flex flex-column align-items-center mt-2 mb-1">
+            <p class="d-flex align-items-center">
+                <a asp-action="Create" class="ml-2 me-2 text-black" style="text-decoration: none; font-size: 25px;">Cadastrar Nova</a>
+                <img id="cadastrar-imagem"
+                     width="30"
+                     height="30"
+                     src="https://img.icons8.com/color/48/plus--v1.png"
+                     alt="plus--v1"
+                     style="cursor: pointer;" />
+            </p>
+        </div>
+        @*<hr/>*@
+    </div>
+    <div class="col-3"></div>
 </div>
 <div class="row">
     @foreach (var item in Model)
@@ -51,13 +59,12 @@
                     </div>
                 </div>
                 <div class="mt-auto card-footer d-flex justify-content-end">
-
                     <a asp-action="Edit" asp-route-id="@item.Id" class="mx-3">
                         <img width="20" height="20" src="https://img.icons8.com/ios-glyphs/30/edit--v1.png" alt="edit--v1" />
                     </a>
                     |
                     <a asp-action="Delete" asp-route-id="@item.Id" class="mx-3">
-                        <img width="20" height="20" src="https://img.icons8.com/ios-glyphs/30/000000/filled-trash.png" alt="filled-trash" />
+                        <img width="20" height="20" src="https://img.icons8.com/ios-filled/50/waste.png" alt="filled-trash" />
                     </a>
                 </div>
             </div>

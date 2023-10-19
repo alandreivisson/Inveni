@@ -3,40 +3,85 @@
 @{
     ViewData["Title"] = "Edit";
 }
-
-<h1>Minhas Temáticas</h1>
-
-<h4>Edição</h4>
-<hr />
 <div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Biografia" class="control-label"></label>
-                <input asp-for="Biografia" class="form-control" />
-                <span asp-validation-for="Biografia" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ModeloId" class="control-label"></label>
-                <select asp-for="ModeloId" asp-items="ViewBag.ModeloId" class="form-control"></select>
-                <span asp-validation-for="ModeloId" class="text-danger"></span>
-            </div>
-            <input type="hidden" asp-for="TematicaId" />
-            <input type="hidden" asp-for="UsuarioId" />
-            <div class="form-group form-check mt-3">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="Ativo" /> @Html.DisplayNameFor(model => model.Ativo)
-                </label>
-            </div>
-            <div class="form-group mt-3">
-                <input type="submit" value="Salvar" class="btn btn-primary" />
-            </div>
-        </form>
+    <div class="col-3">
+        <div class="d-flex flex-column align-items-center mt-4">
+            <p class="d-flex align-items-center">
+                <img id="voltar-imagem"
+                     width="30"
+                     height="30"
+                     src="https://img.icons8.com/external-solid-adri-ansyah/64/228BE6/external-ui-basic-ui-solid-adri-ansyah-26.png"
+                     alt="plus--v1"
+                     style="cursor: pointer;" />
+                <a asp-action="Index" class="ms-2 me-2 text-black" style="text-decoration: none; font-size: 20px;">Temáticas Cadastradas</a>
+            </p>
+        </div>
     </div>
+    <div class="col-6">
+        <div class="d-flex flex-column align-items-center mt-4">
+            <h1>Minhas Temáticas</h1>
+        </div>
+    </div>
+    <div class="col-3"></div>
+    <div class="col-3"></div>
+    <div class="col-6">
+        <div class="d-flex flex-column align-items-center mt-2 mb-1">
+            <p class="d-flex align-items-center" style="font-size: 25px;" ;>
+                @ViewData["TematicaDescricao"]
+                <img width="25" height="25" class="ms-2" src="https://img.icons8.com/ios-glyphs/30/edit--v1.png" alt="edit--v1" />
+            </p>
+        </div>
+    </div>
+    <div class="col-3"></div>
 </div>
 
-<div>
-    <a asp-action="Index">Temáticas Cadastradas</a>
+
+<div class="row">
+    <div class="col-3">
+    </div>
+    <div class="col-6">
+        <div class="card">
+            <div class="card-body">
+                <form asp-action="Edit">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                        <div class="form-group">
+                            <label asp-for="Biografia" class="control-label">@Html.DisplayNameFor(model => model.Biografia)</label>
+                            <textarea asp-for="Biografia" class="form-control mt-2" style="height: 4cm;"></textarea>
+                            <span asp-validation-for="Biografia" class="text-danger"></span>
+                        </div>
+                        <div class="form-group mt-3">
+                            <label asp-for="ModeloId" class="control-label">@Html.DisplayNameFor(model => model.ModeloId)</label>
+                            <select asp-for="ModeloId" asp-items="ViewBag.ModeloId" class="form-control">
+                                <option value="" disabled>Selecione um modelo</option>
+                            </select>
+                            <span asp-validation-for="ModeloId" class="text-danger"></span>
+                        </div>
+                        <div class="form-group form-check mt-3">
+                            <label class="form-check-label">
+                                <input class="form-check-input" asp-for="Ativo" id="Ativo" /> @Html.DisplayNameFor(model => model.Ativo)
+                            </label>
+                        </div>
+                        
+                        <input type="hidden" asp-for="TematicaId" />
+                        <input type="hidden" asp-for="UsuarioId" />
+                        
+                        <div class="form-group col-12 mt-3 text-center">
+                            <input type="submit" value="Salvar" class="btn btn-primary btn-block" />
+                        </div>
+                    
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="col-3"></div>
 </div>
 
+
+
+<script>
+    document.getElementById("voltar-imagem").addEventListener("click", function () {
+        // Quando a imagem for clicada, redirecionar para a ação "Create"
+        window.location.href = "/TematicaMestres/Index"; // Substitua "ControllerName" pelo nome real do seu controlador
+    });
+</script>

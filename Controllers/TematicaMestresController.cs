@@ -85,6 +85,7 @@ namespace Inveni.Controllers
             ViewData["TematicaId"] = new SelectList(_context.Tematica, "Id", "Descricao", tematicaMestre.TematicaId);
             ViewData["UsuarioId"] = new SelectList(_context.Usuario, "Id", "Nome", tematicaMestre.UsuarioId);
             ViewData["ModeloId"] = new SelectList(_context.Modelo, "Id", "Descricao", tematicaMestre.ModeloId);
+            ViewBag.TematicaDescricao = _context.Tematica.FirstOrDefault(t => t.Id == tematicaMestre.TematicaId)?.Descricao;
             return View(tematicaMestre);
         }
 
@@ -102,9 +103,11 @@ namespace Inveni.Controllers
                 return NotFound();
             }
 
-            ViewData["TematicaId"] = new SelectList(_context.Tematica, "Id", "Id", tematicaMestre.TematicaId);
+            ViewData["TematicaId"] = new SelectList(_context.Tematica, "Id", "Descricao", tematicaMestre.TematicaId);
             ViewData["UsuarioId"] = new SelectList(_context.Usuario, "Id", "Id", tematicaMestre.UsuarioId);
             ViewData["ModeloId"] = new SelectList(_context.Modelo, "Id", "Descricao", tematicaMestre.ModeloId);
+            ViewData["TematicaDescricao"] = _context.Tematica.FirstOrDefault(t => t.Id == tematicaMestre.TematicaId)?.Descricao;
+
             return View(tematicaMestre);
         }
 
@@ -140,16 +143,18 @@ namespace Inveni.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["TematicaId"] = new SelectList(_context.Tematica, "Id", "Id", tematicaMestre.TematicaId);
+            ViewData["TematicaId"] = new SelectList(_context.Tematica, "Id", "Descricao", tematicaMestre.TematicaId);
             ViewData["UsuarioId"] = new SelectList(_context.Usuario, "Id", "Id", tematicaMestre.UsuarioId);
             ViewData["ModeloId"] = new SelectList(_context.Modelo, "Id", "Descricao", tematicaMestre.ModeloId);
+            ViewData["TematicaDescricao"] = _context.Tematica.FirstOrDefault(t => t.Id == tematicaMestre.TematicaId)?.Descricao;
+
             return View(tematicaMestre);
         }
 
         // GET: TematicaMestres/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null || _context.TematicaMestre == null)
+            if (id == null)
             {
                 return NotFound();
             }
@@ -158,7 +163,7 @@ namespace Inveni.Controllers
                 .Include(t => t.Tematica)
                 .Include(t => t.Usuario)
                 .Include(t => t.Modelo)
-                .FirstOrDefaultAsync(m => m.UsuarioId == id);
+                .FirstOrDefaultAsync(m => m.Id == id); // Use m.Id para comparar com o id passado
             if (tematicaMestre == null)
             {
                 return NotFound();
@@ -167,24 +172,19 @@ namespace Inveni.Controllers
             return View(tematicaMestre);
         }
 
-        // POST: TematicaMestres/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (_context.TematicaMestre == null)
-            {
-                return Problem("Entity set 'Contexto.TematicaMestre'  is null.");
-            }
             var tematicaMestre = await _context.TematicaMestre.FindAsync(id);
             if (tematicaMestre != null)
             {
                 _context.TematicaMestre.Remove(tematicaMestre);
+                await _context.SaveChangesAsync();
             }
-            
-            await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
+
 
         private bool TematicaMestreExists(int id)
         {

@@ -4,33 +4,67 @@
     ViewData["Title"] = "Create";
 }
 
-<h1>Categorias</h1>
-
-<h4>Cadastro</h4>
-<hr />
 <div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Descricao" class="control-label"></label>
-                <input asp-for="Descricao" class="form-control" />
-                <span asp-validation-for="Descricao" class="text-danger"></span>
-                <span id="msg"></span>
+    <div class="col-3">
+        <div class="d-flex flex-column align-items-center mt-4">
+            <p class="d-flex align-items-center">
+                <img id="voltar-imagem"
+                     width="30"
+                     height="30"
+                     src="https://img.icons8.com/external-solid-adri-ansyah/64/228BE6/external-ui-basic-ui-solid-adri-ansyah-26.png"
+                     alt="plus--v1"
+                     style="cursor: pointer;" />
+                <a asp-action="Index" class="ms-2 me-2 text-black" style="text-decoration: none; font-size: 20px;">Categorias Cadastradas</a>
+            </p>
+        </div>
+    </div>
+    <div class="col-6">
+        <div class="d-flex flex-column align-items-center mt-4">
+            <h1>Categorias</h1>
+        </div>
+    </div>
+    <div class="col-3"></div>
+    <div class="col-3"></div>
+    <div class="col-6">
+        <div class="d-flex flex-column align-items-center mt-2 mb-1">
+            <p class="d-flex align-items-center" style="font-size: 25px" ;>
+                Cadastro
+                <img width="30" height="30" class="ms-2" src="https://img.icons8.com/metro/26/plus.png" alt="plus" />
+            </p>
+        </div>
+    </div>
+    <div class="col-3"></div>
+</div>
+
+<div class="row">
+    <div class="col-3">
+    </div>
+    <div class="col-6">
+        <div class="card">
+            <div class="card-body">
+                <form asp-action="Create">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <div class="form-group">
+                        <label asp-for="Descricao" class="control-label"></label>
+                        <input asp-for="Descricao" class="form-control mt-2" />
+                        <span asp-validation-for="Descricao" class="text-danger"></span>
+                        <span id="msg"></span>
+                    </div>
+                    <div class="form-group col-12 mt-3 text-center">
+                        <input type="submit" id="botao" disabled="disabled" value="Cadastrar" class="btn btn-primary" />
+                    </div>
+                </form>
             </div>
-            <div class="form-group mt-3">
-                <input type="submit" id="botao" disabled="disabled" value="Cadastrar" class="btn btn-primary" />
-            </div>
-        </form>
+        </div>
+    </div>
+    <div class="col-3">
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Categorias Cadastradas</a>
-</div>
-
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
     <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
 }
 
@@ -57,5 +91,12 @@
                 }
             },
         });
+    });
+</script>
+
+<script>
+    document.getElementById("voltar-imagem").addEventListener("click", function () {
+        // Quando a imagem for clicada, redirecionar para a ação "Create"
+        window.location.href = "/Categorias/Index"; // Substitua "ControllerName" pelo nome real do seu controlador
     });
 </script>

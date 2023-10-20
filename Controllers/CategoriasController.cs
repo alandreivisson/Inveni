@@ -26,7 +26,7 @@ namespace Inveni.Controllers
         public async Task<IActionResult> Index()
         {
               return _context.Categoria != null ? 
-                          View(await _context.Categoria.ToListAsync()) :
+                          View(await _context.Categoria.OrderBy(c => c.Descricao).ToListAsync()) :
                           Problem("Entity set 'Contexto.Categoria'  is null.");
         }
 
@@ -47,57 +47,6 @@ namespace Inveni.Controllers
             {
                 _context.Add(categoria);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            return View(categoria);
-        }
-
-        // GET: Categorias/Edit/5
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null || _context.Categoria == null)
-            {
-                return NotFound();
-            }
-
-            var categoria = await _context.Categoria.FindAsync(id);
-            if (categoria == null)
-            {
-                return NotFound();
-            }
-            return View(categoria);
-        }
-
-        // POST: Categorias/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Descricao")] Categoria categoria)
-        {
-            if (id != categoria.Id)
-            {
-                return NotFound();
-            }
-
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(categoria);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!CategoriaExists(categoria.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
                 return RedirectToAction(nameof(Index));
             }
             return View(categoria);

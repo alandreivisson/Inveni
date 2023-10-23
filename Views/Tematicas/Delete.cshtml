@@ -4,30 +4,76 @@
     ViewData["Title"] = "Delete";
 }
 
-<h1>Temáticas</h1>
 
-<h3>Deseja Excluir Permanentemente a Temática?</h3>
-<div>
-    <h4>Temática</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Descricao)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Descricao)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Categoria)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Categoria.Id)
-        </dd>
-    </dl>
-    
-    <form asp-action="Delete">
-        <input type="hidden" asp-for="Id" />
-        <input type="submit" value="Excluir" class="btn btn-danger" /> |
-        <a asp-action="Index">Temáticas Cadastradas</a>
-    </form>
+<div class="row">
+    <div class="col-3">
+        <div class="d-flex flex-column align-items-center mt-4">
+            <p class="d-flex align-items-center">
+                <img id="voltar-imagem"
+                     width="30"
+                     height="30"
+                     src="https://img.icons8.com/external-solid-adri-ansyah/64/228BE6/external-ui-basic-ui-solid-adri-ansyah-26.png"
+                     alt="plus--v1"
+                     style="cursor: pointer;" />
+                <a asp-action="Index" class="ms-2 me-2 text-black" style="text-decoration: none; font-size: 20px;">Temáticas Cadastradas</a>
+            </p>
+        </div>
+    </div>
+    <div class="col-6">
+        <div class="d-flex flex-column align-items-center mt-4">
+            <h1>Minhas Temáticas</h1>
+        </div>
+    </div>
+    <div class="col-3"></div>
+    <div class="col-3"></div>
+    <div class="col-6">
+        <div class="d-flex flex-column align-items-center mt-2 mb-1">
+            <p class="d-flex align-items-center" style="font-size: 25px" ;>
+                Excluir
+                <img width="25" height="25" class="ms-2" src="https://img.icons8.com/ios-filled/50/waste.png" alt="waste" />
+            </p>
+        </div>
+    </div>
+    <div class="col-3"></div>
 </div>
+
+
+<div class="row">
+    <div class="col-3">
+    </div>
+    <div class="col-6">
+        <div class="card">
+            <div class="card-body">
+                <form asp-action="Delete">
+                    <dl class="row">
+                        <dt class="col-sm-2">
+                            @Html.DisplayNameFor(model => model.Descricao)
+                        </dt>
+                        <dd class="col-sm-10">
+                            @Html.DisplayFor(model => model.Descricao)
+                        </dd>
+                        <dt class="col-sm-2">
+                            @Html.DisplayNameFor(model => model.Categoria)
+                        </dt>
+                        <dd class="col-sm-10">
+                            @Html.DisplayFor(model => model.Categoria.Descricao)
+                        </dd>
+                        <div class="form-group col-12 mt-3 text-center">
+                            <input type="hidden" asp-for="Id" />
+                            <input type="submit" value="Confirmar" class="btn btn-danger" />
+                        </div>
+                    </dl>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="col-3"></div>
+</div>
+
+
+<script>
+    document.getElementById("voltar-imagem").addEventListener("click", function () {
+        // Quando a imagem for clicada, redirecionar para a ação "Create"
+        window.location.href = "/Tematicas/Index"; // Substitua "ControllerName" pelo nome real do seu controlador
+    });
+</script>

@@ -33,6 +33,10 @@ builder.Services.AddAuthorization(options =>
     {
         policy.RequireClaim("Permissoes", "2");
     });
+    options.AddPolicy("Aprendiz", policy =>
+    {
+        policy.RequireClaim("Permissoes", "3");
+    });
     options.AddPolicy("Anonimo", policy =>
     {
         policy.RequireAssertion(context =>

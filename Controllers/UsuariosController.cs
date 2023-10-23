@@ -30,7 +30,7 @@ namespace Inveni.Controllers
         public async Task<IActionResult> Index()
         {
             return _context.Usuario != null ?
-                        View(await _context.Usuario.ToListAsync()) :
+                        View(await _context.Usuario.OrderBy(u => u.Nome).ToListAsync()) :
                         Problem("Entity set 'Contexto.Usuario'  is null.");
         }
 
@@ -89,6 +89,9 @@ namespace Inveni.Controllers
             {
                 return NotFound();
             }
+
+            ViewData["UsuarioNome"] = _context.Usuario.FirstOrDefault(t => t.Id == id)?.Nome;
+            ViewData["UsuarioEmail"] = _context.Usuario.FirstOrDefault(t => t.Id == id)?.Email;
             return View(usuario);
         }
 
@@ -98,7 +101,7 @@ namespace Inveni.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Policy = "Administrador")]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Nome,Email,Senha")] Usuario usuario)
+        public async Task<IActionResult> Edit(int id, [Bind("Id, Email, Nome, Ativo, Senha")] Usuario usuario)
         {
             if (id != usuario.Id)
             {
@@ -125,46 +128,9 @@ namespace Inveni.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["UsuarioNome"] = _context.Usuario.FirstOrDefault(t => t.Id == id)?.Nome;
+            ViewData["UsuarioEmail"] = _context.Usuario.FirstOrDefault(t => t.Id == id)?.Email;
             return View(usuario);
-        }
-
-        // GET: Usuarios/Delete/5
-        [Authorize(Policy = "Administrador")]
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null || _context.Usuario == null)
-            {
-                return NotFound();
-            }
-
-            var usuario = await _context.Usuario
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (usuario == null)
-            {
-                return NotFound();
-            }
-
-            return View(usuario);
-        }
-
-        // POST: Usuarios/Delete/5
-        [Authorize(Policy = "Administrador")]
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            if (_context.Usuario == null)
-            {
-                return Problem("Entity set 'Contexto.Usuario'  is null.");
-            }
-            var usuario = await _context.Usuario.FindAsync(id);
-            if (usuario != null)
-            {
-                _context.Usuario.Remove(usuario);
-            }
-
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
         }
 
         private bool UsuarioExists(int id)
@@ -299,7 +265,7 @@ namespace Inveni.Controllers
 
 
         [HttpGet]
-        [Authorize]
+        [Authorize(Policy = "Administrador")]
         public async Task<IActionResult> Alterar()
         {
             var usuarioLogado = await _context.Usuario.FindAsync(int.Parse(User.Identity.Name));
@@ -321,7 +287,8 @@ namespace Inveni.Controllers
         }
 
         [HttpPost]
-        [Authorize]
+        [Authorize(Policy = "Administrador")]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Alterar([FromForm] AlterarPerfilVM usuario)
         {
             if (!ModelState.IsValid)

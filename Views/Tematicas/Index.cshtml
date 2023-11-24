@@ -4,44 +4,85 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Temáticas</h1>
+<div class="row">
+    <div class="col-3"></div>
+    <div class="col-6">
+        <div class="d-flex flex-column align-items-center mt-4">
+            <h1>Temáticas</h1>
+        </div>
+    </div>
+    <div class="col-3"></div>
+    <div class="col-3"></div>
+    <div class="col-6">
+        <div class="d-flex flex-column align-items-center mt-2 mb-1">
+            <p class="d-flex align-items-center">
+                <a asp-action="Create" class="ml-2 me-2 text-black" style="text-decoration: none; font-size: 25px;">Cadastrar Nova</a>
+                <img id="cadastrar-imagem"
+                     width="30"
+                     height="30"
+                     src="https://img.icons8.com/color/48/plus--v1.png"
+                     alt="plus--v1"
+                     style="cursor: pointer;" />
+            </p>
+        </div>
+        @*<hr/>*@
+    </div>
+    <div class="col-3"></div>
+</div>
 
-<p>
-    <a asp-action="Create">Cadastrar Nova</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Descricao)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Categoria)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Descricao)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Categoria.Descricao)
-            </td>
-            <td>
-                
-                <a asp-action="Edit" asp-route-id="@item.Id" class="mx-3">
-                        <img width="20" height="20" src="https://img.icons8.com/ios-glyphs/30/edit--v1.png" alt="edit--v1" />
-                </a> 
-                |
-                <a asp-action="Delete" asp-route-id="@item.Id" class="mx-3">
-                        <img width="20" height="20" src="https://img.icons8.com/ios-glyphs/30/000000/filled-trash.png" alt="filled-trash" />
-                        
-                </a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+<div class="row">
+    <div class="col-3"></div>
+    <div class="col-6">
+        <div class="card">
+            <div class="card-body">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Descricao)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Categoria)
+                            </th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Descricao)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Categoria.Descricao)
+                                </td>
+                                <td class="text-right align-items-end text-end">
+
+                                    <a asp-action="Edit" asp-route-id="@item.Id" class="mx-3">
+                                        <img width="20" height="20" src="https://img.icons8.com/ios-glyphs/30/edit--v1.png" alt="edit--v1" />
+                                    </a>
+                                    |
+                                    <a asp-action="Delete" asp-route-id="@item.Id" class="mx-3">
+                                        <img width="20" height="20" src="https://img.icons8.com/ios-glyphs/30/000000/filled-trash.png" alt="filled-trash" />
+
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="col-3"></div>
+</div>
+
+
+
+<script>
+    document.getElementById("cadastrar-imagem").addEventListener("click", function () {
+        // Quando a imagem for clicada, redirecionar para a ação "Create"
+        window.location.href = "/Tematicas/Create"; // Substitua "ControllerName" pelo nome real do seu controlador
+    });
+</script>

@@ -32,13 +32,13 @@
                                 @if (permissoes == "1")
                                 {
                                     <li class="nav-item">
-                                        <a class="nav-link text-dark" asp-area="" asp-controller="Tematicas" asp-action="Index">Temática</a>
+                                        <a class="nav-link text-dark" asp-area="" asp-controller="Categorias" asp-action="Index">Categorias</a>
                                     </li>
                                     <li class="nav-item">
-                                        <a class="nav-link text-dark" asp-area="" asp-controller="Categorias" asp-action="Index">Categoria</a>
+                                        <a class="nav-link text-dark" asp-area="" asp-controller="Tematicas" asp-action="Index">Temáticas</a>
                                     </li>
                                     <li class="nav-item">
-                                        <a class="nav-link text-dark" asp-area="" asp-controller="Usuarios" asp-action="Index">Usuarios</a>
+                                        <a class="nav-link text-dark" asp-area="" asp-controller="Usuarios" asp-action="Index">Usuários</a>
                                     </li>
                                 }
                                 @if (permissoes == "2")
@@ -56,17 +56,30 @@
                                         @User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value
                                 </a>
                                 <ul class="dropdown-menu dropdown-menu-end">
-                                    <li>
+                                    <li class="d-flex justify-content-between">
                                         <a class="dropdown-item" asp-controller="Usuarios" asp-action="Alterar">
                                             Alterar Dados Cadastrais
+                                            <a asp-controller="Usuarios" asp-action="Alterar">
+                                                <div class="ms-2 me-2">
+                                                    <img width="20" height="20" src="https://img.icons8.com/ios-glyphs/30/edit--v1.png" alt="exit--v1" />
+                                                </div>
+                                            </a>
                                         </a>
                                     </li>
                                     <li>
                                         <hr class="dropdown-divider">
                                     </li>
-                                    <li>
-                                        <a class="dropdown-item" asp-controller="Home" asp-action="Sair">Sair</a>
+                                    <li class="d-flex justify-content-between">
+                                        <a class="dropdown-item" asp-controller="Home" asp-action="Sair">
+                                            Sair
+                                            <a asp-controller="Home" asp-action="Sair">
+                                                <div class="ms-2 me-2">
+                                                    <img width="20" height="20" src="https://img.icons8.com/ios/50/exit--v1.png" alt="exit--v1" />
+                                                </div>
+                                            </a>
+                                        </a>
                                     </li>
+
                                 </ul>
                             </li>
                             }

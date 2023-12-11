@@ -1,11 +1,12 @@
 {
   "version": 2,
-  "dgSpecHash": "M18gh5wZ/S1Yew2uuXMDAL9X7i7/Y1LOR3DCKGGSfPOKFtEJFpKWtVVx46pHfRI95/udC1PV/QMAsXpkYZLKiA==",
+  "dgSpecHash": "ADSjnuBkgUTddUMXStd6UES2TTkGJnn854/Y4KpVTkriwRCq8J/yNPs6OvcmPQVsSZBnmphucLiWnLPNNmr7hw==",
   "success": true,
-  "projectFilePath": "C:\\Users\\Leon Freitas\\Source\\Repos\\Inveni\\Inveni.csproj",
+  "projectFilePath": "C:\\Users\\Leon Freitas\\source\\repos\\alandreivisson\\Inveni\\Inveni.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Leon Freitas\\.nuget\\packages\\azure.core\\1.25.0\\azure.core.1.25.0.nupkg.sha512",
     "C:\\Users\\Leon Freitas\\.nuget\\packages\\azure.identity\\1.7.0\\azure.identity.1.7.0.nupkg.sha512",
+    "C:\\Users\\Leon Freitas\\.nuget\\packages\\bcrypt.net\\0.1.0\\bcrypt.net.0.1.0.nupkg.sha512",
     "C:\\Users\\Leon Freitas\\.nuget\\packages\\humanizer\\2.14.1\\humanizer.2.14.1.nupkg.sha512",
     "C:\\Users\\Leon Freitas\\.nuget\\packages\\humanizer.core\\2.14.1\\humanizer.core.2.14.1.nupkg.sha512",
     "C:\\Users\\Leon Freitas\\.nuget\\packages\\humanizer.core.af\\2.14.1\\humanizer.core.af.2.14.1.nupkg.sha512",
@@ -228,5 +229,16 @@
     "C:\\Users\\Leon Freitas\\.nuget\\packages\\system.xml.readerwriter\\4.3.0\\system.xml.readerwriter.4.3.0.nupkg.sha512",
     "C:\\Users\\Leon Freitas\\.nuget\\packages\\system.xml.xdocument\\4.3.0\\system.xml.xdocument.4.3.0.nupkg.sha512"
   ],
-  "logs": []
+  "logs": [
+    {
+      "code": "NU1701",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "O pacote 'BCrypt.Net 0.1.0' foi restaurado usando '.NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8, .NETFramework,Version=v4.8.1' em vez da estrutura de destino do projeto 'net7.0'. Esse pacote pode não ser totalmente compatível com o seu projeto.",
+      "libraryId": "BCrypt.Net",
+      "targetGraphs": [
+        "net7.0"
+      ]
+    }
+  ]
 }

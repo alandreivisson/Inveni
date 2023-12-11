@@ -1,0 +1,41 @@
+﻿@model IEnumerable<Inveni.Models.MatriculaMestre>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table id="matriculaTable" class="table">
+    <thead>
+        <tr>
+
+            <th></th>
+            <th>Aprendiz</th>
+            <th>Status</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    <img src="@Url.Content(item.Aprendiz.CaminhoFoto)" alt="User Icon" style="width: 25px; height: 25px; border-radius: 50%;" />
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Aprendiz.Nome) <br />
+                    @Html.DisplayFor(modelItem => item.Aprendiz.Email)
+                </td>
+                <td>@Html.DisplayFor(modelItem => item.Status)</td>
+                
+                <td>
+                    <a asp-action="Delete" asp-route-id="@Funcoes.EncodeId(item.Id)"> Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

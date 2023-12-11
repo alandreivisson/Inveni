@@ -10,10 +10,10 @@
     <link rel="stylesheet" href="~/Inveni.styles.css" asp-append-version="true" />
 </head>
 <body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+    <header class="bg-black text-white pt-2">
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light border-bottom box-shadow mb-2 text-white ">
             <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Inveni</a>
+                <a class="navbar-brand m-0 me-3" asp-area="" asp-controller="Home" asp-action="Index">Inveni</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -21,7 +21,7 @@
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                            <a class="nav-link m-0 me-5 text-white" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                             @*</li>
                             <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
@@ -32,38 +32,52 @@
                                 @if (permissoes == "1")
                                 {
                                     <li class="nav-item">
-                                        <a class="nav-link text-dark" asp-area="" asp-controller="Categorias" asp-action="Index">Categorias</a>
+                                    <a class="nav-link text-white ms-auto" asp-area="" asp-controller="Categorias" asp-action="Index">Categorias</a>
                                     </li>
                                     <li class="nav-item">
-                                        <a class="nav-link text-dark" asp-area="" asp-controller="Tematicas" asp-action="Index">Temáticas</a>
+                                    <a class="nav-link text-white mb-3" asp-area="" asp-controller="Tematicas" asp-action="Index">Temáticas</a>
                                     </li>
                                     <li class="nav-item">
-                                        <a class="nav-link text-dark" asp-area="" asp-controller="Usuarios" asp-action="Index">Usuários</a>
+                                    <a class="nav-link text-white mb-3" asp-area="" asp-controller="Usuarios" asp-action="Index">Usuários</a>
                                     </li>
                                 }
                                 @if (permissoes == "2")
                                 {
                                 <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-area="" asp-controller="TematicaMestres" asp-action="Index">Minhas Temáticas</a>
+                                    <a class="nav-link text-white mb-3" asp-area="" asp-controller="TematicaMestres" asp-action="Index">Minhas Temáticas</a>
                                 </li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-white mb-3" asp-area="" asp-controller="Material" asp-action="Index">Material</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-white mb-3" asp-area="" asp-controller="MatriculaMestre" asp-action="Index">Meus Aprendizes</a>
+                                </li>
+                                }
+                                @if (permissoes == "3")
+                                {
+                                <li class="nav-item">
+                                    <a class="nav-link text-white mb-3" asp-area="" asp-controller="Material" asp-action="MateriaisEnviados">Meus Materiais</a>
+                                </li>
+                                
                                 }
                             }
 
                             @if (User.Identity.IsAuthenticated)
                             {
                             <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle text-info" href="#" role="button" data-bs-toggle="dropdown">
-                                        @User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value
-                                </a>
+                                
+                                <ul class="nav-link dropdown-toggle text-info text-white text-end" href="#" role="button" data-bs-toggle="dropdown">
+                                    <img src="@Url.Content(User.Claims.FirstOrDefault(c => c.Type == "CaminhoFoto").Value)" alt="Foto do Usuário" style="width: 35px; height: 35px; border-radius: 50%;" />
+
+                                </ul>
                                 <ul class="dropdown-menu dropdown-menu-end">
+                                    <span class="nav-link dropdown-toggle text-info text-dark text-end">
+                                            @User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value
+                                    </span>
                                     <li class="d-flex justify-content-between">
                                         <a class="dropdown-item" asp-controller="Usuarios" asp-action="Alterar">
+                                            <img width="20" height="20" src="https://img.icons8.com/ios-glyphs/30/edit--v1.png" alt="edit--v1" />
                                             Alterar Dados Cadastrais
-                                            <a asp-controller="Usuarios" asp-action="Alterar">
-                                                <div class="ms-2 me-2">
-                                                    <img width="20" height="20" src="https://img.icons8.com/ios-glyphs/30/edit--v1.png" alt="exit--v1" />
-                                                </div>
-                                            </a>
                                         </a>
                                     </li>
                                     <li>
@@ -71,22 +85,17 @@
                                     </li>
                                     <li class="d-flex justify-content-between">
                                         <a class="dropdown-item" asp-controller="Home" asp-action="Sair">
+                                            <img width="20" height="20" src="https://img.icons8.com/ios/50/exit--v1.png" alt="exit--v1" />
                                             Sair
-                                            <a asp-controller="Home" asp-action="Sair">
-                                                <div class="ms-2 me-2">
-                                                    <img width="20" height="20" src="https://img.icons8.com/ios/50/exit--v1.png" alt="exit--v1" />
-                                                </div>
-                                            </a>
                                         </a>
                                     </li>
-
                                 </ul>
                             </li>
                             }
                             else
                             {
                             <li>
-                                <a href="@Url.Action("Acesso","Usuarios")" class="nav-link">
+                                <a href="@Url.Action("Acesso","Usuarios")" class="nav-link text-white mb-3">
                                     Entrar
                                 </a>
                             </li>
@@ -109,9 +118,18 @@
             &copy; 2023 - Inveni - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>
     </footer>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+
+    <!-- Popper.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+
+    <!-- Bootstrap JS -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.inputmask/5.0.6/jquery.inputmask.min.js"></script>
 
     <script>
         $(document).ready(function () {

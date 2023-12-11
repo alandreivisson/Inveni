@@ -1,8 +1,207 @@
-﻿@{
+﻿@using System.Security.Claims;
+@model IEnumerable<Inveni.Models.TematicaMestre>
+
+@{
     ViewData["Title"] = "Home Page";
 }
+<div class="row">
+    <!-- ... Código anterior ... -->
+    <div class="col-12 mt-3 mb-3 d-flex align-items-center text-center" style="font-size: 25px;">
+        <span>
+            <img width="30" height="30" src="https://img.icons8.com/material-sharp/24/filter--v1.png" alt="filter--v1" />
+            Filtros
+        </span>
+    </div>
+    <form asp-action="Filtrar" method="post">
+        <div id="filtroBox">
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+            @{
+                await Html.RenderPartialAsync("_Dropdowns", new Inveni.ViewModel.FiltrarViewModel());
+            }
+            <div class="row">
+
+                <div class="col-2 mt-3 mb-3 align-items-start text-start">
+                    @*<button type="submit" style="border: none; background: none; padding: 0; margin: 0; display: inline;">
+                    <img width="48" height="48" src="https://img.icons8.com/emoji/48/magnifying-glass-tilted-left-emoji.png" alt="magnifying-glass-tilted-left-emoji" />
+                    </button>*@
+                    <button type="submit" class="btn btn-primary form-control text-center">Pesquisar</button>
+                </div>
+
+                <div class="col-2 mt-3 mb-3 align-items-end text-start">
+                    <a asp-action="Index" asp-controller="Home" class="btn btn-danger form-control">Limpar</a>
+                </div>
+                <div class="col-8 mt-3 mb-3 align-items-start text-start">
+                </div>
+            </div>
+        </div>
+    </form>
 </div>
+
+<div class="row mt-3">
+    @foreach (var item in Model)
+    {
+        <div class="col-md-3 mb-3">
+            <div class="card d-flex flex-column h-100" style="transition: box-shadow 0.9s ease-in-out;">
+                @if (item.Usuario.Ativo)
+                {
+                    <div class="mt-auto card-header d-flex justify-content-start text-white bg-primary">
+                        <span>
+                            @Html.DisplayFor(modelItem => item.Tematica.Descricao)
+                        </span>
+                    </div>
+                }
+                else
+                {
+                    <div class="mt-auto card-header d-flex justify-content-start bg-danger text-white">
+                        <span>Inativo</span>
+                    </div>
+                }
+
+                <div class="card-body">
+
+                    <div class="text-center">
+                        <h5 class="card-title mb-2">
+                            <div style="display: flex; flex-direction: column; align-items: center;">
+                                <img src="@Url.Content(item.Usuario.CaminhoFoto)" alt="User Icon" style="width: 100px; height: 100px; border-radius: 50%;" />
+                                <span>@Html.DisplayFor(modelItem => item.Usuario.Nome)</span>
+
+                            </div>
+                        </h5>
+                    </div>
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        var idUsuario = User.FindFirst(ClaimTypes.Name)?.Value;
+                        var permissoes = User.Claims.First(c => c.Type == "Permissoes").Value;
+
+                       @*if (!string.IsNullOrEmpty(idUsuario) && permissoes == "3")
+                        {
+                            int idUsuarioInt = Convert.ToInt32(idUsuario);
+
+                            // Verifica se o tema já foi favoritado pelo aprendiz
+
+                            bool favoritado = item?.Favoritos?.Any(f => f.AprendizId == idUsuarioInt && f.TematicaMestreId == item.Id) ?? false;
+
+                            <button class="btn btn-primary" onclick="favoritarDesfavoritar(this, '@item.Id', '@idUsuarioInt', '@favoritado')">@(favoritado ? "Favoritado" : "Favoritar")</button>
+
+                        }*@
+                    }
+                    <h6 class="card-subtitle mb-2 mt-2 text-muted">
+                        Categoria: @Html.DisplayFor(modelItem => item.Tematica.Categoria.Descricao)
+                    </h6>
+                    <h6 class="card-subtitle mb-2 text-muted">Modelo: @Html.DisplayFor(modelItem => item.Modelo.Descricao)</h6>
+                    <div class="accept-policyaccept-policy mt-2" style="text-align:justify;">
+                        <p class="card-text" id="biografia">
+                            @Html.DisplayFor(modelItem => item.Biografia)
+                        </p>
+                    </div>
+                </div>
+                <div class="mt-auto card-footer d-flex justify-content-center" style="border:none;">
+                    @*<button class="btn btn-primary" onclick="saibaMais('@item.Id')">Saiba Mais</button>*@
+                    <button class="btn btn-primary" onclick="abrirModal('@item.Id')">Saiba Mais</button>
+
+                </div>
+                <style>
+                    .card:hover {
+                        box-shadow: 0 10px 10px rgba(0, 0, 0, 0.1);
+                    }
+                </style>
+
+                @*<div class="mt-auto card-footer d-flex justify-content-end">
+
+            <a asp-action="Edit" asp-route-id="@item.Id" class="mx-3">
+            <img width="20" height="20" src="https://img.icons8.com/ios-glyphs/30/edit--v1.png" alt="edit--v1" />
+            </a>
+            |
+            <a asp-action="Delete" asp-route-id="@item.Id" class="mx-3">
+            <img width="20" height="20" src="https://img.icons8.com/ios-filled/50/waste.png" alt="filled-trash" />
+            </a>
+            </div>*@
+            </div>
+        </div>
+    }
+</div>
+<!-- Modal -->
+<div class="modal fade" id="infoModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-black text-white">
+                <h5 class="modal-title" id="exampleModalLabel">Mestre</h5>
+                <button type="button" class="btn-close text-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="modalBody">
+                <!-- Conteúdo do modal será preenchido dinamicamente -->
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function toggleFiltro() {
+        var filtroBox = document.getElementById('filtroBox');
+        if (filtroBox.style.display === 'none') {
+            filtroBox.style.display = 'block';
+        } else {
+            filtroBox.style.display = 'none';
+        }
+    }
+</script>
+<script>
+    var isUserAuthenticated = @(User.Identity.IsAuthenticated.ToString().ToLower());
+    function abrirModal(id) {
+        // Verificar se o usuário está autenticado
+
+        if (!isUserAuthenticated) {
+            // Redirecionar para a tela de acesso
+            window.location.href = '@Url.Action("Acesso", "Usuarios")';
+        } else {
+            // Se estiver autenticado, continuar com a lógica para abrir o modal
+            // Faça uma requisição AJAX ou manipule os dados diretamente, dependendo do que preferir
+            $.ajax({
+                url: '/Home/Detalhes/' + id, // Substitua pelo caminho real da sua action Detalhes
+                type: 'GET',
+                success: function (data) {
+                    // Preencha o conteúdo do modal com os dados retornados pela action
+                    $('#modalBody').html(data);
+                    // Abra o modal
+                    $('#infoModal').modal('show');
+                },
+                error: function (error) {
+                    console.error(error);
+                }
+            });
+        }
+    }
+</script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        var biografiaElement = document.getElementById("biografia");
+        var biografiaText = biografiaElement.textContent;
+
+        if (biografiaText.length > 10) {
+            biografiaElement.textContent = biografiaText.substring(0, 50) + "...";
+        }
+    });
+</script>
+<!-- Adicione no head do seu HTML -->
+@*<script>
+    function favoritarDesfavoritar(temaId, aprendizId, favoritado) {
+        // Faça uma requisição AJAX para o servidor para favoritar/desfavoritar
+        $.ajax({
+            url: '@Url.Action("FavoritarDesfavoritar", "Home")/' + temaId + '/' + aprendizId,
+            type: 'POST',
+            data: { favoritado: favoritado },
+            success: function (data) {
+                if (data.success) {
+                    $('#favoritarButton').text(data.favoritado ? 'Favoritado' : 'Favoritar');
+                } else {
+                    console.error(data.error);
+                }
+            },
+            error: function (error) {
+                console.error(error);
+            }
+        });
+    }
+</script>*@
+
+

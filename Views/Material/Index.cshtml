@@ -1,0 +1,167 @@
+﻿@model IEnumerable<Inveni.Models.Material>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<div class="row">
+    <div class="col-3"></div>
+    <div class="col-6">
+        <div class="d-flex flex-column align-items-center mt-4">
+            <h1>Materiais enviados</h1>
+        </div>
+    </div>
+    <div class="col-3"></div>
+    <div class="col-3"></div>
+    <div class="col-6">
+        <div class="d-flex flex-column align-items-center mt-2 mb-1">
+            <p class="d-flex align-items-center">
+                <a asp-action="Create" class="ml-2 me-2 text-black" style="text-decoration: none; font-size: 25px;">Adicionar</a>
+                <img id="cadastrar-imagem"
+                     width="30"
+                     height="30"
+                     src="https://img.icons8.com/ios-filled/50/FD7E14/plus.png"
+                     alt="plus--v1"
+                     style="cursor: pointer;" />
+            </p>
+        </div>
+        @*<hr/>*@
+    </div>
+    <div class="col-3"></div>
+</div>
+<div class="row">
+    <div class="col-3"></div>
+    <div class="col-6">
+        <div class="card">
+            <div class="card-body">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>
+                                @Html.DisplayNameFor(model => model.NomeArquivo)
+                            </th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                               @* <td>
+                                    @Html.DisplayFor(modelItem => item.Descricao)
+                                </td>
+                                <td class="text-right align-items-end text-end">
+                                    <a asp-action="Delete" asp-route-id="@item.Id">
+                                        <img width="20" height="20" src="https://img.icons8.com/ios-filled/50/waste.png" alt="Cadastrar" />
+                                    </a>
+                                </td>*@
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.NomeArquivo)
+                                </td>
+                                <td class="text-right align-items-end text-end">
+                                    <a data-material-id="@item.Id" class="mx-3 compartilhar-link" style="text-decoration: none; color: inherit;">
+                                        <img width="20" height="20" src="https://img.icons8.com/ios-filled/50/FD7E14/forward-arrow.png" alt="forward-arrow" />
+                                    </a>
+                                    |
+                                    <a href="@Url.Action("Download", "Material", new { materialId = item.Id })" class="mx-3" style="text-decoration: none; color: inherit;">
+                                        <img width="20" height="20" src="https://img.icons8.com/material-sharp/24/FD7E14/download--v1.png" alt="Download" />
+                                    </a>
+                                    |
+                                    <a asp-action="Delete" asp-route-id="@Funcoes.EncodeId(item.Id)" class="mx-3">
+                                        <img width="20" height="20" src="https://img.icons8.com/ios-filled/50/FD7E14/trash.png" alt="filled-trash" />
+
+                                    </a>
+                                    
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="col-3"></div>
+</div>
+
+
+<div class="modal fade" id="infoModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-black text-white">
+                <h5 class="modal-title" id="exampleModalLabel">Compartilhar Material</h5>
+                <button type="button" class="btn-close text-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="modalBody">
+                <!-- Conteúdo do modal será preenchido dinamicamente -->
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.querySelectorAll('.compartilhar-link').forEach(function (element) {
+        element.addEventListener('click', function (event) {
+            event.preventDefault();
+
+            // Obtém o ID do material da rota
+            var materialId = element.getAttribute('data-material-id');
+
+            // Chama a função para abrir o modal
+            abrirModal(materialId);
+        });
+    });
+
+    function abrirModal(materialId) {
+        // Faça uma requisição AJAX ou manipule os dados diretamente, dependendo do que preferir
+        $.ajax({
+            url: '/Material/CompartilharMaterial/' + id,
+            type: 'GET',
+            success: function (data) {
+                // Preencha o conteúdo do modal com os dados retornados pela action
+                $('#modalBody').html(data);
+                // Abra o modal
+                $('#infoModal').modal('show');
+            },
+            error: function (error) {
+                console.error(error);
+            }
+        });
+    }
+</script>
+<script>
+    function abrirModal(id) {
+        // Faça uma requisição AJAX ou manipule os dados diretamente, dependendo do que preferir
+        $.ajax({
+            url: '/Material/CompartilharMaterial/' + id, 
+            type: 'GET',
+            success: function (data) {
+                // Preencha o conteúdo do modal com os dados retornados pela action
+                $('#modalBody').html(data);
+                // Abra o modal
+                $('#infoModal').modal('show');
+            },
+            error: function (error) {
+                console.error(error);
+            }
+        });
+    }
+</script>
+<script>
+    document.getElementById("cadastrar-imagem").addEventListener("click", function () {
+        // Quando a imagem for clicada, redirecionar para a ação "Create"
+        window.location.href = "/Material/Create"; // Substitua "ControllerName" pelo nome real do seu controlador
+    });
+</script>
+<script>
+    document.querySelectorAll('.compartilhar-link').forEach(function (element) {
+        element.addEventListener('click', function (event) {
+            event.preventDefault();
+
+            // Obtém o ID do material da rota
+            var materialId = element.getAttribute('asp-route-id');
+
+            // Chama a função para abrir o modal
+            abrirModal(materialId);
+        });
+    });
+</script>

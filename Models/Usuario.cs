@@ -31,12 +31,17 @@ namespace Inveni.Models
         [PasswordPropertyText]
         public required string Senha { get; set; }
 
+        [MaxLength(500)]
+        public string? CaminhoFoto { get; set; }
+
+        public ICollection<UsuarioPerfil>? UsuarioPerfil;
 
         [Display(Name = "Ativo")]
         public required bool Ativo { get; set; }
 
         public virtual ICollection<UsuarioPerfil>? UsuarioPerfil { get; set; }
         public virtual ICollection<TematicaMestre>? TematicaMestre { get; set; }
+
 
         public bool ValidarPasswordComplexity()
         {
@@ -45,6 +50,13 @@ namespace Inveni.Models
 
             return regex.IsMatch(Senha);
         }
+        public virtual ICollection<Favorito>? Favoritos { get; set; }
+
+        public virtual ICollection<Matricula>? Matriculas { get; set; }
+
+        public virtual ICollection<MatriculaMestre>? MatriculaMestreMestre { get; set; }
+
+        public virtual ICollection<MatriculaMestre>? MatriculaMestreAprendiz { get; set; }
     }
 
 

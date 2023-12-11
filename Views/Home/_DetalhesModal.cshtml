@@ -1,0 +1,193 @@
+﻿@using System.Security.Claims;
+@using System.Linq.Expressions;
+
+
+<div>
+    <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;">
+        <div class="mt-2 pb-2">
+            <img src="@Url.Content(Model.Usuario.CaminhoFoto)" alt="User Icon" style="width: 100px; height: 100px; border-radius: 50%;" />
+        </div>
+
+
+        <p> @Model.Usuario.Nome</p>
+
+
+        <p style="margin: 0;">
+            <a href="mailto:@Model.Usuario.Email" target="_blank" style="text-decoration: none;">
+                <img width="30" height="30" src="https://img.icons8.com/papercut/60/new-post.png" alt="e-mail" style="vertical-align: middle; margin-right: 1px;" />
+                <span>@Model.Usuario.Email</span>
+            </a>
+        </p>
+
+        @if (Model?.Usuario != null)
+        {
+            if (@Model.Usuario.Telefone != null)
+            {
+                <p style="margin: 0;">
+                    <a href="https://api.whatsapp.com/send?phone=@Model.Usuario.Telefone" target="_blank" style="text-decoration: none;">
+                        <img width="35" height="35" src="https://img.icons8.com/color/48/whatsapp--v1.png" alt="whatsapp--v1" style="vertical-align: middle; margin-right: 1px;" />
+                        <span id="telefone">@Model.Usuario.Telefone</span>
+                    </a>
+                </p>
+            }
+        }
+        <div style="display: flex; flex-direction: column; align-items: start; justify-content: start; text-align: justify;" class="mt-3">
+            <div class="row">
+                <div class="col-1"></div>
+                <div class="col-10 mt-3">
+                    <h6>Minha Experiência</h6>
+                </div>
+                <div class="col-1"></div>
+                <div class="col-1"></div>
+                <div class="col-10">
+                    <p>@(Model?.Biografia ?? "N/A")</p>
+                </div>
+                <div class="col-1"></div>
+                <div class="col-1"></div>
+                <div class="col-10 mt-3">
+                    <h6>Informações Adicionais</h6>
+                </div>
+                <div class="col-1"></div>
+                <div class="col-1"></div>
+                <div class="col-10">
+                    @if (Model?.Tematica != null)
+                    {
+                        <p>Temática: @Model.Tematica.Descricao</p>
+                    }
+                    @if (Model?.Tematica?.Categoria != null)
+                    {
+                        <p>Categoria: @Model.Tematica.Categoria.Descricao</p>
+                    }
+                    @if (Model?.Modelo != null)
+                    {
+                        <p>Modelo: @Model.Modelo.Descricao</p>
+                    }
+                </div>
+                <div class="col-1"></div>
+                <div class="col-1"></div>
+                <div class="col-10 align-items-center text-center">
+                 @*   @{
+                        var idUsuario = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+                        if (!string.IsNullOrEmpty(idUsuario))
+                        {
+                            int idUsuarioInt = Convert.ToInt32(idUsuario);
+
+                            // Verifica se há uma matrícula para o usuário na temática do mestre
+                            bool matriculaExistente = Model.Matriculas.Any(m => m.AprendizId == idUsuarioInt && m.TematicaMestreId == Model.Id);
+
+                            // Define o texto e estado do botão com base na existência da matrícula
+                            string buttonText = matriculaExistente ? "Matrícula Solicitada" : "Tenho Interesse";
+                            bool isButtonDisabled = matriculaExistente;
+
+                            <div class="col-12">
+                                @if (User.Identity.IsAuthenticated && User.IsInRole("Aprendiz"))
+                                {
+                                    <button class="btn btn-primary" disabled="@isButtonDisabled">@buttonText</button>
+                                }
+                            </div>
+                        }
+                    }*@
+
+                   @* @if (User.Identity.IsAuthenticated)
+                    {
+                        if (permissoes == "3" && !favoritado)
+                        {
+                            <button class="btn btn-primary" onclick="solicitarMatricula('@Model.Id')">Tenho Interesse</button>
+                        }
+                        
+                    }*@
+                   @* @if (User.Identity.IsAuthenticated)
+                    {
+                        var permissoes = User.Claims.First(c => c.Type == "Permissoes").Value;
+                        if (permissoes == "3")
+                        {
+                            var idUsuario = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+                            // Converte a string para uma expressão de árvore de expressão
+                            Expression<Func<Favorito, bool>> predicate = null;
+
+                            if (!string.IsNullOrEmpty(idUsuario))
+                            {
+                                var parameter = Expression.Parameter(typeof(Favorito), "f");
+                                var idUsuarioInt = Convert.ToInt32(idUsuario);
+
+                                var condition = Expression.AndAlso(
+                                Expression.Equal(Expression.Property(parameter, "AprendizId"), Expression.Constant(idUsuarioInt)),
+                                Expression.Equal(Expression.Property(parameter, "TematicaMestreId"), Expression.Constant(Model.Id))
+                                );
+
+                                predicate = Expression.Lambda<Func<Favorito, bool>>(condition, parameter);
+                            }
+
+                            // Usa a expressão na coleção de Favoritos
+                            bool favoritado = Model?.Favoritos?.AsQueryable().Any(predicate) ?? false;
+
+                            <button class="btn btn-primary" id="favoritarButton" onclick="favoritarDesfavoritar('@Model.Id', '@idUsuario', '@favoritado')">@(favoritado ? "Favoritado" : "Favoritar")</button>
+                        }
+
+                       
+                    }*@
+                </div>
+                </div>
+
+                </div>
+                <div class="col-1"></div>
+
+
+            </div>
+        </div>
+
+    </div>
+
+    @* @if (Model?.Tematica != null)
+    {
+    <p>Temática: @Model.Tematica.Descricao</p>
+    @if (Model.Tematica.Categoria != null)
+    {
+    <p>Categoria: @Model.Tematica.Categoria.Descricao</p>
+    }
+    }
+
+    @if (Model?.Modelo != null)
+    {
+    <p>Modelo: @Model.Modelo.Descricao</p>
+    }
+    *@
+
+    <!-- Adicione mais informações conforme necessário -->
+</div>
+
+<script>
+    $(document).ready(function () {
+        // Aplica a máscara ao elemento com o ID "telefone"
+        $('#telefone').inputmask('(99) 99999-9999');
+    });
+
+    function favoritarDesfavoritar(temaId, idUsuario, favoritado) {
+        // Aqui você pode adicionar lógica adicional antes de enviar a solicitação ao servidor, se necessário
+        // ...
+
+        // Envia a solicitação ao servidor para favoritar/desfavoritar
+        $.ajax({
+            type: 'POST',
+            url: '/Home/FavoritarDesfavoritar', // Substitua pela URL correta do seu controlador
+            data: { temaId: temaId, aprendizId: idUsuario, favoritado: favoritado },
+            success: function (result) {
+                if (result.success) {
+                    // Atualize o botão ou forneça feedback ao usuário, se necessário
+                    $('#favoritarButton').text(result.favoritado ? 'Favoritado' : 'Favoritar');
+                    alert(result.favoritado ? 'Tema favoritado!' : 'Tema removido dos favoritos!');
+                } else {
+                    // Trate erros ou forneça feedback ao usuário
+                    alert(result.message || 'Ocorreu um erro ao processar a solicitação.');
+                }
+            },
+            error: function () {
+                // Trate erros ou forneça feedback ao usuário
+                alert('Ocorreu um erro ao processar a solicitação.');
+            }
+        });
+    }
+</script>
+
+

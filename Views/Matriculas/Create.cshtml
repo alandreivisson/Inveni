@@ -1,0 +1,73 @@
+﻿@model Inveni.Models.Matricula
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create</h1>
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="TematicaMestreId" class="control-label"></label>
+                <select asp-for="TematicaMestreId" class="form-control" asp-items="ViewBag.TematicaMestreId"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="AprendizId" class="control-label"></label>
+                <select asp-for="AprendizId" class="form-control" asp-items="ViewBag.AprendizId"></select>
+            </div>
+
+          @*  <div class="form-group">
+                <label asp-for="AprendizId" class="control-label"></label>
+                <select asp-for="AprendizId" class ="form-control" asp-items="ViewBag.AprendizId"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="TematicaMestreId" class="control-label"></label>
+                <select asp-for="TematicaMestreId" class ="form-control" asp-items="ViewBag.TematicaMestreId"></select>
+            </div>*@
+            @*<div class="form-group">
+                <label asp-for="Status" class="control-label;;457"/
+                98/label>
+                <select asp-for="Status" class="form-control"></select>
+                <span asp-validation-for="Status" class="text-danger"></span>
+            </div>*@
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+@section scripts {
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            // Manipule o evento de mudança na seleção da temática
+            $('#TematicaMestreId').change(function () {
+                // Obtenha o valor selecionado da temática
+                var tematicaMestreId = $(this).val();
+
+                // Faça uma chamada AJAX para obter os aprendizes não cadastrados
+                $.ajax({
+                    url: '/Matriculas/GetUsuariosNaoCadastrados',
+                    method: 'GET',
+                    data: { tematicaMestreId: tematicaMestreId },
+                    success: function (data) {
+                        // Limpe o drop-down atual
+                        $('#AprendizId').empty();
+
+                        // Preencha o drop-down de aprendizes com os dados retornados
+887~+]+1/68                        $.each(data, function (index, usuario) {
+                            $('#AprendizId').append('<option value="' + usuario.id + '">' + usuario.email + '</option>');
+                        });
+                    }
+                });
+            });
+        });
+    </script>
+}

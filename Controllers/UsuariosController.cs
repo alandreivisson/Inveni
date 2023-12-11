@@ -13,6 +13,7 @@ using Inveni.ViewModel;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using System.Drawing;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.CodeAnalysis.Scripting;
 
 namespace Inveni.Controllers
 {
@@ -145,114 +146,77 @@ namespace Inveni.Controllers
         }
 
         [HttpPost]
-        [Authorize (Policy = "Anonimo")]
+        [Authorize(Policy = "Anonimo")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Acesso(UsuarioVM login)
         {
-            //Metodo de criptografia
-            //var senhaCriptografada = Funcoes.Criptografar(login.Senha);
-            Usuario usu = _context.Usuario.Where( t => t.Email == login.Email).FirstOrDefault();
+            // Buscar o usuário pelo email
+            Usuario usu = _context.Usuario.FirstOrDefault(t => t.Email == login.Email);
 
-            
-            // Verificar credenciais e autenticar o usuário
+            // Verificar se o usuário existe
             if (usu != null)
             {
-                if (login.Opcoes.Equals("2"))
+                // Verificar se as credenciais correspondem aos perfis permitidos
+                if ((login.Opcoes == "2" && _context.UsuarioPerfil.Any(up => up.UsuarioId == usu.Id && (up.PerfilId == 2 || up.PerfilId == 1))) ||
+                    (login.Opcoes != "2" && _context.UsuarioPerfil.Any(up => up.UsuarioId == usu.Id && (up.PerfilId == 3 || up.PerfilId == 1))))
                 {
-                    if (_context.UsuarioPerfil.Any(up => up.UsuarioId == usu.Id && (up.PerfilId == 2 || up.PerfilId == 1)))
+                    // Verificar se a senha fornecida corresponde ao hash armazenado no banco de dados
+                    if (BCrypt.Net.BCrypt.Verify(login.Senha, usu.Senha))
                     {
-                        usu = null;
-                        usu = _context.Usuario
-                        .Where(t => t.Email == login.Email && t.Senha == login.Senha)
-                        .Join(_context.UsuarioPerfil
-                            .Where(usuarioPerfil => usuarioPerfil.PerfilId == 1 || usuarioPerfil.PerfilId == 2),
-                            usuario => usuario.Id,
-                            usuarioPerfil => usuarioPerfil.UsuarioId,
-                            (usuario, usuarioPerfil) => usuario)
-                        .FirstOrDefault();
-
-                        if (usu != null && !usu.Ativo) 
-                        { 
-                            ModelState.AddModelError("", "Usuário está com o perfil inativado, contatar suporte para mais informações!");
-                            return View();
-                        }
-                    }
-                    else 
-                    {
-                        ModelState.AddModelError("", "Usuário não está cadastrado como Mestre!");
-                        return View();
-                    }
-                }
-                else
-                {
-                    if (_context.UsuarioPerfil.Any(up => up.UsuarioId == usu.Id && (up.PerfilId == 3 || up.PerfilId == 1)))
-                    {
-                        usu = null;
-                        usu = _context.Usuario
-                        .Where(t => t.Email == login.Email && t.Senha == login.Senha)
-                        .Join(_context.UsuarioPerfil
-                            .Where(usuarioPerfil => usuarioPerfil.PerfilId == 1 || usuarioPerfil.PerfilId == 3),
-                            usuario => usuario.Id,
-                            usuarioPerfil => usuarioPerfil.UsuarioId,
-                            (usuario, usuarioPerfil) => usuario)
-                        .FirstOrDefault();
-
-                        if (usu != null && !usu.Ativo)
+                        // Verificar se o usuário está ativo
+                        if (!usu.Ativo)
                         {
                             ModelState.AddModelError("", "Usuário está com o perfil inativado, contatar suporte para mais informações!");
                             return View();
                         }
-                    }
-                    else
-                    {
-                        ModelState.AddModelError("", "Usuário não está cadastrado como Aprendiz!");
-                        return View();
-                    }
-                }
-                if (usu != null)
+
+                        // Obter as permissões do usuário
+                        var permissoes = _context.UsuarioPerfil
+                            .Where(up => up.UsuarioId == usu.Id)
+                            .Join(
+                                _context.Perfil,
+                                up => up.PerfilId,
+                                perfil => perfil.Id,
+                                (up, perfil) => new
+                                {
+                                    PerfilId = perfil.Id
+                                }
+                            )
+                            .Select(result => result.PerfilId.ToString())
+                            .FirstOrDefault();
+
+                        // Criar as reivindicações para o usuário autenticado
+                        var claims = new List<Claim>
                 {
-                    var permissoes = _context.UsuarioPerfil
-                    .Where(up => up.UsuarioId == usu.Id)
-                    .Join(
-                        _context.Perfil,
-                        up => up.PerfilId,
-                        perfil => perfil.Id,
-                        (up, perfil) => new
+                    new Claim(ClaimTypes.Name, usu.Id.ToString()),
+                    new Claim(ClaimTypes.NameIdentifier, usu.Nome),
+                    new Claim("Permissoes", permissoes)
+                    // Adicione outras reivindicações conforme necessário
+                };
+
+                        // Criar a identidade e propriedades de autenticação
+                        var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+                        var authProperties = new AuthenticationProperties
                         {
-                            PerfilId = perfil.Id
-                        }
-                    )
-                    .Select(result => result.PerfilId).FirstOrDefault().ToString();
+                            IsPersistent = false // Defina como verdadeiro se desejar manter o usuário autenticado
+                        };
 
-                    var claims = new List<Claim>
-                     {
-                        new Claim(ClaimTypes.Name, usu.Id.ToString()),
-                        new Claim(ClaimTypes.NameIdentifier, usu.Nome),
-                        new Claim("Permissoes", permissoes)
-                // Adicione outras reivindicações conforme necessário
-                    };
+                        // Autenticar o usuário
+                        await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity), authProperties);
 
-                    var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-                    var authProperties = new AuthenticationProperties
-                    {
-                        IsPersistent = false // Defina como verdadeiro se desejar manter o usuário autenticado
-                    };
-
-                    await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity), authProperties);
-
-                    return RedirectToAction("Index", "Home");
+                        // Redirecionar para a página inicial
+                        return RedirectToAction("Index", "Home");
+                    }
                 }
                 else
                 {
-                    ModelState.AddModelError("", "Usuário ou Senha Inválidos!");
+                    ModelState.AddModelError("", login.Opcoes == "2" ? "Usuário não está cadastrado como Mestre!" : "Usuário não está cadastrado como Aprendiz!");
                     return View();
                 }
             }
-            else
-            {
-                ModelState.AddModelError("", "Usuário não encontrado!");
-                return View();
-            }
+
+            ModelState.AddModelError("", "Usuário ou Senha Inválidos!");
+            return View();
         }
         public IActionResult ErrorPermissaoAcesso()
         {
@@ -312,6 +276,73 @@ namespace Inveni.Controllers
 
             // Redireciona para a página inicial
             return RedirectToAction("Index", "Home");
+        }
+
+
+        [HttpGet]
+        public IActionResult Cadastrar()
+        {
+            return View();
+        }
+
+        // POST: /Usuarios/Cadastrar
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Cadastrar([Bind("Nome,Localizacao,Email,Senha")] Usuario usuario)
+        {
+
+            if (!ModelState.IsValid)
+            {
+                return View();
+            }
+
+            if (!usuario.ValidarPasswordComplexity())
+            {
+                ModelState.AddModelError("Senha", "A senha deve ter pelo menos 8 caracteres, uma letra minúscula, uma letra maiúscula, um dígito e um caractere especial.");
+                return View();
+            }
+
+            if (await _context.Usuario.AnyAsync(u => u.Email == usuario.Email))
+            {
+                ModelState.AddModelError("Email", "Este endereço de e-mail já está registrado.");
+                return View();
+            }
+
+            if (usuario is null)
+            {
+                return BadRequest("O formulário não foi preenchido corretamente.");
+            }
+
+            usuario.Ativo = true;
+
+            if (!string.IsNullOrEmpty(usuario.Senha))
+            {
+                usuario.Senha = BCrypt.Net.BCrypt.HashPassword(usuario.Senha);
+            }
+
+            await _context.Usuario.AddAsync(usuario).ConfigureAwait(false);
+
+            await _context.SaveChangesAsync().ConfigureAwait(false);
+
+            int perfilId;
+            if (int.TryParse(Request.Form["perfilId"], out perfilId))
+            {
+
+                int usuarioId = usuario.Id;
+
+                UsuarioPerfil usuarioPerfil = new UsuarioPerfil
+                {
+                    UsuarioId = usuarioId,
+                    PerfilId = perfilId
+                };
+
+                await _context.UsuarioPerfil.AddAsync(usuarioPerfil);
+
+                await _context.SaveChangesAsync();
+            }
+
+
+            return RedirectToAction("Index");
         }
     }
 }

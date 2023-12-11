@@ -10,7 +10,6 @@ namespace Inveni.Models
         public required int PerfilId { get; set; }
         public required virtual Usuario? Usuario { get; set; }
         public required virtual Perfil? Perfil { get; set; }
-
     }
 }
     

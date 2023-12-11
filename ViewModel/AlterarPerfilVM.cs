@@ -23,5 +23,10 @@ namespace Inveni.ViewModel
         [Required(ErrorMessage = "O campo {0} é de preenchimento obrigatório.")]
         public required string Biografia { get; set; }
 
+        [Display(Name = "Foto")]
+        public IFormFile? Foto { get; set; }
+        [Display(Name = "Foto do Perfil")]
+        public string? CaminhoFoto { get; set; }
+
     }
 }

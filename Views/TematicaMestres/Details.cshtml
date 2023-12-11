@@ -6,7 +6,7 @@
 
 <h1>Details</h1>
 
-<div>
+<@*div>
     <h4>TematicaMestre</h4>
     <hr />
     <dl class="row">
@@ -47,7 +47,21 @@
             @Html.DisplayFor(model => model.Modelo.Descricao)
         </dd>
     </dl>
+</div>*@
+<div>
+    @foreach (var matricula in Model.Matriculas)
+    {
+            <p>Aprendiz Nome: @(matricula.Aprendiz != null ? matricula.Aprendiz.Nome : "N/A")</p>
+                <p>Aprendiz Email: @(matricula.Aprendiz != null ? matricula.Aprendiz.Email : "N/A")</p>
+                <!-- Adicione aqui outros detalhes da matrícula se necessário -->
+        @*  <a asp-action="FinalizarMatricula" asp-route-id="@matricula.Id">
+            Finalizar Matrícula de @matricula.Aprendiz.Nome
+        </a>*@
+    }
 </div>
+
+
+    <a asp-action="Index">Back to List</a>
 <div>
     @Html.ActionLink("Edit", "Edit", new { /* id = Model.PrimaryKey */ }) |
     <a asp-action="Index">Back to List</a>

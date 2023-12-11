@@ -44,18 +44,16 @@ namespace Inveni.Controllers
             {
                 return NotFound();
             }
-
-            var tematicaMestre = await _context.TematicaMestre
-                .Include(t => t.Tematica)
-                .Include(t => t.Usuario)
-                .Include(t => t.Modelo)
-                .FirstOrDefaultAsync(m => m.UsuarioId == id);
-            if (tematicaMestre == null)
+            var matriculas = await _context.TematicaMestre
+             .Include(t => t.Matriculas)  // Inclui informações sobre as matrículas da temática
+             .Include(t => t.Usuarios)    // Inclui informações sobre os usuários
+             .FirstOrDefaultAsync(t => t.Id == id && t.UsuarioId == Convert.ToInt32(User.Identity.Name));
+            if (matriculas == null)
             {
                 return NotFound();
             }
 
-            return View(tematicaMestre);
+            return View(matriculas);
         }
 
         // GET: TematicaMestres/Create
@@ -88,16 +86,17 @@ namespace Inveni.Controllers
             ViewBag.TematicaDescricao = _context.Tematica.FirstOrDefault(t => t.Id == tematicaMestre.TematicaId)?.Descricao;
             return View(tematicaMestre);
         }
-
         // GET: TematicaMestres/Edit/5
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null)
+        // GET: TematicaMestres/Edit/5
+        // GET: TematicaMestres/Edit/5
+        public async Task<IActionResult> Edit(string id) {
+            int encodeId = Funcoes.DecodeId(id);
+            if (encodeId == null)
             {
                 return NotFound();
             }
 
-            var tematicaMestre = await _context.TematicaMestre.FindAsync(id);
+            var tematicaMestre = await _context.TematicaMestre.FindAsync(encodeId);
             if (tematicaMestre == null)
             {
                 return NotFound();
@@ -108,17 +107,18 @@ namespace Inveni.Controllers
             ViewData["ModeloId"] = new SelectList(_context.Modelo, "Id", "Descricao", tematicaMestre.ModeloId);
             ViewData["TematicaDescricao"] = _context.Tematica.FirstOrDefault(t => t.Id == tematicaMestre.TematicaId)?.Descricao;
 
+            // Redirecionar para a ação de edição com o novo formato de URL
             return View(tematicaMestre);
         }
 
         // POST: TematicaMestres/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Biografia,TematicaId,UsuarioId,ModeloId,Ativo")] TematicaMestre tematicaMestre)
-        {
-            if (id != tematicaMestre.Id)
+        public async Task<IActionResult> Edit(string? id, [Bind("Id,Biografia,TematicaId,UsuarioId,ModeloId,Ativo")] TematicaMestre tematicaMestre) {
+            // Decodifique o ID
+            int decodeId = Funcoes.DecodeId(id);
+
+            if (decodeId != tematicaMestre.Id)
             {
                 return NotFound();
             }
@@ -151,10 +151,12 @@ namespace Inveni.Controllers
             return View(tematicaMestre);
         }
 
+
+
         // GET: TematicaMestres/Delete/5
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null)
+        public async Task<IActionResult> Delete(string? id) {
+            int encodeId = Funcoes.DecodeId(id);
+            if (encodeId == null)
             {
                 return NotFound();
             }
@@ -163,7 +165,7 @@ namespace Inveni.Controllers
                 .Include(t => t.Tematica)
                 .Include(t => t.Usuario)
                 .Include(t => t.Modelo)
-                .FirstOrDefaultAsync(m => m.Id == id); // Use m.Id para comparar com o id passado
+                .FirstOrDefaultAsync(m => m.Id == encodeId); // Use m.Id para comparar com o id passado
             if (tematicaMestre == null)
             {
                 return NotFound();
@@ -174,9 +176,9 @@ namespace Inveni.Controllers
 
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            var tematicaMestre = await _context.TematicaMestre.FindAsync(id);
+        public async Task<IActionResult> DeleteConfirmed(string? id) {
+            int decodeId = Funcoes.DecodeId(id);
+            var tematicaMestre = await _context.TematicaMestre.FindAsync(decodeId);
             if (tematicaMestre != null)
             {
                 _context.TematicaMestre.Remove(tematicaMestre);
@@ -204,6 +206,20 @@ namespace Inveni.Controllers
             {
                 return Json("n");
             }
+        }
+        [HttpPost]
+        public async Task<IActionResult> MatriculasTematicas(int id) {
+            var matriculas = await _context.TematicaMestre
+         .Include(t => t.Matriculas)  // Inclui informações sobre as matrículas da temática
+         .Include(t => t.Usuarios)    // Inclui informações sobre os usuários
+         .FirstOrDefaultAsync(t => t.Id == id && t.UsuarioId == int.Parse(User.Identity.Name));
+
+            if (matriculas == null)
+            {
+                return NotFound();
+            }
+
+            return View(matriculas);
         }
     }
 }

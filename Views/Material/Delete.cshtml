@@ -1,0 +1,37 @@
+﻿@model Inveni.Models.Material
+
+@{
+    ViewData["Title"] = "Delete";
+}
+
+<div class="row">
+    <div class="col-3"></div>
+    <div class="col-6">
+        <div class="card">
+            <div class="card-body pt-5">
+                <form asp-action="Delete">
+                    <dl class="row">
+                        <dt class="col-sm-4">
+                            @Html.DisplayNameFor(model => model.NomeArquivo)
+                        </dt>
+                        <dd class="col-sm-8">
+                            @Html.DisplayFor(model => model.NomeArquivo)
+                        </dd>
+                        <div class="form-group col-12 mt-3 text-center">
+                            <input type="hidden" asp-for="Id" />
+                            <input type="submit" value="Deletar" class="btn btn-warning" />
+                            <a asp-action="Index" class="btn btn-secondary ms-2">Voltar</a>
+                        </div>
+                    </dl>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="col-3"></div>
+</div>
+
+
+
+
+
+

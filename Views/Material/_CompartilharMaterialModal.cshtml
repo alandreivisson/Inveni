@@ -1,0 +1,42 @@
+﻿<!-- _CompartilharMaterialModal.cshtml -->
+@model Inveni.ViewModel.CompartilharMaterialViewModel
+
+<div class="">
+    <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;">
+        <form asp-action="CompartilharMaterial" asp-route-id="@Model.MaterialId" method="post">
+            <div class="form-group">
+                <label>@Model.Material.NomeArquivo</label>
+            </div>
+            <div class="form-group">
+
+                <label>Selecione os aprendizes para compartilhar:</label>
+                @foreach (var aprendiz in Model.Aprendizes)
+                {
+
+                    <div class="form-check row">
+                        <div class="col-1">
+                            <input class="form-check-input" type="checkbox" name="AprendizesSelecionados" value="@aprendiz.Id">
+                        </div>
+                        <div class="col-1">
+                            @if (!string.IsNullOrEmpty(aprendiz.CaminhoFoto))
+                            {
+                                <img src="@Url.Content(aprendiz.CaminhoFoto)" alt="User Icon" style="width: 25px; height: 25px; border-radius: 50%;" />
+                            }
+                        </div>
+                        <div class="col-8">
+                            <label class="form-check-label">
+                                @aprendiz.Nome
+                            </label>
+                        </div>
+                    </div>
+                }
+            </div>
+            <button type="submit" class="btn btn-dark text-white">Enviar</button>
+        </form>
+    </div>
+</div>
+
+@*Joel Natan*@
+
+
+

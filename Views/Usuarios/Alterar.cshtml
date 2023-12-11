@@ -29,8 +29,19 @@
     <div class="col-6">
         <div class="card">
             <div class="card-body">
-                <form asp-action="Alterar">
+                <form asp-action="Alterar" method="post" enctype="multipart/form-data">
                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <div class="form-group mt-3 text-center align-items-center">
+                        <input asp-for="@Model.Foto" type="file" class="form-control" id="fileInput" style="display: none;" onchange="displayImage(this)" />
+                        <span asp-validation-for="@Model.Foto" class="text-danger"></span>
+
+                        <!-- Imagem circular -->
+                        <div id="imageContainer" class="mt-2" style="width: 200px; height: 200px; overflow: hidden; border-radius: 50%; background-color: #fff; cursor: pointer; position: relative; display: flex; align-items: center; justify-content: center;">
+                            <img id="previewImage" src="@Url.Content(Model.CaminhoFoto)" alt="Foto do Perfil" style="max-width: 100%; max-height: 100%; object-fit: cover; border-radius: 50%;" />
+                        </div>
+
+                    </div>
+
                     <div class="form-group">
                         <label asp-for="@Model.Nome" class="control-label"></label>
                         <input asp-for="@Model.Nome" class="form-control" />
@@ -72,4 +83,25 @@
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
+    <script>
+        function displayImage(input) {
+            var preview = document.getElementById('previewImage');
+            var container = document.getElementById('imageContainer');
+
+            var file = input.files[0];
+            var reader = new FileReader();
+
+            reader.onload = function (e) {
+                preview.src = e.target.result;
+            };
+
+            reader.readAsDataURL(file);
+        }
+
+        // Ativar a escolha de arquivo ao clicar na imagem
+        document.getElementById('imageContainer').addEventListener('click', function () {
+            document.getElementById('fileInput').click();
+        });
+    </script>
+
 }

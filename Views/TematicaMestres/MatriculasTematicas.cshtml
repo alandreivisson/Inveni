@@ -1,0 +1,41 @@
+﻿@model Inveni.Models.TematicaMestre
+
+@{
+    ViewData["Title"] = "Matriculas";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>TematicaMestre</h4>
+    <hr />
+    <dl class="row">
+        <!-- ... Seu código existente ... -->
+    </dl>
+</div>
+
+<div>
+
+    <!-- Botão para ver aprendizes -->
+    @*<a asp-action="VerAprendizes" asp-route-id="@Model.Id">
+        Ver Aprendizes
+    </a> |
+
+    <!-- Botão para matricular novo -->
+    <a asp-action="MatricularNovo" asp-route-id="@Model.Id">
+        Matricular Novo
+    </a>*@
+
+    <!-- Botão para finalizar matrícula -->
+    @foreach (var matricula in Model.Matriculas)
+    {
+       @* <p>@matricula.Usuarios.Nome</p>
+        <p>@matricula.Usuarios.Email</p>*@
+        <!-- Adicione aqui outros detalhes da matrícula se necessário -->
+      @*  <a asp-action="FinalizarMatricula" asp-route-id="@matricula.Id">
+            Finalizar Matrícula de @matricula.Aprendiz.Nome
+        </a>*@
+    }
+
+    <a asp-action="Index">Back to List</a>
+</div>

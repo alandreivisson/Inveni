@@ -1,0 +1,71 @@
+﻿@model IEnumerable<Inveni.Models.Matricula>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table id="matriculaTable" class="table">
+    <thead>
+        <tr>
+            <th>Status</th>
+            <th>Aprendiz</th>
+            <th>Temática</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@Html.DisplayFor(modelItem => item.Status)</td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Aprendiz.Nome) <br />
+                    @Html.DisplayFor(modelItem => item.Aprendiz.Email)
+                </td>
+                <td>@Html.DisplayFor(modelItem => item.TematicaMestre.Tematica.Descricao)</td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+@section scripts {
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css" />
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            // Manipule o evento de mudança na seleção da temática
+            $('#TematicaMestreId').change(function () {
+                // Obtenha o valor selecionado da temática
+                var tematicaMestreId = $(this).val();
+
+                // Faça uma chamada AJAX para obter os aprendizes não cadastrados
+                $.ajax({
+                    url: '/SeuControlador/GetUsuariosNaoCadastrados',
+                    method: 'GET',
+                    data: { tematicaMestreId: tematicaMestreId },
+                    success: function (data) {
+                        // Limpe o drop-down atual
+                        $('#AprendizId').empty();
+
+                        // Preencha o drop-down de aprendizes com os dados retornados
+                        $.each(data, function (index, usuario) {
+                            $('#AprendizId').append('<option value="' + usuario.id + '">' + usuario.email + '</option>');
+                        });
+                    }
+                });
+            });
+        });
+    </script>
+}

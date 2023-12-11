@@ -54,14 +54,14 @@ namespace Inveni.Controllers
         }
 
         // GET: Tematicas/Edit/5
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null || _context.Tematica == null)
+        public async Task<IActionResult> Edit(string id) {
+            int encodeId = Funcoes.DecodeId(id);
+            if (encodeId == null || _context.Tematica == null)
             {
                 return NotFound();
             }
 
-            var tematica = await _context.Tematica.FindAsync(id);
+            var tematica = await _context.Tematica.FindAsync(encodeId);
             if (tematica == null)
             {
                 return NotFound();
@@ -75,9 +75,10 @@ namespace Inveni.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Descricao,CategoriaId")] Tematica tematica)
+        public async Task<IActionResult> Edit(string? id, [Bind("Id,Descricao,CategoriaId")] Tematica tematica)
         {
-            if (id != tematica.Id)
+            int decodeId = Funcoes.DecodeId(id);
+            if (decodeId != tematica.Id)
             {
                 return NotFound();
             }

@@ -19,4 +19,10 @@ html {
 
 body {
   margin-bottom: 60px;
+
+  background-image: url("../imagens/inveni.png");
+  height:120vh;
+  background-repeat: no-repeat;
+  background-size:cover;
+  background-position:center;
 }

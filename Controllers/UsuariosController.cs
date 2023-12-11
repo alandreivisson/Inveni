@@ -77,21 +77,21 @@ namespace Inveni.Controllers
 
         // GET: Usuarios/Edit/5
         [Authorize(Policy = "Administrador")]
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null || _context.Usuario == null)
+        public async Task<IActionResult> Edit(string id) {
+            int encodeId = Funcoes.DecodeId(id);
+            if (encodeId == null || _context.Usuario == null)
             {
                 return NotFound();
             }
 
-            var usuario = await _context.Usuario.FindAsync(id);
+            var usuario = await _context.Usuario.FindAsync(encodeId);
             if (usuario == null)
             {
                 return NotFound();
             }
 
-            ViewData["UsuarioNome"] = _context.Usuario.FirstOrDefault(t => t.Id == id)?.Nome;
-            ViewData["UsuarioEmail"] = _context.Usuario.FirstOrDefault(t => t.Id == id)?.Email;
+            ViewData["UsuarioNome"] = _context.Usuario.FirstOrDefault(t => t.Id == encodeId)?.Nome;
+            ViewData["UsuarioEmail"] = _context.Usuario.FirstOrDefault(t => t.Id == encodeId)?.Email;
             return View(usuario);
         }
 
@@ -101,9 +101,10 @@ namespace Inveni.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Policy = "Administrador")]
-        public async Task<IActionResult> Edit(int id, [Bind("Id, Email, Nome, Ativo, Senha")] Usuario usuario)
+        public async Task<IActionResult> Edit(string? id, [Bind("Id, Email, Nome, Ativo, Senha")] Usuario usuario)
         {
-            if (id != usuario.Id)
+            int decodeId = Funcoes.DecodeId(id);
+            if (decodeId != usuario.Id)
             {
                 return NotFound();
             }
@@ -128,8 +129,8 @@ namespace Inveni.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["UsuarioNome"] = _context.Usuario.FirstOrDefault(t => t.Id == id)?.Nome;
-            ViewData["UsuarioEmail"] = _context.Usuario.FirstOrDefault(t => t.Id == id)?.Email;
+            ViewData["UsuarioNome"] = _context.Usuario.FirstOrDefault(t => t.Id == decodeId)?.Nome;
+            ViewData["UsuarioEmail"] = _context.Usuario.FirstOrDefault(t => t.Id == decodeId)?.Email;
             return View(usuario);
         }
 
@@ -228,7 +229,8 @@ namespace Inveni.Controllers
                      {
                         new Claim(ClaimTypes.Name, usu.Id.ToString()),
                         new Claim(ClaimTypes.NameIdentifier, usu.Nome),
-                        new Claim("Permissoes", permissoes)
+                        new Claim("Permissoes", permissoes),
+                        new Claim("CaminhoFoto", usu.CaminhoFoto)
                 // Adicione outras reivindicações conforme necessário
                     };
 
@@ -265,7 +267,6 @@ namespace Inveni.Controllers
 
 
         [HttpGet]
-        [Authorize(Policy = "Administrador")]
         public async Task<IActionResult> Alterar()
         {
             var usuarioLogado = await _context.Usuario.FindAsync(int.Parse(User.Identity.Name));
@@ -280,17 +281,16 @@ namespace Inveni.Controllers
                 Nome = usuarioLogado.Nome,
                 Email = usuarioLogado.Email,
                 Telefone = usuarioLogado.Telefone,
-                Biografia = usuarioLogado.Biografia
+                Biografia = usuarioLogado.Biografia,
+                CaminhoFoto = usuarioLogado.CaminhoFoto
             };
 
             return View(usuario);
         }
 
         [HttpPost]
-        [Authorize(Policy = "Administrador")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Alterar([FromForm] AlterarPerfilVM usuario)
-        {
+        public async Task<IActionResult> Alterar([FromForm] AlterarPerfilVM usuario) {
             if (!ModelState.IsValid)
             {
                 return View(usuario);
@@ -303,6 +303,42 @@ namespace Inveni.Controllers
                 return NotFound();
             }
 
+            // Verifique se a pasta do usuário existe, se não, crie
+            var userIdFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "imagens", usuarioBD.Id.ToString());
+            if (!Directory.Exists(userIdFolder))
+            {
+                Directory.CreateDirectory(userIdFolder);
+            }
+
+            // Salve o arquivo da foto no diretório do usuário
+            if (usuario.Foto != null)
+            {
+                var fileName = Path.GetFileName(usuario.Foto.FileName);
+                var filePath = Path.Combine(userIdFolder, fileName);
+
+                using (var fileStream = new FileStream(filePath, FileMode.Create))
+                {
+                    await usuario.Foto.CopyToAsync(fileStream);
+                }
+                // Atualize o caminho da foto no usuário
+                usuarioBD.CaminhoFoto = $"~/imagens/{usuarioBD.Id}/{fileName}";
+
+            }
+
+            var oldClaim = User.Claims.FirstOrDefault(c => c.Type == "CaminhoFoto");
+            if (oldClaim != null)
+            {
+                var identity = (ClaimsIdentity)User.Identity;
+                identity.RemoveClaim(oldClaim);
+            }
+
+            // Adicionar a nova claim com o caminho da foto atualizado
+            var newClaim = new Claim("CaminhoFoto", usuarioBD.CaminhoFoto);
+            ((ClaimsIdentity)User.Identity).AddClaim(newClaim);
+
+            // Atualizar a identidade do usuário
+            await HttpContext.SignInAsync(User);
+
             usuarioBD.Nome = usuario.Nome;
             usuarioBD.Telefone = usuario.Telefone;
             usuarioBD.Biografia = usuario.Biografia;
@@ -313,5 +349,7 @@ namespace Inveni.Controllers
             // Redireciona para a página inicial
             return RedirectToAction("Index", "Home");
         }
+
+
     }
 }

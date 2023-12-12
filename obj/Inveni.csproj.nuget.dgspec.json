@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Leon Freitas\\Source\\Repos\\Inveni\\Inveni.csproj": {}
+    "C:\\Users\\Leon Freitas\\source\\repos\\alandreivisson\\Inveni\\Inveni.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Leon Freitas\\Source\\Repos\\Inveni\\Inveni.csproj": {
+    "C:\\Users\\Leon Freitas\\source\\repos\\alandreivisson\\Inveni\\Inveni.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Leon Freitas\\Source\\Repos\\Inveni\\Inveni.csproj",
+        "projectUniqueName": "C:\\Users\\Leon Freitas\\source\\repos\\alandreivisson\\Inveni\\Inveni.csproj",
         "projectName": "Inveni",
-        "projectPath": "C:\\Users\\Leon Freitas\\Source\\Repos\\Inveni\\Inveni.csproj",
+        "projectPath": "C:\\Users\\Leon Freitas\\source\\repos\\alandreivisson\\Inveni\\Inveni.csproj",
         "packagesPath": "C:\\Users\\Leon Freitas\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Leon Freitas\\Source\\Repos\\Inveni\\obj\\",
+        "outputPath": "C:\\Users\\Leon Freitas\\source\\repos\\alandreivisson\\Inveni\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\Leon Freitas\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -41,6 +41,10 @@
         "net7.0": {
           "targetAlias": "net7.0",
           "dependencies": {
+            "BCrypt.Net": {
+              "target": "Package",
+              "version": "[0.1.0, )"
+            },
             "Microsoft.AspNetCore.Authentication.JwtBearer": {
               "target": "Package",
               "version": "[7.0.12, )"

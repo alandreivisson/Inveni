@@ -1,9 +1,6 @@
 ﻿@using System.Security.Claims;
 @model IEnumerable<Inveni.Models.TematicaMestre>
-
-@{
-    ViewData["Title"] = "Home Page";
-}
+@{ViewData["Title"] = "Home Page";}
 <div class="row">
     <!-- ... Código anterior ... -->
     <div class="col-12 mt-3 mb-3 d-flex align-items-center text-center" style="font-size: 25px;">
@@ -14,23 +11,16 @@
     </div>
     <form asp-action="Filtrar" method="post">
         <div id="filtroBox">
-
-            @{
-                await Html.RenderPartialAsync("_Dropdowns", new Inveni.ViewModel.FiltrarViewModel());
-            }
+            @{await Html.RenderPartialAsync("_Dropdowns", new Inveni.ViewModel.FiltrarViewModel());}
             <div class="row">
-
                 <div class="col-2 mt-3 mb-3 align-items-start text-start">
                     @*<button type="submit" style="border: none; background: none; padding: 0; margin: 0; display: inline;">
                     <img width="48" height="48" src="https://img.icons8.com/emoji/48/magnifying-glass-tilted-left-emoji.png" alt="magnifying-glass-tilted-left-emoji" />
                     </button>*@
-                    <button type="submit" class="btn btn-primary form-control text-center">Pesquisar</button>
+                    <button type="submit" class="btn btn-warning text-white form-control text-center">Pesquisar</button>
                 </div>
-
                 <div class="col-2 mt-3 mb-3 align-items-end text-start">
                     <a asp-action="Index" asp-controller="Home" class="btn btn-danger form-control">Limpar</a>
-                </div>
-                <div class="col-8 mt-3 mb-3 align-items-start text-start">
                 </div>
             </div>
         </div>
@@ -38,38 +28,30 @@
 </div>
 
 <div class="row mt-3">
-    @foreach (var item in Model)
-    {
+    @foreach (var item in Model){
         <div class="col-md-3 mb-3">
             <div class="card d-flex flex-column h-100" style="transition: box-shadow 0.9s ease-in-out;">
-                @if (item.Usuario.Ativo)
-                {
-                    <div class="mt-auto card-header d-flex justify-content-start text-white bg-primary">
+                @if (item.Usuario.Ativo) {
+                    <div class="mt-auto card-header d-flex justify-content-start text-white bg-black">
                         <span>
                             @Html.DisplayFor(modelItem => item.Tematica.Descricao)
                         </span>
                     </div>
-                }
-                else
-                {
+                } else {
                     <div class="mt-auto card-header d-flex justify-content-start bg-danger text-white">
                         <span>Inativo</span>
                     </div>
                 }
-
                 <div class="card-body">
-
                     <div class="text-center">
                         <h5 class="card-title mb-2">
                             <div style="display: flex; flex-direction: column; align-items: center;">
                                 <img src="@Url.Content(item.Usuario.CaminhoFoto)" alt="User Icon" style="width: 100px; height: 100px; border-radius: 50%;" />
                                 <span>@Html.DisplayFor(modelItem => item.Usuario.Nome)</span>
-
                             </div>
                         </h5>
                     </div>
-                    @if (User.Identity.IsAuthenticated)
-                    {
+                    @if (User.Identity.IsAuthenticated) {
                         var idUsuario = User.FindFirst(ClaimTypes.Name)?.Value;
                         var permissoes = User.Claims.First(c => c.Type == "Permissoes").Value;
 
@@ -85,10 +67,10 @@
 
                         }*@
                     }
-                    <h6 class="card-subtitle mb-2 mt-2 text-muted">
+                    <p class="card-subtitle mb-2 mt-2 text-muted">
                         Categoria: @Html.DisplayFor(modelItem => item.Tematica.Categoria.Descricao)
-                    </h6>
-                    <h6 class="card-subtitle mb-2 text-muted">Modelo: @Html.DisplayFor(modelItem => item.Modelo.Descricao)</h6>
+                    </p>
+                    <p class="card-subtitle mb-2 text-muted">Modelo: @Html.DisplayFor(modelItem => item.Modelo.Descricao)</p>
                     <div class="accept-policyaccept-policy mt-2" style="text-align:justify;">
                         <p class="card-text" id="biografia">
                             @Html.DisplayFor(modelItem => item.Biografia)
@@ -97,8 +79,7 @@
                 </div>
                 <div class="mt-auto card-footer d-flex justify-content-center" style="border:none;">
                     @*<button class="btn btn-primary" onclick="saibaMais('@item.Id')">Saiba Mais</button>*@
-                    <button class="btn btn-primary" onclick="abrirModal('@item.Id')">Saiba Mais</button>
-
+                    <button class="btn btn-dark text-white" onclick="abrirModal('@item.Id')">Saiba Mais</button>
                 </div>
                 <style>
                     .card:hover {

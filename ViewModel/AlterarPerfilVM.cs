@@ -1,11 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Inveni.ViewModel
-{
-    public class AlterarPerfilVM
-    {
-
-
+namespace Inveni.ViewModel {
+    public class AlterarPerfilVM {
         [Display(Name = "Nome Completo")]
         [Required(ErrorMessage = "O campo {0} é de preenchimento obrigatório.")]
         public required string Nome { get; set; }

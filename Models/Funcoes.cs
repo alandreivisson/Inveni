@@ -17,7 +17,7 @@ namespace Inveni.Models {
             HashAlgorithm algoritmo = HashAlgorithm.Create("SHA-512");
             if (algoritmo == null)
             {
-                throw new ArgumentException("Hash nãó válida!");
+                throw new ArgumentException("Hash não é válida!");
             }
             else
             {

@@ -9,6 +9,7 @@ namespace Inveni.Models {
         public int MestreId { get; set; }
 
         [Required]
+        [Display (Name = "Aprendiz")]
         public int AprendizId { get; set; }
 
         public MatriculaStatus Status { get; set; }

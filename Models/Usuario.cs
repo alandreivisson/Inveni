@@ -17,6 +17,7 @@ namespace Inveni.Models
 
         [MaxLength(200)]
         [EmailAddress]
+        [Display (Name ="E-mail")]
         public required string Email { get; set; }
 
         [MaxLength(200)]
@@ -34,7 +35,6 @@ namespace Inveni.Models
         [MaxLength(500)]
         public string? CaminhoFoto { get; set; }
 
-        public ICollection<UsuarioPerfil>? UsuarioPerfil;
 
         [Display(Name = "Ativo")]
         public required bool Ativo { get; set; }

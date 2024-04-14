@@ -10,10 +10,10 @@
                 <img id="voltar-imagem"
                      width="30"
                      height="30"
-                     src="https://img.icons8.com/external-solid-adri-ansyah/64/228BE6/external-ui-basic-ui-solid-adri-ansyah-26.png"
+                     src="https://img.icons8.com/external-solid-adri-ansyah/64/FD7E14/external-ui-basic-ui-solid-adri-ansyah-26.png"
                      alt="plus--v1"
                      style="cursor: pointer;" />
-                <a asp-action="Index" class="ms-2 me-2 text-black" style="text-decoration: none; font-size: 20px;">Usuários Cadastrados</a>
+                <a asp-action="Index" class="ms-2 me-2 text-black" style="text-decoration: none; font-size: 20px;"></a>
             </p>
         </div>
     </div>
@@ -47,6 +47,13 @@
                     <input type="hidden" asp-for="Nome" />
                     <input type="hidden" asp-for="Email" />
                     <input type="hidden" asp-for="Senha" />
+@*                    <div class="form-group mt-3 text-center align-items-center">
+                        <div class="form-group text-center">
+                            <div id="imageContainer" class="mt-2 text-center align-items-center" style="width: 200px; height: 200px; overflow: hidden; border-radius: 50%; background-color: #fff; cursor: pointer; position: relative; display: flex; align-items: center; justify-content: center;">
+                                <img id="previewImage" src="@Url.Content(ViewData["UsuarioCaminhoFoto"].ToString())" alt="Foto do Perfil" style="max-width: 100%; max-height: 100%; object-fit: cover; border-radius: 50%;" />
+                            </div>
+                        </div>
+                    </div>*@
                     <div class="form-group text-center">
                         <p style="font-size: 25px;" ;>
                             @ViewData["UsuarioNome"]
@@ -64,7 +71,7 @@
                         </label>
                     </div>
                     <div class="form-group col-12 mt-4 text-center">
-                        <input type="submit" value="Salvar" class="btn btn-primary btn-block" />
+                        <input type="submit" value="Salvar" class="btn btn-primary btn-block btn-warning text-white" />
                     </div>
                 </form>
             </div>

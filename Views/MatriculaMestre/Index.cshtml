@@ -4,38 +4,90 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<div class="row">
+    <div class="col-3"></div>
+    <div class="col-6">
+        <div class="d-flex flex-column align-items-center mt-4">
+            <h1>Matrículas</h1>
+        </div>
+    </div>
+    <div class="col-3"></div>
+    <div class="col-3"></div>
+    <div class="col-6">
+        <div class="d-flex flex-column align-items-center mt-2 mb-1">
+            <p class="d-flex align-items-center">
+                <a asp-action="Create" class="ml-2 me-2 text-black" style="text-decoration: none; font-size: 25px;">Cadastrar</a>
+                <img id="cadastrar-imagem"
+                     width="30"
+                     height="30"
+                     src="https://img.icons8.com/ios-filled/50/FD7E14/plus.png"
+                     alt="plus--v1"
+                     style="cursor: pointer;" />
+            </p>
+        </div>
+        @*<hr/>*@
+    </div>
+    <div class="col-3"></div>
+</div>
+<div class="row">
+    <div class="col-3"></div>
+    <div class="col-6">
+        <div class="card">
+            <div class="card-body">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>
+                              
+                            </th>
+                            <th>
+                                Aprendiz
+                            </th>
+                            <th>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table id="matriculaTable" class="table">
-    <thead>
-        <tr>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                @* <td>
+                            @Html.DisplayFor(modelItem => item.Descricao)
+                            </td>
+                            <td class="text-right align-items-end text-end">
+                            <a asp-action="Delete" asp-route-id="@item.Id">
+                            <img width="20" height="20" src="https://img.icons8.com/ios-filled/50/waste.png" alt="Cadastrar" />
+                            </a>
+                            </td>*@
+                                <td class="align-middle">
+                                    <img src="@Url.Content(item.Aprendiz.CaminhoFoto)" alt="User Icon" style="width: 25px; height: 25px; border-radius: 50%;" />
+                                </td>
+                                <td class="align-middle">
+                                    @Html.DisplayFor(modelItem => item.Aprendiz.Nome) <br />
+                                    @Html.DisplayFor(modelItem => item.Aprendiz.Email)
+                                </td>
+                                <td class="align-middle">
+                                    <a asp-action="Delete" asp-route-id="@Funcoes.EncodeId(item.Id)" class="mx-3">
+                                        <img width="20" height="20" src="https://img.icons8.com/ios-filled/50/FD7E14/trash.png" alt="filled-trash" />
 
-            <th></th>
-            <th>Aprendiz</th>
-            <th>Status</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>
-                    <img src="@Url.Content(item.Aprendiz.CaminhoFoto)" alt="User Icon" style="width: 25px; height: 25px; border-radius: 50%;" />
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Aprendiz.Nome) <br />
-                    @Html.DisplayFor(modelItem => item.Aprendiz.Email)
-                </td>
-                <td>@Html.DisplayFor(modelItem => item.Status)</td>
-                
-                <td>
-                    <a asp-action="Delete" asp-route-id="@Funcoes.EncodeId(item.Id)"> Delete</a>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+                                    </a>
+
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="col-3"></div>
+</div>
+<script>
+    document.getElementById("cadastrar-imagem").addEventListener("click", function () {
+        // Quando a imagem for clicada, redirecionar para a ação "Create"
+        window.location.href = "/MatriculaMestre/Create"; // Substitua "ControllerName" pelo nome real do seu controlador
+    });
+</script>
+
+

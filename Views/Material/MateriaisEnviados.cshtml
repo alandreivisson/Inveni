@@ -14,7 +14,6 @@
     <div class="col-6">
         <div class="d-flex flex-column align-items-center mt-2 mb-1">
             <p class="d-flex align-items-center" style="font-size: 25px" ;>
-
                 <img width="30" height="30" class="ms-2" src="https://img.icons8.com/external-glyph-andi-nur-abdillah/64/FD7E14/external-Books-hygge-(glyph)-glyph-andi-nur-abdillah.png" alt="plus" />
             </p>
         </div>
@@ -54,20 +53,19 @@
                             var material = materialMatriculaMestre.Material;
                             var mestre = material.Mestre;
                             <tr>
-                                <td>
-                                    <img src="@Url.Content(mestre.CaminhoFoto)" alt="User Icon" style="width: 25px; height: 25px; border-radius: 50%;" />
+                                <td class="align-middle">
+                                    <img src="@Url.Content(mestre.CaminhoFoto)" alt="User Icon" style="height: 50px; border-radius: 50%;" />
                                 </td>
-                                <td>
+                                <td class="align-middle">
                                     @mestre.Nome
                                 </td>
-                                <td>
+                                <td class="align-middle">
                                     @material.NomeArquivo
                                 </td>
-                                
-                                <td>
+                                <td class="align-middle">
                                     @materialMatriculaMestre.DataEnviado.ToString("dd/MM/yyyy 'às' HH:mm")
-                                </td>
-                                <td class="text-right align-items-end text-end">
+                                </td>   
+                                <td class="align-middle">
                                     <a href="@Url.Action("Download", "Material", new { materialId = material.Id })">
                                         <img width="20" height="20" src="https://img.icons8.com/material-sharp/24/FD7E14/download--v1.png" alt="Ícone de Download" />
                                     </a>

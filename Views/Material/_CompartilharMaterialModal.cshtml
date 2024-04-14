@@ -1,42 +1,43 @@
 ﻿<!-- _CompartilharMaterialModal.cshtml -->
 @model Inveni.ViewModel.CompartilharMaterialViewModel
-
 <div class="">
     <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;">
         <form asp-action="CompartilharMaterial" asp-route-id="@Model.MaterialId" method="post">
-            <div class="form-group">
+            <div class="form-group mt-2">
                 <label>@Model.Material.NomeArquivo</label>
             </div>
-            <div class="form-group">
+            <div class="form-group mt-3">
 
                 <label>Selecione os aprendizes para compartilhar:</label>
                 @foreach (var aprendiz in Model.Aprendizes)
                 {
+                    <div class="form-check mt-2">
+                        <input class="form-check-input" type="checkbox" name="AprendizesSelecionados" value="@aprendiz.Id">
+                        <label class="form-check-label ml-1">@aprendiz.Nome</label>
+                    </div>
 
-                    <div class="form-check row">
-                        <div class="col-1">
+                       @* <div class="col-1 d-flex align-items-center justify-content-center">
                             <input class="form-check-input" type="checkbox" name="AprendizesSelecionados" value="@aprendiz.Id">
                         </div>
-                        <div class="col-1">
+                        <div class="col-1 d-flex justify-content-center">
+                            <label class="form-check-label">
+                                @aprendiz.Nome
+                            </label>
                             @if (!string.IsNullOrEmpty(aprendiz.CaminhoFoto))
                             {
                                 <img src="@Url.Content(aprendiz.CaminhoFoto)" alt="User Icon" style="width: 25px; height: 25px; border-radius: 50%;" />
                             }
                         </div>
-                        <div class="col-8">
-                            <label class="form-check-label">
-                                @aprendiz.Nome
-                            </label>
-                        </div>
-                    </div>
+                        <div class="col-8 d-flex align-items-center">
+                            
+                        </div>*@
+                    @*</div>*@
                 }
             </div>
-            <button type="submit" class="btn btn-dark text-white">Enviar</button>
+            <div class="form-group mt-2">
+                <button type="submit" class="btn btn-dark text-white">Enviar</button>
+            </div>
+            
         </form>
     </div>
 </div>
-
-@*Joel Natan*@
-
-
-

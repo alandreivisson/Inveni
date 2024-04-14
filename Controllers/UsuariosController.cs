@@ -93,6 +93,8 @@ namespace Inveni.Controllers
 
             ViewData["UsuarioNome"] = _context.Usuario.FirstOrDefault(t => t.Id == encodeId)?.Nome;
             ViewData["UsuarioEmail"] = _context.Usuario.FirstOrDefault(t => t.Id == encodeId)?.Email;
+            
+            ViewData["UsuarioCaminhoFoto"] = _context.Usuario.FirstOrDefault(t => t.Id == encodeId)?.CaminhoFoto;
             return View(usuario);
         }
 
@@ -355,6 +357,8 @@ namespace Inveni.Controllers
             {
                 usuario.Senha = BCrypt.Net.BCrypt.HashPassword(usuario.Senha);
             }
+
+            usuario.CaminhoFoto = $"~/imagens/user.png";
 
             await _context.Usuario.AddAsync(usuario).ConfigureAwait(false);
 

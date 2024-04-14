@@ -117,13 +117,9 @@ namespace Inveni.Controllers
         public async Task<IActionResult> Edit(string? id, [Bind("Id,Biografia,TematicaId,UsuarioId,ModeloId,Ativo")] TematicaMestre tematicaMestre) {
             // Decodifique o ID
             int decodeId = Funcoes.DecodeId(id);
-
-            if (decodeId != tematicaMestre.Id)
-            {
-                return NotFound();
-            }
-
-            if (ModelState.IsValid)
+            tematicaMestre.Id = decodeId;
+                       
+            if (tematicaMestre.Id == decodeId)
             {
                 try
                 {

@@ -3,6 +3,14 @@
 @{ViewData["Title"] = "Home Page";}
 <div class="row">
     <!-- ... Código anterior ... -->
+    <div class="container">
+        <div class="row">
+            <div class="text-center pt-3">
+                <h1>Encontre o seu professor</h1>
+            </div>
+
+        </div>
+    </div>
     <div class="col-12 mt-3 mb-3 d-flex align-items-center text-center" style="font-size: 25px;">
         <span>
             <img width="30" height="30" src="https://img.icons8.com/material-sharp/24/filter--v1.png" alt="filter--v1" />
@@ -13,18 +21,28 @@
         <div id="filtroBox">
             @{await Html.RenderPartialAsync("_Dropdowns", new Inveni.ViewModel.FiltrarViewModel());}
             <div class="row">
-                <div class="col-2 mt-3 mb-3 align-items-start text-start">
-                    @*<button type="submit" style="border: none; background: none; padding: 0; margin: 0; display: inline;">
-                    <img width="48" height="48" src="https://img.icons8.com/emoji/48/magnifying-glass-tilted-left-emoji.png" alt="magnifying-glass-tilted-left-emoji" />
-                    </button>*@
-                    <button type="submit" class="btn btn-warning text-white form-control text-center">Pesquisar</button>
+                <div class="col-8 mt-3 mb-3 align-items-end text-start">
+                    <div class="input-group">
+                        <input type="text" class="form-control" name="searchTerm" placeholder="Buscar...">
+                    </div>
                 </div>
+
                 <div class="col-2 mt-3 mb-3 align-items-end text-start">
                     <a asp-action="Index" asp-controller="Home" class="btn btn-danger form-control">Limpar</a>
                 </div>
+                
+
+                <div class="col-2 mt-3 mb-3 align-items-end text-start">
+                    <button type="submit" class="btn btn-primary text-white form-control text-center">Pesquisar</button>
+                </div>
+                
+                    
+
+                
             </div>
         </div>
     </form>
+
 </div>
 
 <div class="row mt-3">
@@ -32,7 +50,7 @@
         <div class="col-md-3 mb-3">
             <div class="card d-flex flex-column h-100" style="transition: box-shadow 0.9s ease-in-out;">
                 @if (item.Usuario.Ativo) {
-                    <div class="mt-auto card-header d-flex justify-content-start text-white bg-black">
+                    <div class="mt-auto card-header d-flex justify-content-start text-white azulfundo">
                         <span>
                             @Html.DisplayFor(modelItem => item.Tematica.Descricao)
                         </span>

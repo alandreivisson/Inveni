@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.CodeAnalysis.Elfie.Serialization;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
 using System.Security.Claims;
@@ -70,13 +71,23 @@ namespace Inveni.Controllers {
             return RedirectToAction("Index", "Home");
         }
         [HttpPost]
-        public async Task<IActionResult> Filtrar(FiltrarViewModel filtro) {
+        public async Task<IActionResult> Filtrar(FiltrarViewModel filtro, string searchTerm) {
             var contexto = _context.TematicaMestre
                 .Include(t => t.Tematica)
                 .ThenInclude(t => t.Categoria) // Inclua a Categoria
                 .Include(t => t.Usuario)
                 .Include(t => t.Modelo)
                 .Where(t => t.Ativo);
+
+            // Aplicar filtro de palavra-chave
+            if (!string.IsNullOrEmpty(searchTerm))
+            {
+                contexto = contexto.Where(t =>
+                    t.Usuario.Nome.Contains(searchTerm) ||
+                    t.Tematica.Descricao.Contains(searchTerm) ||
+                    t.Modelo.Descricao.Contains(searchTerm) ||
+                    t.Tematica.Categoria.Descricao.Contains(searchTerm));
+            }
 
             if (filtro.CategoriaId.HasValue)
             {

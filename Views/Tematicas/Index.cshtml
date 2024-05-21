@@ -35,7 +35,7 @@
     <div class="col-6">
         <div class="card">
             <div class="card-body">
-                <table class="table">
+                <table id="tabela-tematicas" class="table">
                     <thead>
                         <tr>
                             <th>
@@ -77,8 +77,16 @@
     <div class="col-3"></div>
 </div>
 
+<link rel="stylesheet" href="https://cdn.datatables.net/2.0.3/css/dataTables.dataTables.css" />
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+<script src="https://cdn.datatables.net/2.0.3/js/dataTables.js"></script>
 
-
+<script type="text/javascript">
+    var js = jQuery.noConflict(true);
+    js(document).ready(function () {
+        js('#tabela-tematicas').DataTable();
+    });
+</script>
 <script>
     document.getElementById("cadastrar-imagem").addEventListener("click", function () {
         // Quando a imagem for clicada, redirecionar para a ação "Create"

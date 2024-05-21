@@ -20,9 +20,13 @@ html {
 body {
   margin-bottom: 60px;
 
-  background-image: url("../imagens/inveni.png");
+  background-image: url("'../imagens/fundo estudeja.png'");
   height:120vh;
   background-repeat: no-repeat;
   background-size:cover;
   background-position:center;
+}
+
+.azulfundo {
+    background-color: #2400F0;
 }

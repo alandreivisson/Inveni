@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Inveni.Models {
     public class MaterialMatriculaMestre {
@@ -12,9 +13,11 @@ namespace Inveni.Models {
 
             [Required]
             public DateTime DataEnviado { get; set; }
-
-            // Propriedades de navegação
+        
+            [ForeignKey("MaterialId")]
             public virtual Material? Material { get; set; }
+            [ForeignKey("MatriculaMestreId")]
+            [InverseProperty("MaterialMatriculaMestre")]
             public virtual MatriculaMestre? MatriculaMestre { get; set; }
         
     }

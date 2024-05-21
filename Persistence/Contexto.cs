@@ -10,6 +10,7 @@ namespace Inveni.Persistence
         //}
         public Contexto(DbContextOptions<Contexto> contextOptions) : base(contextOptions)
         {
+           // Database.EnsureCreated();
         }
         public DbSet<Usuario> Usuario { get; set; }
         public DbSet<Perfil> Perfil { get; set; }
@@ -30,13 +31,13 @@ namespace Inveni.Persistence
 
             modelBuilder.Entity<UsuarioPerfil>().HasKey(up => new { up.Id });
 
-            modelBuilder.Entity<UsuarioPerfil>().HasOne(up => up.Usuario).WithMany(u => u.UsuarioPerfil).HasForeignKey(up => up.UsuarioId);
+            modelBuilder.Entity<UsuarioPerfil>().HasOne(up => up.Usuario).WithMany(u => u.UsuarioPerfil).HasForeignKey(up => up.UsuarioId).OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<UsuarioPerfil>().HasOne(up => up.Perfil).WithMany(p => p.UsuarioPerfil).HasForeignKey(up => up.PerfilId);
 
             modelBuilder.Entity<TematicaMestre>().HasKey(tm => new { tm.Id });
 
-            modelBuilder.Entity<TematicaMestre>().HasOne(tm => tm.Usuario).WithMany(u => u.TematicaMestre).HasForeignKey(tm => tm.UsuarioId);
+            modelBuilder.Entity<TematicaMestre>().HasOne(tm => tm.Usuario).WithMany(u => u.TematicaMestre).HasForeignKey(tm => tm.UsuarioId).OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<TematicaMestre>().HasOne(tm => tm.Tematica).WithMany(t => t.TematicaMestre).HasForeignKey(tm => tm.TematicaId);
 
@@ -50,30 +51,30 @@ namespace Inveni.Persistence
 
             modelBuilder.Entity<Matricula>().HasKey(m => new { m.Id});
 
-            modelBuilder.Entity<Matricula>().HasOne(m => m.Aprendiz).WithMany(u => u.Matriculas).HasForeignKey(m => m.AprendizId);
-
             modelBuilder.Entity<Matricula>().HasOne(m => m.TematicaMestre).WithMany(a => a.Matriculas).HasForeignKey(m => m.TematicaMestreId);
-            
+
+            modelBuilder.Entity<Matricula>().HasOne(m => m.Aprendiz).WithMany(u => u.Matriculas).HasForeignKey(m => m.AprendizId).OnDelete(DeleteBehavior.Restrict);
+
             modelBuilder.Entity<Material>().HasKey(m => new { m.Id });
 
             modelBuilder.Entity<MaterialMatricula>().HasKey(mm => new { mm.Id});
 
             modelBuilder.Entity<MaterialMatricula>().HasOne(mm => mm.Material).WithMany(m => m.MaterialMatricula).HasForeignKey(mm => mm.MaterialId);
 
-            modelBuilder.Entity<MaterialMatricula>().HasOne(mm => mm.Matricula).WithMany(m => m.MaterialMatricula).HasForeignKey(mm => mm.MatriculaId);
+            modelBuilder.Entity<MaterialMatricula>().HasOne(mm => mm.Matricula).WithMany(m => m.MaterialMatricula).HasForeignKey(mm => mm.MatriculaId).OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<MatriculaMestre>()
             .HasKey(mm => mm.Id);
 
             modelBuilder.Entity<MatriculaMestre>().HasOne(mm => mm.Mestre).WithMany(u => u.MatriculaMestreMestre).HasForeignKey(mm => mm.MestreId).OnDelete(DeleteBehavior.Restrict);
 
-            modelBuilder.Entity<MatriculaMestre>().HasOne(mm => mm.Aprendiz).WithMany(u => u.MatriculaMestreAprendiz).HasForeignKey(mm => mm.AprendizId).OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<MatriculaMestre>().HasOne(mm => mm.Aprendiz).WithMany(u => u.MatriculaMestreAprendiz).HasForeignKey(mm => mm.AprendizId);
 
             modelBuilder.Entity<MaterialMatriculaMestre>().HasKey(mm => mm.Id);
 
             modelBuilder.Entity<MaterialMatriculaMestre>().HasOne(mm => mm.Material).WithMany(m => m.MaterialMatriculaMestre).HasForeignKey(mm => mm.MaterialId);
 
-            modelBuilder.Entity<MaterialMatriculaMestre>().HasOne(mm => mm.MatriculaMestre).WithMany(m => m.MaterialMatriculaMestre).HasForeignKey(mm => mm.MatriculaMestreId);
+            modelBuilder.Entity<MaterialMatriculaMestre>().HasOne(mm => mm.MatriculaMestre).WithMany(m => m.MaterialMatriculaMestre).HasForeignKey(mm => mm.MatriculaMestreId).OnDelete(DeleteBehavior.Restrict);
 
             base.OnModelCreating(modelBuilder);
         }

@@ -14,6 +14,7 @@ namespace Inveni.Models {
         public virtual Usuario? Mestre { get; set; }
         public virtual ICollection<MaterialMatriculaMestre>? MaterialMatriculaMestre { get; set; }
         public virtual ICollection<MaterialMatricula>? MaterialMatricula { get; set; }
+        public virtual ICollection<MaterialEnviadoHistorico>? MaterialEnviadoHistorico { get; set; }
 
         [NotMapped]
         public IFormFile? Arquivo { get; set; }

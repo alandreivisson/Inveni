@@ -1,0 +1,168 @@
+﻿@model List<IGrouping<DateTime, Inveni.Models.MaterialEnviadoHistorico>>
+
+<div class="row">
+    <div class="col-3">
+        <div class="d-flex flex-column align-items-center mt-4">
+            <a asp-area="" asp-controller="Material" asp-action="Index" class="d-flex align-items-center">
+                <img id="voltar-imagem" width="30" height="30"
+                     src="https://img.icons8.com/external-solid-adri-ansyah/64/FD7E14/external-ui-basic-ui-solid-adri-ansyah-26.png" alt="external-ui-basic-ui-solid-adri-ansyah-26"
+                     alt="Voltar" style="cursor: pointer;" />
+            </a>
+        </div>
+    </div>
+    <div class="col-6">
+        <div class="d-flex flex-column align-items-center mt-4">
+            <h1>Materiais Enviados</h1>
+        </div>
+    </div>
+    <div class="col-3"></div>
+    <div class="col-3"></div>
+    <div class="col-6">
+        <div class="d-flex flex-column align-items-center mt-2 mb-1">
+            <p class="d-flex align-items-center" style="font-size: 25px" ;>
+                Histórico
+            </p>
+        </div>
+    </div>
+    <div class="col-3"></div>
+</div>
+
+<div class="row">
+    <div class="col-3"></div>
+    <div class="col-6">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Data de Envio</th>
+                    <th>Material</th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var group in Model)
+                {
+                    // Obter o primeiro item do grupo para exibir o nome do material no cabeçalho
+                    var firstItem = group.FirstOrDefault();
+                    <tr class="group-header" data-group-id="@group.Key.ToString("yyyyMMdd")">
+                        <td>
+                            <strong>@group.Key.ToString("dd/MM/yyyy")</strong>
+                        </td>
+                        <td>
+                            <strong>@firstItem?.Material.NomeArquivo</strong>
+                        </td>
+                        <td>
+                            <button type="button" class="btn btn-link toggle-group" data-group-id="@group.Key.ToString("yyyyMMdd")">Mostrar</button>
+                        </td>
+                        <td>
+                        <td>
+                            <a href="#" class="delete-material" data-material-id="@firstItem.MaterialId" data-toggle="modal" data-target="#confirmDeleteModal">
+                                <img width="20" height="20" src="https://img.icons8.com/ios-filled/50/FD7E14/trash.png" alt="filled-trash" />
+                            </a>
+                        </td>
+                    </tr>
+                    @foreach (var item in group)
+                    {
+                        <tr class="group-item" data-group-id="@group.Key.ToString("yyyyMMdd")" style="display: none;">
+                            <td class="align-middle">
+                                <img src="@Url.Content(item.Aprendiz.CaminhoFoto)" alt="User Icon" style="height: 50px; border-radius: 50%;" />
+                            </td>
+                            <td>
+                                <strong>Enviado Para:</strong> @item.Aprendiz.Nome <br />
+                                <strong>Hora de Envio:</strong> @item.DataEnviado.ToString("HH:mm")
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+    <div class="col-3"></div>
+</div>
+
+<!-- Modal de Confirmação de Exclusão -->
+<div class="modal fade" id="confirmDeleteModal" tabindex="-1" role="dialog" aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmDeleteModalLabel">Confirmar Exclusão</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Tem certeza de que deseja excluir os registros relacionados a este material?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-danger" id="confirmDeleteBtn">Excluir</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<link rel="stylesheet" href="https://cdn.datatables.net/2.0.3/css/dataTables.dataTables.css" />
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+<script src="https://cdn.datatables.net/2.0.3/js/dataTables.js"></script>
+
+<script type="text/javascript">
+    var js = jQuery.noConflict(true);
+    js(document).ready(function () {
+        js('#tabela-material').DataTable();
+    });
+</script>
+
+@section Scripts {
+    <script>
+        document.querySelectorAll('.toggle-group').forEach(button => {
+            button.addEventListener('click', () => {
+                const groupId = button.getAttribute('data-group-id');
+                const items = document.querySelectorAll(`.group-item[data-group-id="${groupId}"]`);
+                items.forEach(item => {
+                    item.style.display = item.style.display === 'none' ? '' : 'none';
+                });
+                button.textContent = button.textContent === 'Mostrar' ? 'Esconder' : 'Mostrar';
+            });
+        });
+    </script>
+    <script>
+        document.getElementById("voltar-imagem").addEventListener("click", function () {
+            // Quando a imagem for clicada, redirecionar para a ação "Create"
+            window.location.href = "/Material/Index"; // Substitua "ControllerName" pelo nome real do seu controlador
+        });
+    </script>
+
+    <script>
+        document.querySelectorAll('.delete-material').forEach(button => {
+            button.addEventListener('click', () => {
+                const materialId = button.getAttribute('data-material-id');
+                const confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
+                confirmDeleteBtn.addEventListener('click', () => {
+                    // Envie uma solicitação para o servidor para excluir os registros
+                    fetch(`/Material/DeleteMaterialEnviadoHistorico?materialId=${materialId}`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-Requested-With': 'XMLHttpRequest',
+                            'RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val()
+                        }
+                    })
+                    .then(response => {
+                        if (response.ok) {
+                            // Recarregar a página para atualizar a exibição
+                            location.reload();
+                        } else {
+                            alert('Erro ao excluir os registros.');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Erro ao excluir os registros:', error);
+                        alert('Erro ao excluir os registros.');
+                    });
+                });
+            });
+        });
+    </script>
+
+}

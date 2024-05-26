@@ -34,13 +34,14 @@ namespace Inveni.Models
 
         [MaxLength(500)]
         public string? CaminhoFoto { get; set; }
+        public TematicaMestre? TematicaMestre { get; set; }
+        public virtual ICollection<TematicaMestre>? TematicaMestres { get; set; }
 
 
         [Display(Name = "Ativo")]
         public required bool Ativo { get; set; }
 
         public virtual ICollection<UsuarioPerfil>? UsuarioPerfil { get; set; }
-        public virtual ICollection<TematicaMestre>? TematicaMestre { get; set; }
 
 
         public bool ValidarPasswordComplexity()
@@ -57,6 +58,8 @@ namespace Inveni.Models
         public virtual ICollection<MatriculaMestre>? MatriculaMestreMestre { get; set; }
 
         public virtual ICollection<MatriculaMestre>? MatriculaMestreAprendiz { get; set; }
+
+        public virtual ICollection<MaterialEnviadoHistorico>? MaterialEnviadoHistorico { get; set; }
     }
 
 

@@ -8,15 +8,15 @@
     <div class="col-3"></div>
     <div class="col-6">
         <div class="d-flex flex-column align-items-center mt-4">
-            <h1>Materiais enviados</h1>
+            <h1>Meus Materiais</h1>
         </div>
     </div>
     <div class="col-3"></div>
     <div class="col-3"></div>
-    <div class="col-6">
+    <div class="col-3">
         <div class="d-flex flex-column align-items-center mt-2 mb-1">
             <p class="d-flex align-items-center">
-                <a asp-action="Create" class="ml-2 me-2 text-black" style="text-decoration: none; font-size: 25px;">Adicionar</a>
+                <a asp-action="Create" class="ml-2 me-2 text-black" style="text-decoration: none; font-size: 25px;">Carregar</a>
                 <img id="cadastrar-imagem"
                      width="30"
                      height="30"
@@ -26,6 +26,20 @@
             </p>
         </div>
         @*<hr/>*@
+    </div>
+    
+    <div class="col-3">
+        <div class="d-flex flex-column align-items-center mt-2 mb-1">
+            <p class="d-flex align-items-center">
+                <a asp-action="MaterialEnviadoHistorico" class="ml-2 me-2 text-black" style="text-decoration: none; font-size: 25px;">Ver Enviados</a>
+                <img id="historico-imagem"
+                     width="30"
+                     height="30"
+                     src="https://img.icons8.com/pastel-glyph/64/surprise--v2.png" 
+                     alt="plus--v1"
+                     style="cursor: pointer;" />
+            </p>
+        </div>
     </div>
     <div class="col-3"></div>
 </div>
@@ -174,5 +188,11 @@
             // Chama a função para abrir o modal
             abrirModal(materialId);
         });
+    });
+</script>
+<script>
+    document.getElementById("historico-imagem").addEventListener("click", function () {
+        // Quando a imagem for clicada, redirecionar para a ação "MaterialEnviadoHistorico"
+        window.location.href = "/Material/MaterialEnviadoHistorico"; // Substitua "ControllerName" pelo nome real do seu controlador
     });
 </script>

@@ -24,6 +24,8 @@ namespace Inveni.Models {
         [ForeignKey("ModeloId")]
         public required virtual Modelo? Modelo { get; set; }
 
+        public virtual ICollection<MatriculaMestre>? MatriculaMestre { get; set; }
+
         public virtual ICollection<Matricula>? Matriculas { get; set; }
 
         public virtual ICollection<Favorito>? Favoritos { get; set; }

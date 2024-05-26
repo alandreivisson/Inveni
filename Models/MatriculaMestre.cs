@@ -22,6 +22,7 @@ namespace Inveni.Models {
         [ForeignKey("AprendizId")]
         public virtual Usuario? Aprendiz { get; set; }
         public virtual ICollection<MaterialMatriculaMestre>? MaterialMatriculaMestre { get; set; }
+        public virtual TematicaMestre? TematicaMestre { get; set; }
     }
     public enum MatriculaMestreStatus {
         Matriculado,

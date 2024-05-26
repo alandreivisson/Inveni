@@ -22,24 +22,24 @@
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
                             <a class="nav-link m-0 me-5 text-white" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                            </li>
-                            @if (User.Identity.IsAuthenticated) 
+                        </li>
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            var permissoes = User.Claims.First(c => c.Type == "Permissoes").Value;
+                            @if (permissoes == "1")
                             {
-                                var permissoes = User.Claims.First(c => c.Type == "Permissoes").Value;
-                                @if (permissoes == "1")
-                                {
-                                    <li class="nav-item">
+                                <li class="nav-item">
                                     <a class="nav-link text-white ms-auto" asp-area="" asp-controller="Categorias" asp-action="Index">Categorias</a>
-                                    </li>
-                                    <li class="nav-item">
+                                </li>
+                                <li class="nav-item">
                                     <a class="nav-link text-white mb-3" asp-area="" asp-controller="Tematicas" asp-action="Index">Temáticas</a>
-                                    </li>
-                                    <li class="nav-item">
+                                </li>
+                                <li class="nav-item">
                                     <a class="nav-link text-white mb-3" asp-area="" asp-controller="Usuarios" asp-action="Index">Usuários</a>
-                                    </li>
-                                }
-                                @if (permissoes == "2")
-                                {
+                                </li>
+                            }
+                            @if (permissoes == "2")
+                            {
                                 <li class="nav-item">
                                     <a class="nav-link text-white mb-3" asp-area="" asp-controller="TematicaMestres" asp-action="Index">Temáticas</a>
                                 </li>
@@ -49,25 +49,25 @@
                                 <li class="nav-item">
                                     <a class="nav-link text-white mb-3" asp-area="" asp-controller="MatriculaMestre" asp-action="Index">Aprendizes</a>
                                 </li>
-                                }
-                                @if (permissoes == "3")
-                                {
+                            }
+                            @if (permissoes == "3")
+                            {
                                 <li class="nav-item">
                                     <a class="nav-link text-white mb-3" asp-area="" asp-controller="Material" asp-action="MateriaisEnviados">Materiais</a>
                                 </li>
-                                
-                                }
-                            }
 
-                            @if (User.Identity.IsAuthenticated)
-                            {
+                            }
+                        }
+
+                        @if (User.Identity.IsAuthenticated)
+                        {
                             <li class="nav-item dropdown">
                                 <ul class="nav-link dropdown-toggle text-info text-white text-end" href="#" role="button" data-bs-toggle="dropdown">
                                     <img src="@Url.Content(User.Claims.FirstOrDefault(c => c.Type == "CaminhoFoto").Value)" alt="Foto do Usuário" style="width: 35px; height: 35px; border-radius: 50%;" />
                                 </ul>
                                 <ul class="dropdown-menu dropdown-menu-end">
                                     <span class="nav-link dropdown-toggle text-info text-dark text-end">
-                                            @User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value
+                                        @User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value
                                     </span>
                                     <li class="d-flex justify-content-between">
                                         <a class="dropdown-item" asp-controller="Usuarios" asp-action="Alterar">
@@ -86,9 +86,9 @@
                                     </li>
                                 </ul>
                             </li>
-                            }
-                            else
-                            {
+                        }
+                        else
+                        {
 
                             <li class="nav-item">
                                 <a href="@Url.Action("Acesso","Usuarios")" class="nav-link text-white mb-3">Entrar</a>
@@ -96,7 +96,7 @@
                             <li class="nav-item">
                                 <a href="@Url.Action("Cadastrar","Usuarios")" class="nav-link text-white mb-3">Cadastrar</a>
                             </li>
-                            }
+                        }
                     </ul>
                 </div>
             </div>
@@ -106,6 +106,13 @@
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
+    </div>
+    <div class="container">
+        <div class="floating-email">
+            <a href="mailto:estudefacil.oficial@gmail.com?subject=CONTATO%20COM%20ADMINISTRADORES%20DO%20ESTUDE%20FACIL">
+                <span class="material-symbols-outlined">mail</span> Fale Conosco
+            </a>
+        </div>
     </div>
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
     <!-- Popper.js -->

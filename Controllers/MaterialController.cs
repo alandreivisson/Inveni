@@ -10,6 +10,7 @@ using Inveni.Persistence;
 using Inveni.ViewModel;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.StaticFiles;
+using Microsoft.DotNet.Scaffolding.Shared.Messaging;
 
 namespace Inveni.Controllers {
     public class MaterialController : Controller {
@@ -20,6 +21,48 @@ namespace Inveni.Controllers {
             _context = context;
             _env = env;
         }
+
+        [HttpGet]
+        [Authorize(Policy = "Mestre")]
+        public IActionResult MaterialEnviadoHistorico() {
+            var mestreId = Convert.ToInt32(User.Identity.Name);
+            // Consulta para obter os dados de MaterialEnviadoHistorico com base no ID do mestre
+            /*var materialEnviadoHistorico = _context.MaterialEnviadoHistorico
+            .Where(meh => meh.MestreId == mestreId)
+            .Include(meh => meh.Material)
+            .Include(meh => meh.Aprendiz)
+            .GroupBy(meh => new { meh.MaterialId, meh.DataEnviado })
+            .Select(g => g.FirstOrDefault())
+            .ToList();*/
+
+
+            // Consulta para obter os dados de MaterialEnviadoHistorico com base no ID do mestre
+            var materialEnviadoHistorico = _context.MaterialEnviadoHistorico
+                .Where(meh => meh.MestreId == mestreId)
+                .Include(meh => meh.Material)
+                .Include(meh => meh.Aprendiz)
+                .ToList()
+                .GroupBy(meh => meh.DataEnviado.Date) // Agrupar por DataEnviado
+                .ToList();
+
+
+
+            // Retornar os dados para a view MaterialEnviadoHistorico
+            return View(materialEnviadoHistorico);
+        }
+
+        [HttpPost]
+        [Authorize(Policy = "Mestre")]
+        public IActionResult DeleteMaterialEnviadoHistorico(int materialId) {
+            var registros = _context.MaterialEnviadoHistorico.Where(meh => meh.MaterialId == materialId);
+            _context.MaterialEnviadoHistorico.RemoveRange(registros);
+            _context.SaveChanges();
+
+            return Ok();
+        }
+
+
+
 
         // GET: Material
         [Authorize(Policy = "Mestre")]
@@ -41,45 +84,45 @@ namespace Inveni.Controllers {
         [ValidateAntiForgeryToken]
         [Authorize(Policy = "Mestre")]
         public async Task<IActionResult> Create([Bind("Id")] Material material, IFormFile arquivo) {
-            
-                if (arquivo != null && arquivo.Length > 0)
+
+            if (arquivo != null && arquivo.Length > 0)
+            {
+                // Obter o nome do arquivo
+                material.NomeArquivo = Path.GetFileName(arquivo.FileName);
+
+                // Obter o ID do usuário da sessão
+                // (Substitua isso com a lógica real para obter o ID do usuário da sessão)
+                var userId = Convert.ToInt32(User.Identity.Name); // Exemplo: substitua isso com sua lógica real
+
+                // Definir o MestreId
+                material.MestreId = userId;
+
+                // Criar diretório se não existir
+                var userDirectory = Path.Combine(_env.ContentRootPath, "Arquivos", userId.ToString());
+                if (!Directory.Exists(userDirectory))
                 {
-                    // Obter o nome do arquivo
-                    material.NomeArquivo = Path.GetFileName(arquivo.FileName);
-
-                    // Obter o ID do usuário da sessão
-                    // (Substitua isso com a lógica real para obter o ID do usuário da sessão)
-                    var userId = Convert.ToInt32(User.Identity.Name); // Exemplo: substitua isso com sua lógica real
-
-                    // Definir o MestreId
-                    material.MestreId = userId;
-
-                    // Criar diretório se não existir
-                    var userDirectory = Path.Combine(_env.ContentRootPath, "Arquivos", userId.ToString());
-                    if (!Directory.Exists(userDirectory))
-                    {
-                        Directory.CreateDirectory(userDirectory);
-                    }
-
-                    // Definir o caminho do arquivo
-                    var filePath = Path.Combine(userDirectory, material.NomeArquivo);
-
-                    // Salvar o arquivo
-                    using (var fileStream = new FileStream(filePath, FileMode.Create))
-                    {
-                        await arquivo.CopyToAsync(fileStream);
-                    }
-
-                    // Definir o CaminhoArquivo
-                    material.CaminhoArquivo = filePath;
+                    Directory.CreateDirectory(userDirectory);
                 }
 
-                _context.Add(material);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            
+                // Definir o caminho do arquivo
+                var filePath = Path.Combine(userDirectory, material.NomeArquivo);
 
-           // return View(material);
+                // Salvar o arquivo
+                using (var fileStream = new FileStream(filePath, FileMode.Create))
+                {
+                    await arquivo.CopyToAsync(fileStream);
+                }
+
+                // Definir o CaminhoArquivo
+                material.CaminhoArquivo = filePath;
+            }
+
+            _context.Add(material);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+
+
+            // return View(material);
         }
 
         // POST: Material/Edit/5
@@ -211,13 +254,13 @@ namespace Inveni.Controllers {
                 .ThenInclude(m => m.Mestre)
             .OrderByDescending(mmm => mmm.DataEnviado).ToList();
 
-          
-                // Criar um modelo para a exibição na view
-                var viewModel = new MateriaisEnviadosViewModel
-                {
-                    Matriculas = matriculas
-                };
-           
+
+            // Criar um modelo para a exibição na view
+            var viewModel = new MateriaisEnviadosViewModel
+            {
+                Matriculas = matriculas
+            };
+
             return View(viewModel);
         }
         [Authorize]

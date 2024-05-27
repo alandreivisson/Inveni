@@ -288,7 +288,7 @@ namespace Inveni.Controllers
                     await usuario.Foto.CopyToAsync(fileStream);
                 }
                 // Atualize o caminho da foto no usuário
-                usuarioBD.CaminhoFoto = $"~/imagens/{usuarioBD.Id}/{fileName}";
+                usuarioBD.CaminhoFoto = $"/imagens/{usuarioBD.Id}/{fileName}";
 
             }
 
@@ -358,7 +358,7 @@ namespace Inveni.Controllers
                 usuario.Senha = BCrypt.Net.BCrypt.HashPassword(usuario.Senha);
             }
 
-            usuario.CaminhoFoto = $"~/imagens/user.png";
+            usuario.CaminhoFoto = $"/imagens/user.png";
 
             await _context.Usuario.AddAsync(usuario).ConfigureAwait(false);
 

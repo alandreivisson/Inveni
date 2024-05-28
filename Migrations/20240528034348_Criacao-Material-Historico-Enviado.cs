@@ -6,11 +6,10 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Inveni.Migrations
 {
     /// <inheritdoc />
-    public partial class CriacaoTabelaMaterialHistoricoEnviado : Migration
+    public partial class CriacaoMaterialHistoricoEnviado : Migration
     {
         /// <inheritdoc />
-        protected override void Up(MigrationBuilder migrationBuilder)
-        {
+        protected override void Up(MigrationBuilder migrationBuilder) {
             migrationBuilder.DropForeignKey(
                 name: "FK_Favorito_TematicaMestre_TematicaMestreId",
                 table: "Favorito");
@@ -81,6 +80,7 @@ namespace Inveni.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     MaterialId = table.Column<int>(type: "int", nullable: false),
                     AprendizId = table.Column<int>(type: "int", nullable: false),
+                    MestreId = table.Column<int>(type: "int", nullable: false),
                     DataEnviado = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
@@ -176,8 +176,7 @@ namespace Inveni.Migrations
         }
 
         /// <inheritdoc />
-        protected override void Down(MigrationBuilder migrationBuilder)
-        {
+        protected override void Down(MigrationBuilder migrationBuilder) {
             migrationBuilder.DropForeignKey(
                 name: "FK_Favoritos_TematicaMestre_TematicaMestreId",
                 table: "Favoritos");
@@ -313,5 +312,6 @@ namespace Inveni.Migrations
                 principalColumn: "Id",
                 onDelete: ReferentialAction.Cascade);
         }
+
     }
 }

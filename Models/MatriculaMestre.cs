@@ -10,19 +10,19 @@ namespace Inveni.Models {
         public int MestreId { get; set; }
 
         [Required]
-        [Display (Name = "Aprendiz")]
+        [Display(Name = "Aprendiz")]
         public int AprendizId { get; set; }
+
+        public int? TematicaMestreId { get; set; }
 
         public MatriculaStatus Status { get; set; }
 
         // Propriedades de navegação
-        [ForeignKey("MestreId")]
-        [InverseProperty("MatriculaMestreMestre")]
         public virtual Usuario? Mestre { get; set; }
-        [ForeignKey("AprendizId")]
         public virtual Usuario? Aprendiz { get; set; }
-        public virtual ICollection<MaterialMatriculaMestre>? MaterialMatriculaMestre { get; set; }
         public virtual TematicaMestre? TematicaMestre { get; set; }
+
+        public virtual ICollection<MaterialMatriculaMestre>? MaterialMatriculaMestre { get; set; }
     }
     public enum MatriculaMestreStatus {
         Matriculado,

@@ -16,22 +16,18 @@ namespace Inveni.Models {
         public required int ModeloId { get; set; }
         [Required(ErrorMessage = "Selecione uma opção das opções entre ativo ou inativo!")]
         public required bool Ativo { get; set; }
+
         [ForeignKey("TematicaId")]
         public required virtual Tematica? Tematica { get; set; }
+
         [ForeignKey("UsuarioId")]
-        [InverseProperty("TematicaMestre")]
         public required virtual Usuario? Usuario { get; set; }
+
         [ForeignKey("ModeloId")]
         public required virtual Modelo? Modelo { get; set; }
 
         public virtual ICollection<MatriculaMestre>? MatriculaMestre { get; set; }
-
         public virtual ICollection<Matricula>? Matriculas { get; set; }
-
         public virtual ICollection<Favorito>? Favoritos { get; set; }
-
-        public virtual ICollection<Usuario>? Usuarios { get; set; }
-
-
     }
 }

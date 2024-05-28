@@ -98,14 +98,15 @@ namespace Inveni.Controllers {
                 material.MestreId = userId;
 
                 // Criar diretório se não existir
-                var userDirectory = Path.Combine(_env.ContentRootPath, "Arquivos", userId.ToString());
-                if (!Directory.Exists(userDirectory))
+                var userIdFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "arquivos", userId.ToString());
+                if (!Directory.Exists(userIdFolder))
                 {
-                    Directory.CreateDirectory(userDirectory);
+                    Directory.CreateDirectory(userIdFolder);
                 }
 
                 // Definir o caminho do arquivo
-                var filePath = Path.Combine(userDirectory, material.NomeArquivo);
+                var fileName = Path.GetFileName(arquivo.FileName);
+                var filePath = Path.Combine(userIdFolder, fileName);
 
                 // Salvar o arquivo
                 using (var fileStream = new FileStream(filePath, FileMode.Create))
@@ -114,7 +115,8 @@ namespace Inveni.Controllers {
                 }
 
                 // Definir o CaminhoArquivo
-                material.CaminhoArquivo = filePath;
+                // Atualize o caminho da foto no usuário
+                material.CaminhoArquivo = $"/arquivos/{userId}/{fileName}";
             }
 
             _context.Add(material);

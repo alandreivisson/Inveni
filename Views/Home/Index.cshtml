@@ -1,41 +1,37 @@
 ﻿@using System.Security.Claims;
 @model IEnumerable<Inveni.Models.TematicaMestre>
 @{ViewData["Title"] = "Estude Facil";}
+
 <div class="row">
     <!-- ... Código anterior ... -->
-    <div class="container">
+    <div class="container paddingb">
         <div class="row">
-            <div class="text-center pt-3">
-                <h1>Encontre o seu professor</h1>
+            <div class="text-center pt-3 new-font">
+                <h1>Encontre o melhor Mestre para você!!</h1>
             </div>
 
         </div>
     </div>
-    <div class="col-12 mt-3 mb-3 d-flex align-items-center text-center" style="font-size: 25px;">
-        <span>
-            <img width="30" height="30" src="https://img.icons8.com/material-sharp/24/filter--v1.png" alt="filter--v1" />
-            Filtros
-        </span>
-    </div>
+  
     <form asp-action="Filtrar" method="post">
         <div id="filtroBox">
             @{await Html.RenderPartialAsync("_Dropdowns", new Inveni.ViewModel.FiltrarViewModel());}
             <div class="row">
-                <div class="col-8 mt-3 mb-3 align-items-end text-start">
+                <div class="col-12 mt-3 mb-3 align-items-end text-start">
                     <div class="input-group">
                         <input type="text" class="form-control" name="searchTerm" placeholder="Buscar...">
                     </div>
                 </div>
 
-                <div class="col-2 mt-3 mb-3 align-items-end text-start">
-                    <a asp-action="Index" asp-controller="Home" class="btn btn-danger form-control">Limpar</a>
+   @*             <div class="col-2 mt-3 mb-3 align-items-end text-start">
+                    <a asp-action="Index" asp-controller="Home" class="btn btn-primary form-control">Limpar</a>
                 </div>
                 
 
                 <div class="col-2 mt-3 mb-3 align-items-end text-start">
                     <button type="submit" class="btn btn-primary text-white form-control text-center">Pesquisar</button>
                 </div>
-                
+                *@
                     
 
                 
@@ -50,7 +46,7 @@
         <div class="col-md-3 mb-3">
             <div class="card d-flex flex-column h-100" style="transition: box-shadow 0.9s ease-in-out;">
                 @if (item.Usuario.Ativo) {
-                    <div class="mt-auto card-header d-flex justify-content-start text-white azulfundo">
+                    <div class="mt-auto card-header d-flex justify-content-start text-white header-azul ">
                         <span>
                             @Html.DisplayFor(modelItem => item.Tematica.Descricao)
                         </span>
@@ -97,7 +93,7 @@
                 </div>
                 <div class="mt-auto card-footer d-flex justify-content-center" style="border:none;">
                     @*<button class="btn btn-primary" onclick="saibaMais('@item.Id')">Saiba Mais</button>*@
-                    <button class="btn btn-dark text-white" onclick="abrirModal('@item.Id')">Saiba Mais</button>
+                    <button class="btn btn-outline-primary" onclick="abrirModal('@item.Id')">Saiba Mais</button>
                 </div>
                 <style>
                     .card:hover {
@@ -181,6 +177,8 @@
         }
     });
 </script>
+
+
 <!-- Adicione no head do seu HTML -->
 @*<script>
     function favoritarDesfavoritar(temaId, aprendizId, favoritado) {

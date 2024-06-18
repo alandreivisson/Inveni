@@ -1,13 +1,13 @@
 ﻿@model Inveni.ViewModel.CadastroVM
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Cadastrar";
 }
 <div class="row">
     <div class="col-1">
     </div><div class="col-10 align-self-center">
         <div class="card my-5 mx-auto" style="padding: 0px 40px; width: 50%">
             <div class="text-center align-items-center">
-                <img src="~/imagens/Inveni logo.png" width="300px" height="300px" alt="" />
+                <img src="~/img/logo.png" alt="" />
             </div>
             <form asp-action="Cadastrar" asp-controller="Usuarios">
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
@@ -16,11 +16,11 @@
                     <input asp-for="@Model.Nome" class="form-control mb-3" />
                     <span asp-validation-for="@Model.Nome" class="text-danger"></span>
                 </div>
-                <div class="form-group mb-3">
+@*                <div class="form-group mb-3">
                     <label asp-for="@Model.Localizacao" class="control-label">Localização:</label>
                     <input asp-for="@Model.Localizacao" class="form-control mb-3" />
                     <span asp-validation-for="@Model.Localizacao" class="text-danger"></span>
-                </div>
+                </div>*@
                 <div class="form-group mb-3">
                     <label asp-for="@Model.Email" class="control-label">E-mail:</label>
                     <input asp-for="@Model.Email" class="form-control mb-3" />
@@ -44,18 +44,30 @@
                         <option value="3">Aprendiz</option>
                     </select>
                 </div>
-                <div class="form-group mt-2 mb-2 text-center align-items-center">
-                    <input type="submit" value="Cadastrar" class="btn btn-warning text-light mt-2" />
-                </div>
                 
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
+                    <label class="form-check-label" for="defaultCheck1">
+                        Aceito os
+                        <a asp-action="" class="text-primary text-gradient font-weight-bold"> termos de uso</a>
+                       
+                    </label>
+                </div>
+
+                <div class="form-group mt-2 mb-2 text-center align-items-center">
+                    <input type="submit" value="Cadastrar" class="btn btn-primary text-light mt-2" />
+                </div>
+
             </form>
         </div>
     </div>
     <div class="col-1">
     </div>
 </div>
-    @section Scripts {
-        @{
-            await Html.RenderPartialAsync("_ValidationScriptsPartial");
-        }
+
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
     }

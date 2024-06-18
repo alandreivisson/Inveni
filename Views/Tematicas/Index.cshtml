@@ -16,13 +16,7 @@
     <div class="col-6">
         <div class="d-flex flex-column align-items-center mt-2 mb-1">
             <p class="d-flex align-items-center">
-                <a asp-action="Create" class="ml-2 me-2 text-black" style="text-decoration: none; font-size: 25px;">Cadastrar Nova</a>
-                <img id="cadastrar-imagem"
-                     width="30"
-                     height="30"
-                     src="https://img.icons8.com/ios-filled/50/FD7E14/plus.png"
-                     alt="plus--v1"
-                     style="cursor: pointer;" />
+                <a asp-action="Create" class="ml-2 me-2 btn btn-primary-outline" style="text-decoration: none; font-size: 25px;">Cadastrar Nova</a>
             </p>
         </div>
         @*<hr/>*@
@@ -60,10 +54,10 @@
                                 <td class="text-right align-items-end text-end">
 
                                     <a asp-action="Edit" asp-route-id="@Funcoes.EncodeId(item.Id)" class="mx-3" style="text-decoration: none; color: inherit;">
-                                        <img width="20" height="20" src="https://img.icons8.com/ios-glyphs/30/FD7E14/pencil--v1.png" alt="Editar" />
+                                        <img width="20" height="20" src="https://img.icons8.com/ios-glyphs/30/007BFF/pencil--v1.png" alt="Editar" />
                                     </a>
                                    @* <a asp-action="Delete" asp-route-id="@item.Id" class="mx-3">
-                                        <img width="20" height="20" src="https://img.icons8.com/ios-filled/50/FD7E14/trash.png" alt="filled-trash" />
+                                <img width="20" height="20" src="https://img.icons8.com/ios-filled/50/007BFF/trash.png" alt="filled-trash" />
 
                                     </a>*@
                                 </td>

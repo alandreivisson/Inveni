@@ -8,7 +8,7 @@
     <div class="col-3"></div>
     <div class="col-6">
         <div class="d-flex flex-column align-items-center mt-4">
-            <h1>Meus Materiais</h1>
+            <h1>Materiais</h1>
         </div>
     </div>
     <div class="col-3"></div>
@@ -16,13 +16,13 @@
     <div class="col-3">
         <div class="d-flex flex-column align-items-center mt-2 mb-1">
             <p class="d-flex align-items-center">
-                <a asp-action="Create" class="ml-2 me-2 text-black" style="text-decoration: none; font-size: 25px;">Carregar</a>
-                <img id="cadastrar-imagem"
+                <a asp-action="Create" class="ml-2 me-2 btn btn-outline-primary align-items-center" style="text-decoration: none; font-size: 25px;">Carregar</a>
+             @*   <img id="cadastrar-imagem"
                      width="30"
                      height="30"
-                     src="https://img.icons8.com/ios-filled/50/FD7E14/plus.png"
+                     src="https://img.icons8.com/ios-filled/50/007BFF/plus.png"
                      alt="plus--v1"
-                     style="cursor: pointer;" />
+                     style="cursor: pointer;" />*@
             </p>
         </div>
         @*<hr/>*@
@@ -31,13 +31,13 @@
     <div class="col-3">
         <div class="d-flex flex-column align-items-center mt-2 mb-1">
             <p class="d-flex align-items-center">
-                <a asp-action="MaterialEnviadoHistorico" class="ml-2 me-2 text-black" style="text-decoration: none; font-size: 25px;">Ver Enviados</a>
-                <img id="historico-imagem"
+                <a asp-action="MaterialEnviadoHistorico" class="ml-2 me-2 btn btn-outline-primary align-items-center" style="text-decoration: none; font-size: 25px;">Enviados</a>
+             @*   <img id="historico-imagem"
                      width="30"
                      height="30"
-                     src="https://img.icons8.com/pastel-glyph/64/surprise--v2.png" 
+                     src="https://img.icons8.com/pastel-glyph/64/007BFF/surprise--v2.png"
                      alt="plus--v1"
-                     style="cursor: pointer;" />
+                     style="cursor: pointer;" />*@
             </p>
         </div>
     </div>
@@ -45,8 +45,8 @@
 </div>
 <div class="row">
     <div class="col-3"></div>
-    <div class="col-6">
-        <div class="card">
+    <div    class="col-6">
+        <div class="card blue-bordered-card">
             <div class="card-body">
                 <table id="tabela-material" class="table">
                     <thead>
@@ -66,23 +66,23 @@
                                 </td>
                                 <td class="text-right align-items-end text-end">
                                     <a asp-action="Delete" asp-route-id="@item.Id">
-                                        <img width="20" height="20" src="https://img.icons8.com/ios-filled/50/waste.png" alt="Cadastrar" />
+                            <img width="20" height="20" src="https://img.icons8.com/ios-filled/50/007BFF/waste.png" alt="Cadastrar" />
                                     </a>
                                 </td>*@
                                 <td>
                                     @Html.DisplayFor(modelItem => item.NomeArquivo)
                                 </td>
                                 <td class="text-right align-items-end text-end">
-                                    <a data-material-id="@item.Id" class="mx-3 compartilhar-link" style="text-decoration: none; color: inherit;">
-                                        <img width="20" height="20" src="https://img.icons8.com/ios-filled/50/FD7E14/forward-arrow.png" alt="forward-arrow" />
+                                    <a data-material-id="@item.Id" class="mx-1 compartilhar-link" style="text-decoration: none; color: inherit;">
+                                        <img width="20" height="20" src="https://img.icons8.com/ios-filled/50/007BFF/forward-arrow.png" alt="forward-arrow" />
                                     </a>
                                     |
-                                    <a href="@Url.Action("Download", "Material", new { materialId = item.Id })" class="mx-3" style="text-decoration: none; color: inherit;">
-                                        <img width="20" height="20" src="https://img.icons8.com/material-sharp/24/FD7E14/download--v1.png" alt="Download" />
+                                    <a href="@Url.Action("Download", "Material", new { materialId = item.Id })" class="mx-1" style="text-decoration: none; color: inherit;">
+                                        <img width="20" height="20" src="https://img.icons8.com/material-sharp/24/007BFF/download--v1.png" alt="Download" />
                                     </a>
                                     |
-                                    <a asp-action="Delete" asp-route-id="@Funcoes.EncodeId(item.Id)" class="mx-3">
-                                        <img width="20" height="20" src="https://img.icons8.com/ios-filled/50/FD7E14/trash.png" alt="filled-trash" />
+                                    <a asp-action="Delete" asp-route-id="@Funcoes.EncodeId(item.Id)" class="mx-1">
+                                        <img width="20" height="20" src="https://img.icons8.com/ios-filled/50/007BFF/trash.png" alt="filled-trash" />
 
                                     </a>
                                     
@@ -115,6 +115,7 @@
 <link rel="stylesheet" href="https://cdn.datatables.net/2.0.3/css/dataTables.dataTables.css" />
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
 <script src="https://cdn.datatables.net/2.0.3/js/dataTables.js"></script>
+
 
 <script type="text/javascript">
     var js = jQuery.noConflict(true);

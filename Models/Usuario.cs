@@ -34,7 +34,7 @@ namespace Inveni.Models
 
         [MaxLength(500)]
         public string? CaminhoFoto { get; set; }
-        public TematicaMestre? TematicaMestre { get; set; }
+     
         public virtual ICollection<TematicaMestre>? TematicaMestres { get; set; }
 
 

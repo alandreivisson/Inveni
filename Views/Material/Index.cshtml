@@ -20,7 +20,7 @@
                 <img id="cadastrar-imagem"
                      width="30"
                      height="30"
-                     src="https://img.icons8.com/ios-filled/50/FD7E14/plus.png"
+                     src="https://img.icons8.com/ios-filled/50/0d6efd/plus.png"
                      alt="plus--v1"
                      style="cursor: pointer;" />
             </p>
@@ -35,7 +35,7 @@
                 <img id="historico-imagem"
                      width="30"
                      height="30"
-                     src="https://img.icons8.com/pastel-glyph/64/surprise--v2.png" 
+                     src="https://img.icons8.com/pastel-glyph/64/0d6efd/surprise--v2.png"
                      alt="plus--v1"
                      style="cursor: pointer;" />
             </p>
@@ -55,37 +55,34 @@
                                 @Html.DisplayNameFor(model => model.NomeArquivo)
                             </th>
                             <th></th>
+                            <th></th>
+                            <th></th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach (var item in Model)
                         {
                             <tr>
-                               @* <td>
-                                    @Html.DisplayFor(modelItem => item.Descricao)
-                                </td>
-                                <td class="text-right align-items-end text-end">
-                                    <a asp-action="Delete" asp-route-id="@item.Id">
-                                        <img width="20" height="20" src="https://img.icons8.com/ios-filled/50/waste.png" alt="Cadastrar" />
-                                    </a>
-                                </td>*@
                                 <td>
                                     @Html.DisplayFor(modelItem => item.NomeArquivo)
                                 </td>
                                 <td class="text-right align-items-end text-end">
-                                    <a data-material-id="@item.Id" class="mx-3 compartilhar-link" style="text-decoration: none; color: inherit;">
-                                        <img width="20" height="20" src="https://img.icons8.com/ios-filled/50/FD7E14/forward-arrow.png" alt="forward-arrow" />
-                                    </a>
-                                    |
                                     <a href="@Url.Action("Download", "Material", new { materialId = item.Id })" class="mx-3" style="text-decoration: none; color: inherit;">
-                                        <img width="20" height="20" src="https://img.icons8.com/material-sharp/24/FD7E14/download--v1.png" alt="Download" />
+                                        <img width="20" height="20" src="https://img.icons8.com/material-sharp/24/0d6efd/download--v1.png" alt="Download" />
                                     </a>
                                     |
+                                </td>
+                                <td class="text-right align-items-end text-end">
+                                    <a data-material-id="@item.Id" class="mx-3 compartilhar-link" style="text-decoration: none; color: inherit;">
+                                        <img width="20" height="20" src="https://img.icons8.com/ios-filled/50/0d6efd/forward-arrow.png" alt="forward-arrow" />
+                                    </a>  
+                                    |
+                                </td>
+                                <td class="text-right align-items-end text-end">
                                     <a asp-action="Delete" asp-route-id="@Funcoes.EncodeId(item.Id)" class="mx-3">
                                         <img width="20" height="20" src="https://img.icons8.com/ios-filled/50/FD7E14/trash.png" alt="filled-trash" />
 
                                     </a>
-                                    
                                 </td>
                             </tr>
                         }
@@ -112,14 +109,35 @@
     </div>
 </div>
 
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
 <link rel="stylesheet" href="https://cdn.datatables.net/2.0.3/css/dataTables.dataTables.css" />
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
-<script src="https://cdn.datatables.net/2.0.3/js/dataTables.js"></script>
+
 
 <script type="text/javascript">
     var js = jQuery.noConflict(true);
     js(document).ready(function () {
         js('#tabela-material').DataTable();
+    });
+
+    $(document).ready(function () {
+        // Definindo a função toggleMatriculas no escopo global
+        window.toggleMatriculas = function (tematicaId) {
+            // Fecha todas as linhas de matrícula
+            var allRows = document.getElementsByClassName('matricula-row');
+            for (var i = 0; i < allRows.length; i++) {
+                allRows[i].style.display = 'none';
+            }
+
+            // Alterna a exibição da linha de matrícula clicada
+            var targetRow = document.getElementById('matricula-row-' + tematicaId);
+            if (targetRow.style.display === 'none' || targetRow.style.display === '') {
+                targetRow.style.display = 'block';
+            } else {
+                targetRow.style.display = 'none';
+            }
+        }
     });
 </script>
 
@@ -135,23 +153,6 @@
             abrirModal(materialId);
         });
     });
-
-    function abrirModal(materialId) {
-        // Faça uma requisição AJAX ou manipule os dados diretamente, dependendo do que preferir
-        $.ajax({
-            url: '/Material/CompartilharMaterial/' + id,
-            type: 'GET',
-            success: function (data) {
-                // Preencha o conteúdo do modal com os dados retornados pela action
-                $('#modalBody').html(data);
-                // Abra o modal
-                $('#infoModal').modal('show');
-            },
-            error: function (error) {
-                console.error(error);
-            }
-        });
-    }
 </script>
 <script>
     function abrirModal(id) {

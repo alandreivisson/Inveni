@@ -2,7 +2,7 @@
     public class Favorito {
         public int Id { get; set; }
         public int AprendizId { get; set; }
-        public int TematicaMestreId { get; set; }
+        public int TematicasMestreId { get; set; }
         public bool Favoritado { get; set; }
 
         public virtual Usuario? Aprendiz { get; set; }

@@ -66,7 +66,7 @@ namespace Inveni.Controllers {
             var matricula = new Matricula(); // Substitua isso pela sua lógica para obter a instância de Matricula
 
             // Faça uma chamada AJAX para obter os usuários não cadastrados
-            var usuariosNaoCadastrados = GetUsuariosNaoCadastrados(matricula.TematicaMestreId);
+            var usuariosNaoCadastrados = GetUsuariosNaoCadastrados(matricula.TematicasMestreId);
             ViewBag.AprendizId = new SelectList((System.Collections.IEnumerable)usuariosNaoCadastrados, "Id", "Email");
 
             return View();
@@ -84,7 +84,7 @@ namespace Inveni.Controllers {
             {
                 // Adicione lógica para buscar usuários que não estão cadastrados para a temática do mestre
                 var usuariosNaoCadastrados = _context.Usuario
-                    .Where(u => !_context.Matricula.Any(m => m.TematicaMestreId == matricula.TematicaMestreId && m.AprendizId == u.Id))
+                    .Where(u => !_context.Matricula.Any(m => m.TematicasMestreId == matricula.TematicasMestreId && m.AprendizId == u.Id))
                     .ToList();
 
                 ViewBag.AprendizId = new SelectList(usuariosNaoCadastrados, "Id", "Email", matricula.AprendizId);
@@ -115,7 +115,7 @@ namespace Inveni.Controllers {
                 return NotFound();
             }
             ViewData["AprendizId"] = new SelectList(_context.Usuario, "Id", "Id", matricula.AprendizId);
-            ViewData["TematicaMestreId"] = new SelectList(_context.TematicaMestre, "Id", "Id", matricula.TematicaMestreId);
+            ViewData["TematicaMestreId"] = new SelectList(_context.TematicaMestre, "Id", "Id", matricula.TematicasMestreId);
             return View(matricula);
         }
 
@@ -151,7 +151,7 @@ namespace Inveni.Controllers {
                 return RedirectToAction(nameof(Index));
             }
             ViewData["AprendizId"] = new SelectList(_context.Usuario, "Id", "Id", matricula.AprendizId);
-            ViewData["TematicaMestreId"] = new SelectList(_context.TematicaMestre, "Id", "Id", matricula.TematicaMestreId);
+            ViewData["TematicaMestreId"] = new SelectList(_context.TematicaMestre, "Id", "Id", matricula.TematicasMestreId);
             return View(matricula);
         }
 
@@ -200,7 +200,7 @@ namespace Inveni.Controllers {
             var usuariosNaoCadastrados = _context.Usuario
                 .Include(u => u.UsuarioPerfil)  // Garante que a propriedade UsuarioPerfil seja carregada
                 .Where(u => u.UsuarioPerfil.Any(up => up.PerfilId == 3) && !_context.Matricula
-                    .Any(m => m.TematicaMestreId == tematicaMestreId && m.AprendizId == u.Id))
+                    .Any(m => m.TematicasMestreId == tematicaMestreId && m.AprendizId == u.Id))
                 .ToList();
 
             return Json(usuariosNaoCadastrados);

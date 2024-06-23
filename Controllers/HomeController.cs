@@ -70,8 +70,9 @@ namespace Inveni.Controllers {
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             return RedirectToAction("Index", "Home");
         }
+
         [HttpPost]
-        public async Task<IActionResult> Filtrar(FiltrarViewModel filtro, string searchTerm) {
+        public async Task<IActionResult> Filtrar(FiltrarViewModel filtro, string searchTerm, bool? favoritos, bool?matriculado, bool? pendente) {
             var contexto = _context.TematicaMestre
                 .Include(t => t.Tematica)
                 .ThenInclude(t => t.Categoria) // Inclua a Categoria
@@ -104,6 +105,55 @@ namespace Inveni.Controllers {
                 contexto = contexto.Where(t => t.ModeloId == filtro.ModeloId);
             }
 
+            // Filtrar favoritos, se necessário
+            if (User.Identity.IsAuthenticated && User.Claims.First(c => c.Type == "Permissoes").Value == "3") {
+                if (favoritos == null) {
+                    favoritos = false;
+                }
+                if ((bool)favoritos)
+                {
+                    var idUsuario = User.FindFirst(ClaimTypes.Name)?.Value;
+                    var idUsuarioInt = Convert.ToInt32(idUsuario);
+                    var favoritosIds = await _context.Favoritado
+                        .Where(f => f.AprendizId == idUsuarioInt)
+                        .Select(f => f.TematicasMestreId)
+                        .ToListAsync();
+
+                    contexto = contexto.Where(t => favoritosIds.Contains(t.Id));
+                }
+                if (matriculado == null) {
+                    matriculado = false;
+                }
+                if ((bool)matriculado) 
+                {
+                    var idUsuario = User.FindFirst(ClaimTypes.Name)?.Value;
+                    var idUsuarioInt = Convert.ToInt32(idUsuario);
+                    var matriculadoIds = await _context.MatriculaMestre
+                        .Where(m => m.AprendizId == idUsuarioInt && m.Status == MatriculaStatus.Matriculado)
+                        .Select(m => m.TematicaMestreId)
+                        .ToListAsync();
+
+                    contexto = contexto.Where(t => matriculadoIds.Contains(t.Id));
+                }
+                if (pendente == null)
+                {
+                    pendente = false;
+                }
+                if ((bool)pendente)
+                {
+                    var idUsuario = User.FindFirst(ClaimTypes.Name)?.Value;
+                    var idUsuarioInt = Convert.ToInt32(idUsuario);
+                    var matriculadoIds = await _context.MatriculaMestre
+                        .Where(m => m.AprendizId == idUsuarioInt && m.Status == MatriculaStatus.Pendente)
+                        .Select(m => m.TematicaMestreId)
+                        .ToListAsync();
+
+                    contexto = contexto.Where(t => matriculadoIds.Contains(t.Id));
+                }
+
+            }
+           
+
             contexto = contexto.OrderBy(t => t.Tematica.Descricao);
 
             ViewBag.Categorias = new SelectList(await _context.Categoria.OrderBy(c => c.Descricao).ToListAsync(), "Id", "Descricao");
@@ -115,6 +165,53 @@ namespace Inveni.Controllers {
 
             return View("Index", await contexto.ToListAsync());
         }
+
+
+        //[HttpPost]
+        //public async Task<IActionResult> Filtrar(FiltrarViewModel filtro, string searchTerm) {
+        //    var contexto = _context.TematicaMestre
+        //        .Include(t => t.Tematica)
+        //        .ThenInclude(t => t.Categoria) // Inclua a Categoria
+        //        .Include(t => t.Usuario)
+        //        .Include(t => t.Modelo)
+        //        .Where(t => t.Ativo);
+
+        //    // Aplicar filtro de palavra-chave
+        //    if (!string.IsNullOrEmpty(searchTerm))
+        //    {
+        //        contexto = contexto.Where(t =>
+        //            t.Usuario.Nome.Contains(searchTerm) ||
+        //            t.Tematica.Descricao.Contains(searchTerm) ||
+        //            t.Modelo.Descricao.Contains(searchTerm) ||
+        //            t.Tematica.Categoria.Descricao.Contains(searchTerm));
+        //    }
+
+        //    if (filtro.CategoriaId.HasValue)
+        //    {
+        //        contexto = contexto.Where(t => t.Tematica.CategoriaId == filtro.CategoriaId);
+        //    }
+
+        //    if (filtro.TematicaId.HasValue)
+        //    {
+        //        contexto = contexto.Where(t => t.TematicaId == filtro.TematicaId);
+        //    }
+
+        //    if (filtro.ModeloId.HasValue)
+        //    {
+        //        contexto = contexto.Where(t => t.ModeloId == filtro.ModeloId);
+        //    }
+
+        //    contexto = contexto.OrderBy(t => t.Tematica.Descricao);
+
+        //    ViewBag.Categorias = new SelectList(await _context.Categoria.OrderBy(c => c.Descricao).ToListAsync(), "Id", "Descricao");
+        //    ViewBag.Categorias = AddDefaultItem(ViewBag.Categorias, "Todas as Categorias");
+        //    ViewBag.Tematicas = new SelectList(await _context.Tematica.OrderBy(t => t.Descricao).ToListAsync(), "Id", "Descricao");
+        //    ViewBag.Tematicas = AddDefaultItem(ViewBag.Tematicas, "Todas as Temáticas");
+        //    ViewBag.Modelos = new SelectList(await _context.Modelo.OrderBy(m => m.Descricao).ToListAsync(), "Id", "Descricao");
+        //    ViewBag.Modelos = AddDefaultItem(ViewBag.Modelos, "Todos os Modelos");
+
+        //    return View("Index", await contexto.ToListAsync());
+        //}
         public IActionResult Detalhes(int id) 
         {
 
@@ -146,22 +243,99 @@ namespace Inveni.Controllers {
         }
 
         [HttpPost]
-        public IActionResult SolicitarMatricula(int tematicaMestreId) {
-            
-            var userId = Convert.ToInt32(User.FindFirst(ClaimTypes.Name)?.Value);
-            var matricula = new Matricula
+        [Authorize(Policy = "Aprendiz")]
+        public async Task<IActionResult> SolicitarMatricula(int idAprendiz, int idTematicaMestre) {
+
+            var tematicaMestre = await _context.TematicaMestre
+            .Include(t => t.Tematica)
+                .ThenInclude(t => t.Categoria)
+            .Include(t => t.Usuario)
+            .Include(t => t.Modelo)
+            .FirstOrDefaultAsync(tm => tm.Id == idTematicaMestre && tm.Ativo);
+
+            var matriculaMestre = new MatriculaMestre
             {
-                AprendizId = userId,
-                TematicaMestreId = tematicaMestreId,
+                MestreId = tematicaMestre.UsuarioId,
+                AprendizId = idAprendiz,
+                TematicaMestreId = tematicaMestre.Id,
                 Status = MatriculaStatus.Pendente
             };
 
-            _context.Add(matricula);
-            _context.SaveChanges();
+            _context.MatriculaMestre.Add(matriculaMestre);
+            var usuario = _context.Usuario
+                .FirstOrDefault(m => m.Id == idAprendiz);
+            var mensagem = $"Matricula solicitada - Usuário(a): {usuario.Nome} - Temática: {tematicaMestre.Tematica.Descricao}";
 
-            // Redirecione de volta para a página de detalhes
-            return RedirectToAction("Detalhes", new { id = tematicaMestreId });
+            var notificacao = new Notificacao
+            {
+                Descricao = mensagem,
+                Aberto = true,
+                UsuarioId = matriculaMestre.MestreId // Define o aprendiz como destinatário da notificação
+            };
+
+            _context.Notificacao.Add(notificacao);
+
+            await _context.SaveChangesAsync();
+
+            var matricula = _context.MatriculaMestre
+                                    .FirstOrDefault(m => m.TematicaMestreId == idTematicaMestre && m.AprendizId == idAprendiz);
+            if (matricula != null)
+                {
+                    return Json(new { status = 1 }); // Retorne o novo status
+                }
+
+                return Json(new { status = 0 }); // Retorne um status de erro se não encontrado
         }
+        [HttpPost]
+        [Authorize(Policy = "Aprendiz")]
+        public async Task<IActionResult> FavoritarTematicaMestre(int idAprendiz, int idTematicaMestre) {
+
+           
+
+            var favoritado = new Favoritado
+            {
+                AprendizId = idAprendiz,
+                TematicasMestreId = idTematicaMestre
+                // Define o aprendiz como destinatário da notificação
+            };
+
+            _context.Favoritado.Add(favoritado);
+
+            await _context.SaveChangesAsync();
+
+            var favoritadoVerifica = _context.Favoritado
+                                             .FirstOrDefault(m => m.TematicasMestreId == idTematicaMestre && m.AprendizId == idAprendiz);
+          
+            if (favoritadoVerifica != null)
+            {
+                return Json(new { status = 0}); // Retorne o novo status
+            }
+
+            return Json(new { status = 1 }); // Retorne um status de erro se não encontrado
+        }
+
+        [HttpPost]
+        [Authorize(Policy = "Aprendiz")]
+        public async Task<IActionResult> DesfavoritarTematicaMestre(int idAprendiz, int idTematicaMestre) {
+
+            var favoritado = _context.Favoritado
+                                            .FirstOrDefault(m => m.TematicasMestreId == idTematicaMestre && m.AprendizId == idAprendiz);
+
+            _context.Favoritado.Remove(favoritado);
+
+            await _context.SaveChangesAsync();
+
+            var favoritadoVerifica = _context.Favoritado
+                                             .FirstOrDefault(m => m.TematicasMestreId == idTematicaMestre && m.AprendizId == idAprendiz);
+
+            if (favoritadoVerifica != null)
+            {
+                return Json(new { status = 1 }); // Retorne o novo status
+            }
+
+            return Json(new { status = 0 }); // Retorne um status de erro se não encontrado
+        }
+
 
         [HttpPost]
         public IActionResult FavoritarDesfavoritar(int temaId, int aprendizId, bool favoritado) {
@@ -176,12 +350,12 @@ namespace Inveni.Controllers {
                 if (aprendiz != null && tema != null)
                  {
                     // Verifica se já existe um registro de favorito para este tema e aprendiz
-                   var favorito = aprendiz.Favoritos.FirstOrDefault(f => f.TematicaMestreId == temaId && f.AprendizId == aprendizId);
+                   var favorito = aprendiz.Favoritos.FirstOrDefault(f => f.TematicasMestreId == temaId && f.AprendizId == aprendizId);
 
                     if (favoritado && favorito == null)
                     {
         //                // Se favoritado e não existir, cria um novo registro
-                        aprendiz.Favoritos.Add(new Favorito { AprendizId = aprendizId, TematicaMestreId = temaId, Favoritado = true });
+                        aprendiz.Favoritos.Add(new Favorito { AprendizId = aprendizId, TematicasMestreId = temaId, Favoritado = true });
                     }
                     else if (!favoritado && favorito != null)
                     {
@@ -209,8 +383,76 @@ namespace Inveni.Controllers {
                 });
             }
         }
+        [HttpPost]
+        [Authorize(Policy = "Aprendiz")]
+        public ActionResult VerificarFavoritado(int id, int idAprendiz) {
+            var isUserAuthenticated = User.Identity.IsAuthenticated.ToString().ToLower();
+            if (!string.IsNullOrEmpty(isUserAuthenticated))
+            {
+                var favoritado = _context.Favoritado
+                                                .FirstOrDefault(m => m.TematicasMestreId == id && m.AprendizId == idAprendiz);
+                if (favoritado != null) {
+                    return Json(new
+                    {
+                        status = 0
+                    });
+                }
+                else
+                {
+                    return Json(new
+                    {
+                        status = 1
+                    });
+                }
+            }
+            else
+            {
+                // Usuário não autenticado, lidar com isso de acordo com a sua lógica de negócios
+                return Json(null);
+            }
+        }
+            [HttpPost]
+        [Authorize(Policy = "Aprendiz")]
+        public ActionResult VerificarMatricula(int id, int idAprendiz) {
+            var isUserAuthenticated = User.Identity.IsAuthenticated.ToString().ToLower();
+            if (!string.IsNullOrEmpty(isUserAuthenticated))
+            {
+                var matricula = _context.MatriculaMestre
+                                        .FirstOrDefault(m => m.TematicaMestreId == id && m.AprendizId == idAprendiz);
 
-
+                if (matricula != null)
+                {
+                    
+                    var result = matricula.Status;
+                    if (result == MatriculaStatus.Matriculado)
+                    {
+                        return Json(new
+                        {
+                            status = 0
+                        });
+                    }
+                    else {
+                        return Json(new
+                        {
+                            status = 1
+                        });
+                    }
+                }
+                else
+                {
+                    // Se não existir, devolve 3
+                    return Json(new
+                    {
+                        status = 3
+                    });
+                }
+            }
+            else
+            {
+                // Usuário não autenticado, lidar com isso de acordo com a sua lógica de negócios
+                return Json(null);
+            }
+        }
     }
 
 

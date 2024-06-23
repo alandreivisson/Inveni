@@ -1,0 +1,100 @@
+﻿@model IEnumerable<Inveni.Models.MatriculaMestre>
+
+<div class="col-3"></div>
+<div class="col-6">
+    <div class="card">
+        <div class="card-body">
+            <table id="tabela-matriculas" class="table">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>Aprendiz</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td class="align-middle">
+                                <img src="@Url.Content(item.Aprendiz.CaminhoFoto)" alt="Ícone do Usuário" style="width: 25px; height: 25px; border-radius: 50%;" />
+                            </td>
+                            <td class="align-middle">
+                                @Html.DisplayFor(modelItem => item.Aprendiz.Nome) <br />
+                                @Html.DisplayFor(modelItem => item.Aprendiz.Email)
+                            </td>
+                            <td class="align-middle">
+                                <button class="btn btn-dark text-white" onclick="abrirModalExclusao('@item.Id','@item.Aprendiz.Nome','@item.TematicaMestre.Tematica.Descricao')">Saiba Mais</button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<div class="col-3"></div>
+
+<!-- Modal de Confirmação -->
+<div class="modal fade" id="confirmacaoModal" tabindex="-1" aria-labelledby="confirmacaoModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmacaoModalLabel">Finalizar Matrícula</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p id="confirmacaoMensagem"></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-danger" id="btnConfirmarFinalizar">Confirmar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    var js = jQuery.noConflict(true);
+
+    //function abrirModal(id, aprendizNome, tematicaDescricao) {
+    //    $.ajax({
+    //        url: '/MatriculaMestre/VisualizarMatriculas/' + tematicaId,
+    //        type: 'GET',
+    //        data: { tematicaId: tematicaId },
+    //        success: function (data) {
+    //            $('#matriculas-list').html(data);
+    //            $('#matriculasModal').modal('show');
+    //            js('#tabela-matriculas').DataTable(); // Inicializa DataTable dentro do modal, se necessário
+    //        },
+    //        error: function (error) {
+    //            console.error(error);
+    //            alert("Erro ao carregar as matrículas.");
+    //        }
+    //    });
+    //}
+   
+
+    function abrirModalExclusao(id, nome, descricao) {
+       
+        $.ajax({
+                url: '@Url.Action("FinalizarMatricula", "MatriculaMestre")',
+                type: 'POST',
+                data: { id: id },
+
+                success: function (data) {
+                
+                    // Atualizar a página ou fazer outra ação após finalizar
+                    location.reload();
+
+                $('#matriculas-list').html(data);
+                $('#matriculasModal').modal('show');
+                js('#tabela-matriculas').DataTable(); // Inicializa DataTable dentro do modal, se necessário
+            },
+            error: function (error) {
+                console.error(error);
+                alert("Erro ao finalizar as matrículas.");
+            }
+        });
+    }
+</script>

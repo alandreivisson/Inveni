@@ -46,7 +46,7 @@ namespace Inveni.Controllers
             }
             var matriculas = await _context.TematicaMestre
              .Include(t => t.Matriculas)  // Inclui informações sobre as matrículas da temática
-             .Include(t => t.Usuarios)    // Inclui informações sobre os usuários
+             .Include(t => t.Usuario)    // Inclui informações sobre os usuários
              .FirstOrDefaultAsync(t => t.Id == id && t.UsuarioId == Convert.ToInt32(User.Identity.Name));
             if (matriculas == null)
             {
@@ -174,14 +174,59 @@ namespace Inveni.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(string? id) {
             int decodeId = Funcoes.DecodeId(id);
-            var tematicaMestre = await _context.TematicaMestre.FindAsync(decodeId);
-            if (tematicaMestre != null)
+
+            var tematicaMestre = await _context.TematicaMestre
+                .Include(tm => tm.MatriculaMestre)
+                    .ThenInclude(mm => mm.MaterialMatriculaMestre)
+                .Include(tm => tm.Usuario)
+                .Include(tm => tm.Tematica)
+                .FirstOrDefaultAsync(tm => tm.Id == decodeId);
+
+            if (tematicaMestre == null)
             {
+                return NotFound();
+            }
+
+            try
+            {
+                // Deleta os registros de MaterialMatriculaMestre associados
+                foreach (var matriculaMestre in tematicaMestre.MatriculaMestre.ToList())
+                {
+                    var mensagem = $"A temática {tematicaMestre.Tematica.Descricao}, ministrada pelo(a) Mestre {tematicaMestre.Usuario.Nome} foi excluída e assim sua matrícula e todos os materiais enviados por ele(a) também!";
+
+                    var aprendizId = matriculaMestre.AprendizId;
+
+
+                    foreach (var materialMatriculaMestre in matriculaMestre.MaterialMatriculaMestre.ToList())
+                    {
+                        _context.MaterialMatriculaMestre.Remove(materialMatriculaMestre);
+                    }
+
+                    var notificacao = new Notificacao
+                    {
+                        Descricao = mensagem,
+                        Aberto = true,
+                        UsuarioId = aprendizId // Define o aprendiz como destinatário da notificação
+                    };
+
+                    _context.Notificacao.Add(notificacao);
+                    _context.MatriculaMestre.Remove(matriculaMestre);
+                }
+
+                // Deleta a TematicaMestre do contexto
                 _context.TematicaMestre.Remove(tematicaMestre);
                 await _context.SaveChangesAsync();
+
+                return RedirectToAction(nameof(Index));
             }
-            return RedirectToAction(nameof(Index));
+            catch (Exception ex)
+            {
+                // Tratar exceções, se necessário
+                Console.WriteLine($"Erro ao deletar temática mestre: {ex.Message}");
+                return StatusCode(500, "Erro ao deletar temática mestre.");
+            }
         }
+
 
 
         private bool TematicaMestreExists(int id)
@@ -207,7 +252,7 @@ namespace Inveni.Controllers
         public async Task<IActionResult> MatriculasTematicas(int id) {
             var matriculas = await _context.TematicaMestre
          .Include(t => t.Matriculas)  // Inclui informações sobre as matrículas da temática
-         .Include(t => t.Usuarios)    // Inclui informações sobre os usuários
+         .Include(t => t.Usuario)    // Inclui informações sobre os usuários
          .FirstOrDefaultAsync(t => t.Id == id && t.UsuarioId == int.Parse(User.Identity.Name));
 
             if (matriculas == null)

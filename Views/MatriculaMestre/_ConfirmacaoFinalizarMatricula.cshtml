@@ -1,0 +1,21 @@
+﻿@model Inveni.Models.MatriculaMestre
+
+<div class="modal fade" id="confirmacaoModal" tabindex="-1" aria-labelledby="confirmacaoModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmacaoModalLabel">Finalizar Matrícula</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>@ViewBag.MensagemConfirmacao</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <form asp-action="FinalizarMatricula" asp-route-id="@Model.Id" method="post">
+                    <input type="submit" class="btn btn-danger" value="Confirmar" />
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

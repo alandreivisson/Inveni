@@ -1,4 +1,4 @@
-﻿@model Inveni.Models.MatriculaMestre
+﻿@model IEnumerable<Inveni.Models.MatriculaMestre>
 
 @{
     ViewData["Title"] = "Create";
@@ -11,60 +11,128 @@
                 <img id="voltar-imagem"
                      width="30"
                      height="30"
-                     src="https://img.icons8.com/external-solid-adri-ansyah/64/FD7E14/external-ui-basic-ui-solid-adri-ansyah-26.png" alt="external-ui-basic-ui-solid-adri-ansyah-26"
+                     src="https://img.icons8.com/external-solid-adri-ansyah/64/0d6efd/external-ui-basic-ui-solid-adri-ansyah-26.png"
                      alt="Voltar"
                      style="cursor: pointer;" />
-                <a asp-action="Index" class="ms-2 me-2 text-black" style="text-decoration: none; font-size: 20px;"></a>
+                <a asp-action="Index" class="ms-2 me-2 text-black" style="text-decoration: none; font-size: 20px;">Voltar</a>
             </p>
         </div>
     </div>
     <div class="col-6">
         <div class="d-flex flex-column align-items-center mt-4">
-            <h1>Matriculas</h1>
-        </div>
-    </div>
-    <div class="col-3"></div>
-    <div class="col-3"></div>
-    <div class="col-6">
-        <div class="d-flex flex-column align-items-center mt-2 mb-1">
-            <p class="d-flex align-items-center" style="font-size: 25px" ;>
-                Cadastro
-                <img width="30" height="30" class="ms-2" src="https://img.icons8.com/ios-filled/50/FD7E14/plus.png" alt="plus" />
-            </p>
+            <h1>Matrículas - Solicitações </h1>
         </div>
     </div>
     <div class="col-3"></div>
 </div>
-<div class="row">
-    <div class="col-3">
-    </div>
-    <div class="col-6">
+<div class="row mt-4">
+    <div class="col-2"></div>
+    <div class="col-8">
         <div class="card">
             <div class="card-body">
-                <form asp-action="Create">
-                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                    <div class="form-group">
-                        <label asp-for="AprendizId" class="control-label"></label>
-                        <select asp-for="AprendizId" class="form-control" asp-items="ViewBag.AprendizId"></select>
-                        <input asp-for="MestreId" type="hidden" />
-                        <span id="msg"></span>
-                    </div>
-                    <div class="form-group col-12 mt-3 text-center text-white">
-                        <input type="submit" id="botao" value="Cadastrar" class="btn btn-warning text-white" />
-                    </div>
-                </form>
+                @if (Model.Any())
+                {
+                    <table id="tabela-pendentes" class="table">
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th>Aprendiz</th>
+                                <th>Email</th>
+                                <th>Temática</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td class="align-middle">
+                                        <img src="@Url.Content(item.Aprendiz.CaminhoFoto)" alt="User Icon" style="height: 50px; border-radius: 50%;" />
+                                    </td>
+                                    <td class="align-middle">
+                                        @item.Aprendiz.Nome
+                                    </td>
+                                    <td class="align-middle">
+                                        @item.Aprendiz.Email
+                                    </td>
+                                    <td class="align-middle">
+                                        @item.TematicaMestre.Tematica.Descricao
+                                    </td>
+                                    <td class="align-middle">
+                                        <button class="btn btn-success" onclick="confirmarMatricula(@item.Id)">Confirmar</button>
+                                        <button class="btn btn-danger" onclick="rejeitarMatricula(@item.Id)">Rejeitar</button>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                }
+                else
+                {
+                    <p>Nenhuma matrícula pendente encontrada.</p>
+                }
+
             </div>
         </div>
     </div>
-    <div class="col-3">
+    <div class="col-2">
     </div>
 </div>
 
-
-
 <script>
     document.getElementById("voltar-imagem").addEventListener("click", function () {
-        // Quando a imagem for clicada, redirecionar para a ação "Create"
-        window.location.href = "/MatriculaMestre/Index"; // Substitua "ControllerName" pelo nome real do seu controlador
+        window.location.href = "/MatriculaMestre/Index";
+    });
+
+    function confirmarMatricula(id) {
+        
+        var dataToSend = { id: id };
+
+        $.ajax({
+            url: '@Url.Action("Confirmar", "MatriculaMestre")',
+            type: 'POST',
+            data: dataToSend,
+            success: function (response) {
+                if (response.ok) {
+                    location.reload();
+                } else {
+                    alert('Erro ao confirmar matrícula: ' + response.message);
+                }
+            },
+            error: function (xhr, status, error) {
+                alert("Falhou a tentativa de confirmar! Erro: " + error + "\nStatus: " + status + "\nResponse Text: " + xhr.responseText);
+            }
+        });
+    }
+
+    function rejeitarMatricula(id) {
+
+        var dataToSend = { id: id };
+
+        $.ajax({
+            url: '@Url.Action("Rejeitar", "MatriculaMestre")',
+            type: 'POST',
+            data: dataToSend,
+            success: function (response) {
+                if (response.ok) {
+                    location.reload();
+                } else {
+                    alert('Erro ao rejeitar matrícula.');
+                }
+            },
+            error: function (xhr, status, error) {
+                alert("Falhou a tentativa de rejeitar! Erro: " + error + "\nStatus: " + status + "\nResponse Text: " + xhr.responseText);
+            }
+        });
+    }
+</script>
+
+
+
+
+<script type="text/javascript">
+    var js = jQuery.noConflict(true);
+    js(document).ready(function () {
+        js('#tabela-pendentes').DataTable();
     });
 </script>

@@ -29,5 +29,6 @@ namespace Inveni.Models {
         public virtual ICollection<MatriculaMestre>? MatriculaMestre { get; set; }
         public virtual ICollection<Matricula>? Matriculas { get; set; }
         public virtual ICollection<Favorito>? Favoritos { get; set; }
+        public virtual ICollection<Favoritado>? Favoritado { get; set; }
     }
 }

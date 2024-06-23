@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "43jooKuJ9ZGZNL7280ocG/6tK9CRF6eo4a4ctXaoFUftsFYL3oJ94l29ZMLXU1G/rygtaCwGOUL3gfh8WwUkww==",
+  "dgSpecHash": "ulnL0nGiPcs1e3I+4s1ZakXUrOJY+UQce3vicaq9C1ujx6/TIJ+3hLEg137KStZWDLLZSkNYoqmS+jStuzcycQ==",
   "success": true,
-  "projectFilePath": "C:\\Users\\marqu\\source\\repos\\Projeto Tcc-Alan\\Inveni\\Inveni.csproj",
+  "projectFilePath": "C:\\Users\\marqu\\source\\repos\\TCC-INVENI-6-SEMESTRE\\Inveni\\Inveni.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\marqu\\.nuget\\packages\\azure.core\\1.25.0\\azure.core.1.25.0.nupkg.sha512",
     "C:\\Users\\marqu\\.nuget\\packages\\azure.identity\\1.7.0\\azure.identity.1.7.0.nupkg.sha512",

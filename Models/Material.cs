@@ -18,5 +18,13 @@ namespace Inveni.Models {
 
         [NotMapped]
         public IFormFile? Arquivo { get; set; }
+
+        [Required]
+        public bool Ativo { get; set; } = true;  // Atributo booleano com valor padrão true
+
+        // Construtor
+        public Material() {
+            Ativo = true;  // Garante que o valor padrão seja true
+        }
     }
 }

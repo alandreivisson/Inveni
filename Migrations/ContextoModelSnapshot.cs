@@ -39,12 +39,35 @@ namespace Inveni.Migrations
                     b.ToTable("Categoria");
                 });
 
+            modelBuilder.Entity("Inveni.Models.Favoritado", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("AprendizId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TematicasMestreId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AprendizId");
+
+                    b.HasIndex("TematicasMestreId");
+
+                    b.ToTable("Favoritado");
+                });
+
             modelBuilder.Entity("Inveni.Models.Favorito", b =>
                 {
                     b.Property<int>("AprendizId")
                         .HasColumnType("int");
 
-                    b.Property<int>("TematicaMestreId")
+                    b.Property<int>("TematicasMestreId")
                         .HasColumnType("int");
 
                     b.Property<bool>("Favoritado")
@@ -53,16 +76,11 @@ namespace Inveni.Migrations
                     b.Property<int>("Id")
                         .HasColumnType("int");
 
-                    b.Property<int?>("TematicaMestreId1")
-                        .HasColumnType("int");
+                    b.HasKey("AprendizId", "TematicasMestreId");
 
-                    b.HasKey("AprendizId", "TematicaMestreId");
+                    b.HasIndex("TematicasMestreId");
 
-                    b.HasIndex("TematicaMestreId");
-
-                    b.HasIndex("TematicaMestreId1");
-
-                    b.ToTable("Favorito");
+                    b.ToTable("Favoritos");
                 });
 
             modelBuilder.Entity("Inveni.Models.Material", b =>
@@ -72,6 +90,9 @@ namespace Inveni.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<bool>("Ativo")
+                        .HasColumnType("bit");
 
                     b.Property<string>("CaminhoArquivo")
                         .IsRequired()
@@ -89,6 +110,35 @@ namespace Inveni.Migrations
                     b.HasIndex("MestreId");
 
                     b.ToTable("Material");
+                });
+
+            modelBuilder.Entity("Inveni.Models.MaterialEnviadoHistorico", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("AprendizId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("DataEnviado")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("MaterialId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("MestreId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AprendizId");
+
+                    b.HasIndex("MaterialId");
+
+                    b.ToTable("MaterialEnviadoHistorico");
                 });
 
             modelBuilder.Entity("Inveni.Models.MaterialMatricula", b =>
@@ -122,6 +172,9 @@ namespace Inveni.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<bool>("AtivoAprendiz")
+                        .HasColumnType("bit");
+
                     b.Property<DateTime>("DataEnviado")
                         .HasColumnType("datetime2");
 
@@ -154,14 +207,17 @@ namespace Inveni.Migrations
                     b.Property<int>("Status")
                         .HasColumnType("int");
 
-                    b.Property<int>("TematicaMestreId")
+                    b.Property<int?>("TematicaMestreId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TematicasMestreId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
                     b.HasIndex("AprendizId");
 
-                    b.HasIndex("TematicaMestreId");
+                    b.HasIndex("TematicasMestreId");
 
                     b.ToTable("Matricula");
                 });
@@ -183,11 +239,16 @@ namespace Inveni.Migrations
                     b.Property<int>("Status")
                         .HasColumnType("int");
 
+                    b.Property<int?>("TematicaMestreId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("AprendizId");
 
                     b.HasIndex("MestreId");
+
+                    b.HasIndex("TematicaMestreId");
 
                     b.ToTable("MatriculaMestre");
                 });
@@ -207,6 +268,32 @@ namespace Inveni.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Modelo");
+                });
+
+            modelBuilder.Entity("Inveni.Models.Notificacao", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<bool>("Aberto")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Descricao")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<int>("UsuarioId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UsuarioId");
+
+                    b.ToTable("Notificacao");
                 });
 
             modelBuilder.Entity("Inveni.Models.Perfil", b =>
@@ -326,12 +413,7 @@ namespace Inveni.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
 
-                    b.Property<int?>("TematicaMestreId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("TematicaMestreId");
 
                     b.ToTable("Usuario");
                 });
@@ -359,6 +441,25 @@ namespace Inveni.Migrations
                     b.ToTable("UsuarioPerfil");
                 });
 
+            modelBuilder.Entity("Inveni.Models.Favoritado", b =>
+                {
+                    b.HasOne("Inveni.Models.Usuario", "Aprendiz")
+                        .WithMany("Favoritado")
+                        .HasForeignKey("AprendizId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Inveni.Models.TematicaMestre", "TematicaMestre")
+                        .WithMany("Favoritado")
+                        .HasForeignKey("TematicasMestreId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Aprendiz");
+
+                    b.Navigation("TematicaMestre");
+                });
+
             modelBuilder.Entity("Inveni.Models.Favorito", b =>
                 {
                     b.HasOne("Inveni.Models.Usuario", "Aprendiz")
@@ -368,14 +469,10 @@ namespace Inveni.Migrations
                         .IsRequired();
 
                     b.HasOne("Inveni.Models.TematicaMestre", "TematicaMestre")
-                        .WithMany()
-                        .HasForeignKey("TematicaMestreId")
+                        .WithMany("Favoritos")
+                        .HasForeignKey("TematicasMestreId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.HasOne("Inveni.Models.TematicaMestre", null)
-                        .WithMany("Favoritos")
-                        .HasForeignKey("TematicaMestreId1");
 
                     b.Navigation("Aprendiz");
 
@@ -393,6 +490,25 @@ namespace Inveni.Migrations
                     b.Navigation("Mestre");
                 });
 
+            modelBuilder.Entity("Inveni.Models.MaterialEnviadoHistorico", b =>
+                {
+                    b.HasOne("Inveni.Models.Usuario", "Aprendiz")
+                        .WithMany("MaterialEnviadoHistorico")
+                        .HasForeignKey("AprendizId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Inveni.Models.Material", "Material")
+                        .WithMany("MaterialEnviadoHistorico")
+                        .HasForeignKey("MaterialId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Aprendiz");
+
+                    b.Navigation("Material");
+                });
+
             modelBuilder.Entity("Inveni.Models.MaterialMatricula", b =>
                 {
                     b.HasOne("Inveni.Models.Material", "Material")
@@ -404,7 +520,7 @@ namespace Inveni.Migrations
                     b.HasOne("Inveni.Models.Matricula", "Matricula")
                         .WithMany("MaterialMatricula")
                         .HasForeignKey("MatriculaId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Material");
@@ -423,7 +539,7 @@ namespace Inveni.Migrations
                     b.HasOne("Inveni.Models.MatriculaMestre", "MatriculaMestre")
                         .WithMany("MaterialMatriculaMestre")
                         .HasForeignKey("MatriculaMestreId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Material");
@@ -436,12 +552,12 @@ namespace Inveni.Migrations
                     b.HasOne("Inveni.Models.Usuario", "Aprendiz")
                         .WithMany("Matriculas")
                         .HasForeignKey("AprendizId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("Inveni.Models.TematicaMestre", "TematicaMestre")
                         .WithMany("Matriculas")
-                        .HasForeignKey("TematicaMestreId")
+                        .HasForeignKey("TematicasMestreId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -464,9 +580,26 @@ namespace Inveni.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("Inveni.Models.TematicaMestre", "TematicaMestre")
+                        .WithMany("MatriculaMestre")
+                        .HasForeignKey("TematicaMestreId");
+
                     b.Navigation("Aprendiz");
 
                     b.Navigation("Mestre");
+
+                    b.Navigation("TematicaMestre");
+                });
+
+            modelBuilder.Entity("Inveni.Models.Notificacao", b =>
+                {
+                    b.HasOne("Inveni.Models.Usuario", "Usuario")
+                        .WithMany("Notificacao")
+                        .HasForeignKey("UsuarioId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Usuario");
                 });
 
             modelBuilder.Entity("Inveni.Models.Tematica", b =>
@@ -485,19 +618,19 @@ namespace Inveni.Migrations
                     b.HasOne("Inveni.Models.Modelo", "Modelo")
                         .WithMany("TematicaMestre")
                         .HasForeignKey("ModeloId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("Inveni.Models.Tematica", "Tematica")
                         .WithMany("TematicaMestre")
                         .HasForeignKey("TematicaId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("Inveni.Models.Usuario", "Usuario")
-                        .WithMany("TematicaMestre")
+                        .WithMany("TematicaMestres")
                         .HasForeignKey("UsuarioId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Modelo");
@@ -505,13 +638,6 @@ namespace Inveni.Migrations
                     b.Navigation("Tematica");
 
                     b.Navigation("Usuario");
-                });
-
-            modelBuilder.Entity("Inveni.Models.Usuario", b =>
-                {
-                    b.HasOne("Inveni.Models.TematicaMestre", null)
-                        .WithMany("Usuarios")
-                        .HasForeignKey("TematicaMestreId");
                 });
 
             modelBuilder.Entity("Inveni.Models.UsuarioPerfil", b =>
@@ -525,7 +651,7 @@ namespace Inveni.Migrations
                     b.HasOne("Inveni.Models.Usuario", "Usuario")
                         .WithMany("UsuarioPerfil")
                         .HasForeignKey("UsuarioId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Perfil");
@@ -540,6 +666,8 @@ namespace Inveni.Migrations
 
             modelBuilder.Entity("Inveni.Models.Material", b =>
                 {
+                    b.Navigation("MaterialEnviadoHistorico");
+
                     b.Navigation("MaterialMatricula");
 
                     b.Navigation("MaterialMatriculaMestre");
@@ -572,16 +700,22 @@ namespace Inveni.Migrations
 
             modelBuilder.Entity("Inveni.Models.TematicaMestre", b =>
                 {
+                    b.Navigation("Favoritado");
+
                     b.Navigation("Favoritos");
 
-                    b.Navigation("Matriculas");
+                    b.Navigation("MatriculaMestre");
 
-                    b.Navigation("Usuarios");
+                    b.Navigation("Matriculas");
                 });
 
             modelBuilder.Entity("Inveni.Models.Usuario", b =>
                 {
+                    b.Navigation("Favoritado");
+
                     b.Navigation("Favoritos");
+
+                    b.Navigation("MaterialEnviadoHistorico");
 
                     b.Navigation("MatriculaMestreAprendiz");
 
@@ -589,7 +723,9 @@ namespace Inveni.Migrations
 
                     b.Navigation("Matriculas");
 
-                    b.Navigation("TematicaMestre");
+                    b.Navigation("Notificacao");
+
+                    b.Navigation("TematicaMestres");
 
                     b.Navigation("UsuarioPerfil");
                 });

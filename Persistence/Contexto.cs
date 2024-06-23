@@ -1,16 +1,13 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Inveni.Models;
 
-namespace Inveni.Persistence
-{
-    public class Contexto : DbContext
-    {
+namespace Inveni.Persistence {
+    public class Contexto : DbContext {
         //public Contexto() 
         //{
         //}
-        public Contexto(DbContextOptions<Contexto> contextOptions) : base(contextOptions)
-        {
-           // Database.EnsureCreated();
+        public Contexto(DbContextOptions<Contexto> contextOptions) : base(contextOptions) {
+             //Database.EnsureCreated();
         }
         public DbSet<Usuario> Usuario { get; set; }
         public DbSet<Perfil> Perfil { get; set; }
@@ -21,15 +18,17 @@ namespace Inveni.Persistence
         public DbSet<TematicaMestre> TematicaMestres { get; set; }
         public DbSet<Modelo> Modelo { get; set; }
         public DbSet<Matricula> Matricula { get; set; }
-        public DbSet<Material>  Material { get; set; }
+        public DbSet<Material> Material { get; set; }
         public DbSet<MaterialMatricula> MaterialMatricula { get; set; }
         public DbSet<MatriculaMestre> MatriculaMestre { get; set; }
         public DbSet<MaterialMatriculaMestre> MaterialMatriculaMestre { get; set; }
         public DbSet<MaterialEnviadoHistorico> MaterialEnviadoHistorico { get; set; }
         public DbSet<Favorito> Favoritos { get; set; }
-
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
+        public DbSet<MatriculaMestre> MatriculaMestreMestre { get; set; }
+        public DbSet<MatriculaMestre> MatriculaMestreAprendiz { get; set; }
+        public DbSet<Notificacao> Notificacao { get; set; }
+        public DbSet<Favoritado> Favoritado { get; set; }
+        protected override void OnModelCreating(ModelBuilder modelBuilder) {
             // Tematica
             modelBuilder.Entity<Tematica>()
                 .HasOne(e => e.Categoria)
@@ -65,16 +64,20 @@ namespace Inveni.Persistence
             modelBuilder.Entity<TematicaMestre>()
                 .HasOne(tm => tm.Tematica)
                 .WithMany(t => t.TematicaMestre)
-                .HasForeignKey(tm => tm.TematicaId);
+                .HasForeignKey(tm => tm.TematicaId)
+                .OnDelete(DeleteBehavior.Restrict);
+
 
             modelBuilder.Entity<TematicaMestre>()
                 .HasOne(tm => tm.Modelo)
                 .WithMany(m => m.TematicaMestre)
-                .HasForeignKey(tm => tm.ModeloId);
+                .HasForeignKey(tm => tm.ModeloId)
+                .OnDelete(DeleteBehavior.Restrict);
+
 
             // Favorito
             modelBuilder.Entity<Favorito>()
-                .HasKey(f => new { f.AprendizId, f.TematicaMestreId });
+                .HasKey(f => new { f.AprendizId, f.TematicasMestreId });
 
             modelBuilder.Entity<Favorito>()
                 .HasOne(f => f.Aprendiz)
@@ -84,7 +87,7 @@ namespace Inveni.Persistence
             modelBuilder.Entity<Favorito>()
                 .HasOne(f => f.TematicaMestre)
                 .WithMany(tm => tm.Favoritos)
-                .HasForeignKey(f => f.TematicaMestreId);
+                .HasForeignKey(f => f.TematicasMestreId);
 
             // Matricula
             modelBuilder.Entity<Matricula>()
@@ -93,7 +96,7 @@ namespace Inveni.Persistence
             modelBuilder.Entity<Matricula>()
                 .HasOne(m => m.TematicaMestre)
                 .WithMany(tm => tm.Matriculas)
-                .HasForeignKey(m => m.TematicaMestreId);
+                .HasForeignKey(m => m.TematicasMestreId);
 
             modelBuilder.Entity<Matricula>()
                 .HasOne(m => m.Aprendiz)
@@ -121,6 +124,12 @@ namespace Inveni.Persistence
                 .OnDelete(DeleteBehavior.Restrict);
 
             // MatriculaMestre
+            modelBuilder.Entity<TematicaMestre>().HasOne(tm => tm.Usuario).WithMany(u => u.TematicaMestres).HasForeignKey(tm => tm.UsuarioId);
+
+            modelBuilder.Entity<TematicaMestre>().HasOne(tm => tm.Tematica).WithMany(t => t.TematicaMestre).HasForeignKey(tm => tm.TematicaId);
+
+            modelBuilder.Entity<TematicaMestre>().HasOne(tm => tm.Modelo).WithMany(m => m.TematicaMestre).HasForeignKey(tm => tm.ModeloId);
+
             modelBuilder.Entity<MatriculaMestre>()
                 .HasKey(mm => mm.Id);
 
@@ -133,7 +142,8 @@ namespace Inveni.Persistence
             modelBuilder.Entity<MatriculaMestre>()
                 .HasOne(mm => mm.Aprendiz)
                 .WithMany(u => u.MatriculaMestreAprendiz)
-                .HasForeignKey(mm => mm.AprendizId);
+                .HasForeignKey(mm => mm.AprendizId)
+                .OnDelete(DeleteBehavior.Restrict);
 
             // MaterialMatriculaMestre
             modelBuilder.Entity<MaterialMatriculaMestre>()
@@ -165,6 +175,24 @@ namespace Inveni.Persistence
                 .HasForeignKey(meh => meh.AprendizId)
                 .OnDelete(DeleteBehavior.Restrict);
 
+            modelBuilder.Entity<Notificacao>().HasKey(meh => meh.Id);
+
+            modelBuilder.Entity<Notificacao>()
+                .HasOne(meh => meh.Usuario)
+                .WithMany(m => m.Notificacao)
+                .HasForeignKey(meh => meh.UsuarioId);
+
+            modelBuilder.Entity<Favoritado>().HasKey(meh => meh.Id);
+
+            modelBuilder.Entity<Favoritado>()
+                .HasOne(meh => meh.Aprendiz)
+                .WithMany(m => m.Favoritado)
+                .HasForeignKey(meh => meh.AprendizId);
+
+            modelBuilder.Entity<Favoritado>()
+                .HasOne(meh => meh.TematicaMestre)
+                .WithMany(m => m.Favoritado)
+                .HasForeignKey(meh => meh.TematicasMestreId);
             base.OnModelCreating(modelBuilder);
         }
     }

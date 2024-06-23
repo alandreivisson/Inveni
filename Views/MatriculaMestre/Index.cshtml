@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Inveni.Models.MatriculaMestre>
+﻿@model IEnumerable<Inveni.Models.TematicaMestre>
 
 @{
     ViewData["Title"] = "Index";
@@ -20,82 +20,122 @@
                 <img id="cadastrar-imagem"
                      width="30"
                      height="30"
-                     src="https://img.icons8.com/ios-filled/50/FD7E14/plus.png"
+                     src="https://img.icons8.com/ios-filled/50/0d6efd/plus.png"
                      alt="plus--v1"
                      style="cursor: pointer;" />
             </p>
         </div>
-        @*<hr/>*@
     </div>
     <div class="col-3"></div>
 </div>
 <div class="row">
-    <div class="col-3"></div>
-    <div class="col-6">
+    <div class="col-2"></div>
+    <div class="col-8">
         <div class="card">
             <div class="card-body">
-                <table id="tabela-matriculas" class="table">
+                <table class="table">
                     <thead>
                         <tr>
-                            <th>
-
-                            </th>
-                            <th>
-                                Aprendiz
-                            </th>
-                            <th>
-
-                            </th>
+                            <th>Temáticas</th>
+                            <th></th>
+                            <th></th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach (var item in Model)
+                        @foreach (var tematica in Model)
                         {
-                            <tr>
-                                @* <td>
-                            @Html.DisplayFor(modelItem => item.Descricao)
-                            </td>
-                            <td class="text-right align-items-end text-end">
-                            <a asp-action="Delete" asp-route-id="@item.Id">
-                            <img width="20" height="20" src="https://img.icons8.com/ios-filled/50/waste.png" alt="Cadastrar" />
-                            </a>
-                            </td>*@
-                                <td class="align-middle">
-                                    <img src="@Url.Content(item.Aprendiz.CaminhoFoto)" alt="Ícone do Usuário" style="width: 25px; height: 25px; border-radius: 50%;" />
-                                </td>
-                                <td class="align-middle">
-                                    @Html.DisplayFor(modelItem => item.Aprendiz.Nome) <br />
-                                    @Html.DisplayFor(modelItem => item.Aprendiz.Email)
-                                </td>
-                                <td class="align-middle">
-                                    <a asp-action="Delete" asp-route-id="@Funcoes.EncodeId(item.Id)" class="mx-3">
-                                        <img width="20" height="20" src="https://img.icons8.com/ios-filled/50/FD7E14/trash.png" alt="Lixeira cheia" />
+                            if (tematica.MatriculaMestre.Any())
+                            {
+                                <tr>
+                                    <td>
+                                        <strong>@tematica.Tematica.Descricao</strong>
+                                    </td>
+                                    <td></td>
+                                    <td>
+                                        <button class="btn btn-primary" onclick="toggleMatriculas(@tematica.TematicaId)">Visualizar Matrículas</button>
+                                    </td>
+                                </tr>
+                                @foreach (var matricula in tematica.MatriculaMestre)
+                                {
+                                    <tr class="matricula-row @($"matricula-row-{tematica.TematicaId}")" style="display: none;">
+                                        <td>
+                                            <img src="@Url.Content(matricula.Aprendiz.CaminhoFoto)" alt="User Icon" style="height: 50px; border-radius: 50%;" />
+                                        </td>
+                                        <td>
+                                            <h6>@matricula.Aprendiz.Nome</h6>
+                                            <p><strong>Email:</strong> @matricula.Aprendiz.Email</p>
+                                        </td>
+                                        <td>
+                                            <form asp-action="FinalizarMatricula" asp-route-id="@matricula.Id" method="post">
+                                                <button type="submit" class="btn btn-danger">Excluir</button>
+                                            </form>
+                                        </td>
 
-                                    </a>
-
-                                </td>
-                            </tr>
+                                    </tr>
+                                }
+                            }
+                           
                         }
                     </tbody>
                 </table>
             </div>
         </div>
     </div>
-    <div class="col-3"></div>
+    <div class="col-2"></div>
 </div>
 
-<link rel="stylesheet" href="https://cdn.datatables.net/2.0.3/css/dataTables.dataTables.css" />
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
-<script src="https://cdn.datatables.net/2.0.3/js/dataTables.js"></script>
+<!-- Modal -->
+<div class="modal fade" id="matriculasModal" tabindex="-1" aria-labelledby="matriculasModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="matriculasModalLabel">Matrículas</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div id="matriculas-list" style="width: 100%; height: 100%; overflow: auto;"></div>
+            </div>
+        </div>
+    </div>
+</div>
 
 <script type="text/javascript">
     var js = jQuery.noConflict(true);
     js(document).ready(function () {
-        js('#tabela-matriculas').DataTable();
+        js('#tabela-material').DataTable();
     });
 
     document.getElementById("cadastrar-imagem").addEventListener("click", function () {
-        // Quando a imagem for clicada, redirecionar para a ação "Create"
-        window.location.href = "/MatriculaMestre/Create"; // Substitua "ControllerName" pelo nome real do seu controlador
+        window.location.href = "/MatriculaMestre/Create";
     });
+
+    var isUserAuthenticated = @(User.Identity.IsAuthenticated.ToString().ToLower());
+
+    function toggleMatriculas(tematicaId) {
+        var rows = document.getElementsByClassName(`matricula-row-${tematicaId}`);
+        for (var i = 0; i < rows.length; i++) {
+            rows[i].style.display = rows[i].style.display === 'none' ? 'table-row' : 'none';
+        }
+    }
+
+    function finalizarMatricula(id) {
+        if (confirm("Tem certeza que deseja excluir esta matrícula? O usuário será notificado!")) {
+            js.ajax({
+                type: "POST",
+                url: '@Url.Action("FinalizarMatricula", "MatriculaMestre")', // Substitua "NomeDoControlador" pelo nome correto
+                data: { id: id },
+                success: function () {
+                    location.reload(); // Recarrega a página após excluir a matrícula
+                },
+                error: function (xhr, status, error) {
+                    alert("Erro ao excluir a matrícula: " + xhr.responseText);
+                }
+            });
+        }
+    }
 </script>
+
+@section Scripts {
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdn.datatables.net/2.0.3/js/dataTables.js"></script>
+}

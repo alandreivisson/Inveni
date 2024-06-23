@@ -1,43 +1,45 @@
-﻿<!-- _CompartilharMaterialModal.cshtml -->
-@model Inveni.ViewModel.CompartilharMaterialViewModel
+﻿@model Inveni.ViewModel.CompartilharMaterialViewModel
+
 <div class="">
     <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;">
         <form asp-action="CompartilharMaterial" asp-route-id="@Model.MaterialId" method="post">
-            <div class="form-group mt-2">
-                <label>@Model.Material.NomeArquivo</label>
+            <h5>Matrículas por Temática</h5>
+            <div class="form-group mt-2 mb-2">
+                <label>@Model.MaterialNome</label>
             </div>
-            <div class="form-group mt-3">
 
-                <label>Selecione os aprendizes para compartilhar:</label>
-                @foreach (var aprendiz in Model.Aprendizes)
+            @foreach (var tematica in Model.TematicaMestre)
+            {
+                if (tematica.MatriculaMestre.Any())
                 {
-                    <div class="form-check mt-2">
-                        <input class="form-check-input" type="checkbox" name="AprendizesSelecionados" value="@aprendiz.Id">
-                        <label class="form-check-label ml-1">@aprendiz.Nome</label>
-                    </div>
-
-                       @* <div class="col-1 d-flex align-items-center justify-content-center">
-                            <input class="form-check-input" type="checkbox" name="AprendizesSelecionados" value="@aprendiz.Id">
+                    <div class="card mt-4">
+                        <div class="card-header d-flex justify-content-between align-items-center" id="heading@tematica.TematicaId">
+                            <strong>@tematica.Tematica.Descricao</strong>
+                            <button type="button" class="btn btn-primary" onclick="toggleMatriculas(@tematica.TematicaId)">Matrículas</button>
                         </div>
-                        <div class="col-1 d-flex justify-content-center">
-                            <label class="form-check-label">
-                                @aprendiz.Nome
-                            </label>
-                            @if (!string.IsNullOrEmpty(aprendiz.CaminhoFoto))
+                        <div class="card-body matricula-row" id="matricula-row-@tematica.TematicaId" style="display: none;">
+                            @foreach (var matricula in tematica.MatriculaMestre)
                             {
-                                <img src="@Url.Content(aprendiz.CaminhoFoto)" alt="User Icon" style="width: 25px; height: 25px; border-radius: 50%;" />
+                                <div class="form-check mt-2 d-flex align-items-center">
+                                    <input class="form-check-input" type="checkbox" name="matriculasMestreList[]" value="@matricula.Id">
+                                    <img src="@Url.Content(matricula.Aprendiz.CaminhoFoto)" alt="User Icon" class="ml-2 mr-2" style="height: 50px; border-radius: 50%;" />
+                                    <div class="ml-2 d-flex flex-column">
+                                        <label class="form-check-label">@matricula.Aprendiz.Nome</label>
+                                    </div>
+                                </div>
                             }
                         </div>
-                        <div class="col-8 d-flex align-items-center">
-                            
-                        </div>*@
-                    @*</div>*@
+                    </div>
                 }
-            </div>
-            <div class="form-group mt-2">
-                <button type="submit" class="btn btn-dark text-white">Enviar</button>
-            </div>
-            
+
+            }
+
+            @if (Model.TematicaMestre.Any())
+            {
+                <div class="form-group mt-2">
+                    <button type="submit" class="btn btn-dark text-white">Enviar</button>
+                </div>
+            }
         </form>
     </div>
 </div>

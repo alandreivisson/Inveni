@@ -4,7 +4,7 @@ namespace Inveni.Models {
     public class Matricula {
         public int Id { get; set; }
         public int AprendizId { get; set; }
-        public int TematicaMestreId { get; set; }
+        public int TematicasMestreId { get; set; }
         public MatriculaStatus Status { get; set; }
 
         [ForeignKey("AprendizId")]

@@ -132,3 +132,59 @@ body {
         font-size: 24px;
         color: white;
     }
+
+.img-fluid {
+    max-width: 40%;
+    max-height: 40%;
+}
+
+.nav-item {
+    display: flex; /* Enable flexbox for centering */
+    align-items: center; /* Center vertically */
+    justify-content: center; /* Center horizontally */
+    text-align: center;
+}
+
+.d-flex {
+    display: flex; /* Enable flexbox for the container */
+    justify-content: center; /* Horizontally center the child elements (image and login divs) */
+}
+
+
+.blue-background { /* Create a class named "blue-background" */
+    background-color: dodgerblue; /* Set the background color to blue */
+}
+
+.paddingb {
+    padding-bottom: 30px;
+    padding-top: 20px;
+}
+
+/* Estilos CSS para notificações */
+.notification-badge {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background-color: red;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+}
+
+.notifications-list {
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.notification-item {
+    padding: 8px;
+    border-bottom: 1px solid #ccc;
+}
+
+.close-notification {
+    float: right;
+    border: none;
+    background: none;
+    color: blue;
+    cursor: pointer;
+}

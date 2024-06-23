@@ -11,6 +11,7 @@ using Inveni.ViewModel;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.DotNet.Scaffolding.Shared.Messaging;
+using System.Text;
 
 namespace Inveni.Controllers {
     public class MaterialController : Controller {
@@ -24,37 +25,26 @@ namespace Inveni.Controllers {
 
         [HttpGet]
         [Authorize(Policy = "Mestre")]
-        public IActionResult MaterialEnviadoHistorico() {
+        public async Task<IActionResult> MaterialEnviadoHistorico() {
             var mestreId = Convert.ToInt32(User.Identity.Name);
-            // Consulta para obter os dados de MaterialEnviadoHistorico com base no ID do mestre
-            /*var materialEnviadoHistorico = _context.MaterialEnviadoHistorico
-            .Where(meh => meh.MestreId == mestreId)
-            .Include(meh => meh.Material)
-            .Include(meh => meh.Aprendiz)
-            .GroupBy(meh => new { meh.MaterialId, meh.DataEnviado })
-            .Select(g => g.FirstOrDefault())
-            .ToList();*/
 
-
-            // Consulta para obter os dados de MaterialEnviadoHistorico com base no ID do mestre
-            var materialEnviadoHistorico = _context.MaterialEnviadoHistorico
-                .Where(meh => meh.MestreId == mestreId)
+            var materialEnviadosHistorico = await _context.MaterialEnviadoHistorico
                 .Include(meh => meh.Material)
                 .Include(meh => meh.Aprendiz)
-                .ToList()
-                .GroupBy(meh => meh.DataEnviado.Date) // Agrupar por DataEnviado
-                .ToList();
-
-
+                .Where(meh => meh.MestreId == mestreId)
+                .OrderBy(meh => meh.Material.NomeArquivo)
+                .ThenBy(meh => meh.Aprendiz.Nome)
+                .ToListAsync();
 
             // Retornar os dados para a view MaterialEnviadoHistorico
-            return View(materialEnviadoHistorico);
+            return View(materialEnviadosHistorico);
         }
+
 
         [HttpPost]
         [Authorize(Policy = "Mestre")]
-        public IActionResult DeleteMaterialEnviadoHistorico(int materialId) {
-            var registros = _context.MaterialEnviadoHistorico.Where(meh => meh.MaterialId == materialId);
+        public IActionResult DeleteMaterialEnviadoHistorico(int id) {
+            var registros = _context.MaterialEnviadoHistorico.Where(meh => meh.Id == id);
             _context.MaterialEnviadoHistorico.RemoveRange(registros);
             _context.SaveChanges();
 
@@ -67,7 +57,7 @@ namespace Inveni.Controllers {
         // GET: Material
         [Authorize(Policy = "Mestre")]
         public async Task<IActionResult> Index() {
-            var contexto = _context.Material.Include(m => m.Mestre).Where(m => m.MestreId == Convert.ToInt32(User.Identity.Name));
+            var contexto = _context.Material.Include(m => m.Mestre).Where(m => m.MestreId == Convert.ToInt32(User.Identity.Name) && m.Ativo);
             return View(await contexto.ToListAsync());
         }
 
@@ -97,6 +87,9 @@ namespace Inveni.Controllers {
                 // Definir o MestreId
                 material.MestreId = userId;
 
+                //Definir o Material como true
+                material.Ativo = true;
+
                 // Criar diretório se não existir
                 var userIdFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "arquivos", userId.ToString());
                 if (!Directory.Exists(userIdFolder))
@@ -116,7 +109,7 @@ namespace Inveni.Controllers {
 
                 // Definir o CaminhoArquivo
                 // Atualize o caminho da foto no usuário
-                material.CaminhoArquivo = $"/arquivos/{userId}/{fileName}";
+                material.CaminhoArquivo = $"~/arquivos/{userId}/{fileName}";
             }
 
             _context.Add(material);
@@ -141,7 +134,7 @@ namespace Inveni.Controllers {
 
             var material = await _context.Material
                 .Include(m => m.Mestre)
-                .FirstOrDefaultAsync(m => m.Id == encodeId);
+                .FirstOrDefaultAsync(m => m.Id == encodeId && m.Ativo);
             if (material == null)
             {
                 return NotFound();
@@ -157,22 +150,70 @@ namespace Inveni.Controllers {
             int decodeId = Funcoes.DecodeId(id);
             if (_context.Material == null)
             {
-                return Problem("Entity set 'Contexto.Material'  is null.");
+                return Problem("Entity set 'Contexto.Material' is null.");
             }
             var material = await _context.Material.FindAsync(decodeId);
             if (material != null)
             {
-                _context.Material.Remove(material);
+                material.Ativo = false; // Atualiza o campo Ativo para false
+                _context.Material.Update(material); // Atualiza o contexto com a nova alteração
             }
 
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
+
         private bool MaterialExists(int id) {
             return (_context.Material?.Any(e => e.Id == id)).GetValueOrDefault();
         }
+
+        //teste
         [HttpGet]
+        [Authorize(Policy = "Mestre")]
+        public IActionResult CompartilharMaterial(int id) {
+            // Obter o material pelo ID
+            var material = _context.Material.Find(id);
+
+            if (material == null)
+            {
+                return NotFound();
+            }
+
+            int mestreId = Convert.ToInt32(User.Identity.Name);
+
+            // Consulta as temáticas do mestre ordenadas alfabeticamente
+            var tematicasMestre =  _context.TematicaMestre
+             .Include(tm => tm.Tematica)
+             .Include(tm => tm.MatriculaMestre)
+                 .ThenInclude(mm => mm.Aprendiz)
+             .Where(tm => tm.UsuarioId == mestreId)
+             .OrderBy(tm => tm.Tematica.Descricao)
+             .ToList();
+
+            // Segundo bloco: Ordena as matrículas dentro de cada temática
+            foreach (var tematica in tematicasMestre)
+            {
+                tematica.MatriculaMestre = tematica.MatriculaMestre.Where(mm => mm.Status == MatriculaStatus.Matriculado)
+                    .OrderBy(mm => mm.Aprendiz.Nome)
+                    .ToList();
+            }
+
+
+            // Criar um modelo para a exibição no modal
+            var viewModel = new CompartilharMaterialViewModel
+            {
+                MaterialId = material.Id,
+                TematicaMestre = tematicasMestre,
+                MaterialNome = material.NomeArquivo
+            };
+
+            return PartialView("_CompartilharMaterialModal", viewModel);
+        }
+
+
+
+        /*[HttpGet]
         [Authorize(Policy = "Mestre")]
         public IActionResult CompartilharMaterial(int id) {
             // Obter o material pelo ID
@@ -201,11 +242,11 @@ namespace Inveni.Controllers {
             };
 
             return PartialView("_CompartilharMaterialModal", viewModel);
-        }
+        }*/
 
         [HttpPost]
         [Authorize(Policy = "Mestre")]
-        public IActionResult CompartilharMaterial(int id, List<int> AprendizesSelecionados) {
+        public IActionResult CompartilharMaterial(int id, List<int> matriculasMestreList) {
             // Obter o material pelo ID
             var material = _context.Material.Find(id);
 
@@ -214,15 +255,20 @@ namespace Inveni.Controllers {
                 return NotFound();
             }
 
-            if (AprendizesSelecionados != null && AprendizesSelecionados.Any())
+            if (matriculasMestreList != null && matriculasMestreList.Any())
             {
-                foreach (var aprendizId in AprendizesSelecionados)
+                foreach (var matriculamestre in matriculasMestreList)
                 {
                     // Obter a matrícula do aprendiz para pegar o último atributo
-                    var matriculaMestre = _context.MatriculaMestre
-                        .Where(mm => mm.MestreId == material.MestreId && mm.AprendizId == aprendizId)
+                    var matriculaMestre = _context.MatriculaMestre.
+                            Include(mm => mm.Mestre).
+                           Include(mm => mm.TematicaMestre).
+                                 ThenInclude(mm => mm.Tematica)
+                        .Where(mm => mm.Id == matriculamestre)
                         .OrderByDescending(mm => mm.Id)  // Supondo que o último atributo seja o de maior ID
                         .FirstOrDefault();
+
+                    DateTime dataEnvio = DateTime.Now;
 
                     if (matriculaMestre != null)
                     {
@@ -231,10 +277,31 @@ namespace Inveni.Controllers {
                         {
                             MaterialId = material.Id,
                             MatriculaMestreId = matriculaMestre.Id,
-                            DataEnviado = DateTime.Now
+                            AtivoAprendiz = true,
+                            DataEnviado = dataEnvio
                         };
 
+                        var materialHistoricoEnviado = new MaterialEnviadoHistorico
+                        { 
+                            MaterialId = material.Id,
+                            AprendizId = matriculaMestre.AprendizId,
+                            MestreId = material.MestreId,
+                            DataEnviado = dataEnvio
+                        };
+
+                        var mensagem = $"Material enviado pelo(a) Mestre {matriculaMestre.Mestre.Nome} - {matriculaMestre.TematicaMestre.Tematica.Descricao}: {material.NomeArquivo}";
+
+                        var notificacao = new Notificacao
+                        {
+                            Descricao = mensagem,
+                            Aberto = true,
+                            UsuarioId = matriculaMestre.AprendizId // Define o aprendiz como destinatário da notificação
+                        };
+
+                        _context.Notificacao.Add(notificacao);
+
                         _context.MaterialMatriculaMestre.Add(materialMatriculaMestre);
+                        _context.MaterialEnviadoHistorico.Add(materialHistoricoEnviado);
                     }
                 }
 
@@ -248,13 +315,16 @@ namespace Inveni.Controllers {
             // Obter o ID do aprendiz da sessão (substitua isso pela lógica real)
             var aprendizId = Convert.ToInt32(User.Identity.Name);
 
-            // Obter as matrículas do aprendiz
             var matriculas = _context.MatriculaMestre
-            .Where(mm => mm.AprendizId == aprendizId)
-            .SelectMany(mm => mm.MaterialMatriculaMestre)
-            .Include(mmm => mmm.Material)
-                .ThenInclude(m => m.Mestre)
-            .OrderByDescending(mmm => mmm.DataEnviado).ToList();
+                 .Where(mm => mm.AprendizId == aprendizId)
+                 .SelectMany(mm => mm.MaterialMatriculaMestre)
+                 .Where(mmm => mmm.AtivoAprendiz) // Verifica se AtivoAprendiz é verdadeiro
+                 .Include(mmm => mmm.Material)
+                     .ThenInclude(m => m.Mestre)
+                 .OrderBy(mmm => mmm.DataEnviado)
+                 .ToList();
+
+
 
 
             // Criar um modelo para a exibição na view
@@ -265,6 +335,23 @@ namespace Inveni.Controllers {
 
             return View(viewModel);
         }
+        [Authorize(Policy = "Aprendiz")]
+        public async Task<IActionResult> DeleteMaterialAprendiz(int id) {
+            // Obter o ID do aprendiz da sessão (substitua isso pela lógica real)
+            var aprendizId = Convert.ToInt32(User.Identity.Name);
+
+            var materialMatriculaMestre = await _context.MaterialMatriculaMestre.FindAsync(id);
+
+            if (materialMatriculaMestre != null)
+            {
+                _context.MaterialMatriculaMestre.Remove(materialMatriculaMestre); // Atualiza o contexto com a nova alteração
+                await _context.SaveChangesAsync();
+            }
+
+            return RedirectToAction(nameof(MateriaisEnviados));
+        }
+
+
         [Authorize]
         public IActionResult Download(int materialId) {
             var material = _context.Material.Find(materialId);

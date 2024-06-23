@@ -20,9 +20,142 @@ html {
 body {
   margin-bottom: 60px;
 
-  background-image: url("../imagens/inveni.png");
+  background-image: url("'../imagens/fundo estudeja.png'");
   height:120vh;
   background-repeat: no-repeat;
   background-size:cover;
   background-position:center;
+}
+
+.azulfundo {
+    background-color: #2400F0;
+}
+
+.floating-email {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: #007bff;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 50px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    z-index: 1000;
+}
+
+    .floating-email a {
+        color: white;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+    }
+
+        .floating-email a:hover {
+            background-color: #0056b3;
+            text-decoration: none;
+            color: white;
+        }
+
+    .floating-email .material-symbols-outlined {
+        margin-right: 8px;
+        font-size: 24px;
+        color: white;
+    }
+    html {
+  font-size: 14px;
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
+  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+}
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+  margin-bottom: 60px;
+
+  background-image: url("'../imagens/fundo estudeja.png'");
+  height:120vh;
+  background-repeat: no-repeat;
+  background-size:cover;
+  background-position:center;
+}
+
+.azulfundo {
+    background-color: #2400F0;
+}
+
+.floating-email {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: #007bff;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 50px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    z-index: 1000;
+}
+
+    .floating-email a {
+        color: white;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+    }
+
+        .floating-email a:hover {
+            background-color: #0056b3;
+            text-decoration: none;
+            color: white;
+        }
+
+    .floating-email .material-symbols-outlined {
+        margin-right: 8px;
+        font-size: 24px;
+        color: white;
+    }
+
+.img-fluid {
+    max-width: 40%;
+    max-height: 40%;
+}
+
+.nav-item {
+    display: flex; /* Enable flexbox for centering */
+    align-items: center; /* Center vertically */
+    justify-content: center; /* Center horizontally */
+    text-align: center;
+}
+
+.d-flex {
+    display: flex; /* Enable flexbox for the container */
+    justify-content: center; /* Horizontally center the child elements (image and login divs) */
+}
+
+
+.blue-background { /* Create a class named "blue-background" */
+    background-color: dodgerblue; /* Set the background color to blue */
+}
+
+.paddingb {
+    padding-bottom: 30px;
+    padding-top: 20px;
 }

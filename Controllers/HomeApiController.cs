@@ -191,6 +191,33 @@ namespace Inveni.Controllers {
 
             return Ok(result);
         }
+        [HttpPost("DetalhesJson")]
+        public async Task<IActionResult> Detalhes([FromBody] DetalhesRequest request) {
+            var id = request.TematicaId;
+            var result = await _context.TematicaMestre
+                .Include(t => t.Tematica)
+                .ThenInclude(t => t.Categoria)
+                .Include(t => t.Usuario)
+                .Include(t => t.Modelo)
+                .Include(t => t.Matriculas) // Inclua as matrículas
+                .Where(t => t.Id == id)
+                .Select(t => new
+                {
+                    t.Id,
+                    UsuarioCaminhoFoto = t.Usuario.CaminhoFoto,
+                    UsuarioNome = t.Usuario.Nome,
+                    UsuarioEmail = t.Usuario.Email,
+                    Biografia = t.Biografia,
+                    TematicaDescricao = t.Tematica.Descricao,
+                    CategoriaDescricao = t.Tematica.Categoria.Descricao,
+                    ModeloDescricao = t.Modelo.Descricao,
+                })
+                .OrderBy(t => t.TematicaDescricao)
+                .ToListAsync();
+
+            return Ok(result);
+        }
+
 
     }
 }

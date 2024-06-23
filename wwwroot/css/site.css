@@ -27,8 +27,8 @@ body {
   background-position:center;
 }
 
-.azulfundo {
-    background-color: #2400F0;
+.header-azul {
+    background-color: rgb(0, 123, 255);
 }
 
 .floating-email {
@@ -133,12 +133,14 @@ body {
         color: white;
     }
 
+
 .img-fluid {
     max-width: 40%;
     max-height: 40%;
 }
 
 .nav-item {
+
     display: flex; /* Enable flexbox for centering */
     align-items: center; /* Center vertically */
     justify-content: center; /* Center horizontally */
@@ -160,31 +162,14 @@ body {
     padding-top: 20px;
 }
 
-/* Estilos CSS para notificações */
-.notification-badge {
-    position: absolute;
-    top: 0;
-    right: 0;
-    background-color: red;
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
+
+.blue-bordered-card {
+    margin-top: 20px;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-left: 10px solid #007BFF; /* Faixa azul no canto esquerdo */
 }
 
-.notifications-list {
-    max-height: 300px;
-    overflow-y: auto;
-}
+.new-font{
 
-.notification-item {
-    padding: 8px;
-    border-bottom: 1px solid #ccc;
-}
-
-.close-notification {
-    float: right;
-    border: none;
-    background: none;
-    color: blue;
-    cursor: pointer;
 }

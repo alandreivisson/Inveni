@@ -93,22 +93,23 @@
                                     <img src="@Url.Content(User.Claims.FirstOrDefault(c => c.Type == "CaminhoFoto").Value)" alt="Foto do Usuário" style="width: 35px; height: 35px; border-radius: 50%;" />
                                 </ul>
                                 <ul class="dropdown-menu dropdown-menu-end">
-                                    <span class="nav-link dropdown-toggle text-info text-dark text-end">
-                                        @User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value
-                                    </span>
+                                    <li class="d-flex justify-content-between">
+
+                                        <h4 class="dropdown-header">@User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value</h4>
+                                        
+                                    </li>
                                     <li class="d-flex justify-content-between">
                                         <a class="dropdown-item" asp-controller="Usuarios" asp-action="Alterar">
-                                            <img width="20" height="20" src="https://img.icons8.com/ios-glyphs/30/edit--v1.png" alt="edit--v1" />
                                             Alterar Dados Cadastrais
                                         </a>
                                     </li>
                                     <li>
                                         <hr class="dropdown-divider">
                                     </li>
-                                    <li class="d-flex justify-content-between">
-                                        <a class="dropdown-item" asp-controller="Home" asp-action="Sair">
-                                            <img width="20" height="20" src="https://img.icons8.com/ios/50/exit--v1.png" alt="exit--v1" />
-                                            Sair
+                                    <li class="d-flex justify-content-center">
+                                        <a class="dropdown-item " style="display: flex; align-items: center;" asp-controller="Home" asp-action="Sair">
+                                            <img width="17" height="17" src="https://img.icons8.com/ios/50/007BFF/exit--v1.png" alt="exit--v1" />
+                                           <span style="margin-left: 5px;">Sair</span>
                                         </a>
                                     </li>
                                 </ul>
@@ -136,7 +137,7 @@
     </div>
     <div class="container">
         <div class="floating-email">
-            <a href="mailto:estudefacil.oficial@gmail.com?subject=CONTATO%20COM%20ADMINISTRADORES%20DO%20ESTUDE%20FACIL">
+            <a class="text-white" href="mailto:estudefacil.oficial@gmail.com?subject=CONTATO%20COM%20ADMINISTRADORES%20DO%20ESTUDE%20FACIL">
                 <span class="material-symbols-outlined">mail</span> Fale Conosco
             </a>
         </div>

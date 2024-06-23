@@ -1,46 +1,62 @@
-﻿@{ViewData["Title"] = "Login";}
+﻿@{
+    ViewData["Title"] = "Login";
+}
 @model Inveni.ViewModel.UsuarioVM
 <form asp-controller="Usuarios" asp-action="Acesso" method="post">
-    <div class="row">
-        <div class="col-1">
-        </div>
-        <div class="col-10 align-self-center">
-            <div class="card my-5 mx-auto" style="width: 50%">
-                <div class="text-center align-items-center">
-                    <img src="~/img/logo.png" alt="" />
-                </div>
-                <div class="text-center"><div asp-validation-summary="All"></div></div>
-                <div class="w-50 mx-auto">
-                    <div class="form-group mb-3">
-                        <label asp-for="Email"></label>
-                        <input asp-for="Email" class="form-control" />
-                        <span asp-validation-for="Email" class="text-danger"></span>
+    <div class="row align-items-center">
+        <div class="d-flex ">
+
+
+
+            <div class="col-10 align-self-center">
+                <div class="card my-5 mx-auto" style="width: 50%">
+
+                    <div class="text-center align-items-center">
+                        <img src="~/img/logo.png" alt="" />
                     </div>
-                    <div class="form-group mb-3">
-                        <label asp-for="Senha"></label>
-                        <input asp-for="Senha" type="password" class="form-control" />
-                        <span asp-validation-for="Senha" class="text-danger"></span>
-                    </div>
-                    <div class="form-group pt-2 pb-2">
-                        <div class="form-check form-check-inline">
-                            <input type="radio" class="form-check-input" asp-for="Opcoes" value="3" />
-                            <label class="form-check-label">Aprendiz</label>
+
+                    <div class="text-center"><div asp-validation-summary="All"></div></div>
+                    <div class="w-50 mx-auto">
+                        <div class="form-group mb-3">
+                            <label asp-for="Email"></label>
+                            <input asp-for="Email" class="form-control" />
+                            <span asp-validation-for="Email" class="text-danger"></span>
                         </div>
-                        <div class="form-check form-check-inline">
-                            <input type="radio" class="form-check-input" asp-for="Opcoes" value="2" />
-                            <label class="form-check-label">Mestre</label>
+                        <div class="form-group mb-3">
+                            <label asp-for="Senha"></label>
+                            <input asp-for="Senha" type="password" class="form-control" />
+                            <span asp-validation-for="Senha" class="text-danger"></span>
                         </div>
+                        <div class="form-group pt-2 pb-2">
+                            <div class="form-check form-check-inline">
+                                <input type="radio" class="form-check-input" asp-for="Opcoes" value="3" />
+                                <label class="form-check-label">Aprendiz</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input type="radio" class="form-check-input" asp-for="Opcoes" value="2" />
+                                <label class="form-check-label">Mestre</label>
+                            </div>
+                        </div>
+                       
                     </div>
+
+                    <div class="col-12 mt-3 text-center">
+                        <button type="submit" class="btn btn-primary text-light mt-2" style="width: 200px;">Entrar</button>
+                    </div>
+
                     <p class="mt-2 mb-2 text-sm mx-auto">
                         Ainda não tem uma conta?
                         <a asp-action="Cadastrar" class="text-primary text-gradient font-weight-bold">Crie uma</a>
                     </p>
+
+                    <p class="mt-2 mb-2 text-sm mx-auto">
+                        Esqueceu a senha?
+                        <a asp-action="Cadastrar" class="text-primary text-gradient font-weight-bold">Recuperar</a>
+                    </p>
                 </div>
-                <button type="submit" class="btn btn-primary text-light mt-2">Entrar</button>
+
             </div>
-        </div>
-        <div class="col-1">
-        </div>
+       </div>
     </div>
 </form>
 

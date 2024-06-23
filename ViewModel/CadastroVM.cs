@@ -14,9 +14,9 @@ namespace Inveni.ViewModel
         [Required(ErrorMessage = "O campo Nome é obrigatório!")]
         public required string Nome { get; set; }
 
-        [MaxLength(200)]
+ /*       [MaxLength(200)]
         [Required(ErrorMessage = "O campo Localização é obrigatório!")]
-        public required string Localizacao { get; set; }
+        public required string Localizacao { get; set; }*/
 
         [MaxLength(200)]
         [EmailAddress]

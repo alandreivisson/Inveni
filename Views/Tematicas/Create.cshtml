@@ -11,7 +11,7 @@
                 <img id="voltar-imagem"
                      width="30"
                      height="30"
-                     src="https://img.icons8.com/external-solid-adri-ansyah/64/FD7E14/external-ui-basic-ui-solid-adri-ansyah-26.png"
+                     src="https://img.icons8.com/external-solid-adri-ansyah/64/007BFF/external-ui-basic-ui-solid-adri-ansyah-26.png"
                      alt="plus--v1"
                      style="cursor: pointer;" />
                 <a asp-action="Index" class="ms-2 me-2 text-black" style="text-decoration: none; font-size: 20px;"></a>
@@ -29,7 +29,7 @@
         <div class="d-flex flex-column align-items-center mt-2 mb-1">
             <p class="d-flex align-items-center" style="font-size: 25px" ;>
                 Cadastro
-                <img width="30" height="30" class="ms-2" src="https://img.icons8.com/metro/26/plus.png" alt="plus" />
+                <img width="30" height="30" class="ms-2" src="https://img.icons8.com/metro/26/007BFF/plus.png" alt="plus" />
             </p>
         </div>
     </div>
@@ -41,7 +41,7 @@
     </div>
     <div class="col-6">
         <div class="card">
-            <div class="card-body">
+            <div class="card-body ">
                 <form asp-action="Create">
                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                     <div class="form-group">
@@ -54,7 +54,7 @@
                         <select asp-for="CategoriaId" asp-items="ViewBag.CategoriaId" class="form-control"></select>
                     </div>
                     <div class="form-group mt-3 text-center">
-                        <input type="submit" value="Cadastrar" class="btn btn-warning text-white" />
+                        <input type="submit" value="Cadastrar" class="btn btn-primary text-white" />
                     </div>
                 </form>
             </div>

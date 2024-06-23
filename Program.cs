@@ -13,9 +13,9 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<Contexto>(options =>
 {
     //Quando for usar a conexão local, descomenta aqui
-   //options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+   options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
     //Quando for usar a conexão do site, descomenta aqui 
-    options.UseSqlServer(@"Server=estudefacilservidor.database.windows.net;DataBase=estudefacilOficial;User Id=administrador;Password=@Estudefacil2024;");
+    //options.UseSqlServer(@"Server=estudefacilservidor.database.windows.net;DataBase=estudefacilOficial;User Id=administrador;Password=@Estudefacil2024;");
 });
 
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)

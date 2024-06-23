@@ -46,7 +46,7 @@ namespace Inveni.Controllers
             }
             var matriculas = await _context.TematicaMestre
              .Include(t => t.Matriculas)  // Inclui informações sobre as matrículas da temática
-             .Include(t => t.Usuarios)    // Inclui informações sobre os usuários
+             .Include(t => t.Usuario)    // Inclui informações sobre os usuários
              .FirstOrDefaultAsync(t => t.Id == id && t.UsuarioId == Convert.ToInt32(User.Identity.Name));
             if (matriculas == null)
             {
@@ -207,7 +207,7 @@ namespace Inveni.Controllers
         public async Task<IActionResult> MatriculasTematicas(int id) {
             var matriculas = await _context.TematicaMestre
          .Include(t => t.Matriculas)  // Inclui informações sobre as matrículas da temática
-         .Include(t => t.Usuarios)    // Inclui informações sobre os usuários
+         .Include(t => t.Usuario)    // Inclui informações sobre os usuários
          .FirstOrDefaultAsync(t => t.Id == id && t.UsuarioId == int.Parse(User.Identity.Name));
 
             if (matriculas == null)

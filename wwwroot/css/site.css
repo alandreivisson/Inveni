@@ -173,3 +173,20 @@ body {
 .new-font{
 
 }
+
+.notification-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #ddd;
+    padding: 10px 0;
+}
+
+    .notification-item:last-child {
+        border-bottom: none;
+    }
+
+    .notification-item p {
+        margin: 0;
+        flex-grow: 1;
+    }

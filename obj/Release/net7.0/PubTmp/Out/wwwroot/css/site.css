@@ -27,8 +27,8 @@ body {
   background-position:center;
 }
 
-.azulfundo {
-    background-color: #2400F0;
+.header-azul {
+    background-color: rgb(0, 123, 255);
 }
 
 .floating-email {
@@ -133,12 +133,14 @@ body {
         color: white;
     }
 
+
 .img-fluid {
     max-width: 40%;
     max-height: 40%;
 }
 
 .nav-item {
+
     display: flex; /* Enable flexbox for centering */
     align-items: center; /* Center vertically */
     justify-content: center; /* Center horizontally */
@@ -158,4 +160,16 @@ body {
 .paddingb {
     padding-bottom: 30px;
     padding-top: 20px;
+}
+
+
+.blue-bordered-card {
+    margin-top: 20px;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-left: 10px solid #007BFF; /* Faixa azul no canto esquerdo */
+}
+
+.new-font{
+
 }

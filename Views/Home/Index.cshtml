@@ -1,37 +1,33 @@
 ﻿@using System.Security.Claims;
 @model IEnumerable<Inveni.Models.TematicaMestre>
-@{ViewData["Title"] = "Estude Facil";}
+@{
+    ViewData["Title"] = "Estude Facil";
+}
 
-<div class="row">
-    <!-- ... Código anterior ... -->
-    <div class="container paddingb">
-        <div class="row">
-            <div class="text-center pt-3 new-font">
-                <h1>Encontre o melhor Mestre para você!!</h1>
+
+
+    <div class="row">
+        <!-- ... Código anterior ... -->
+        <div class="container paddingb">
+            <div class="row">
+                <div class="text-center pt-3 new-font">
+                    <h1>Encontre o melhor Mestre para você!!</h1>
+                </div>
+
             </div>
-
         </div>
-    </div>
-  
-    <form asp-action="Filtrar" method="post">
+
+        <form id="filtroForm" asp-action="Filtrar" method="post">
         <div id="filtroBox">
-            @{await Html.RenderPartialAsync("_Dropdowns", new Inveni.ViewModel.FiltrarViewModel());}
+            @{
+                await Html.RenderPartialAsync("_Dropdowns", new Inveni.ViewModel.FiltrarViewModel());
+            }
             <div class="row">
                 <div class="col-12 mt-3 mb-3 align-items-end text-start">
                     <div class="input-group">
-                        <input type="text" class="form-control" name="searchTerm" placeholder="Buscar...">
+                        <input type="text" class="form-control" id="searchTerm" name="searchTerm" placeholder="Buscar..." value="@ViewBag.SearchTerm">
                     </div>
                 </div>
-
-                <div class="col-2 mt-3 mb-3 align-items-end text-start">
-                    <a asp-action="Index" asp-controller="Home" class="btn btn-primary form-control">Limpar</a>
-                </div>
-                
-
-                <div class="col-2 mt-3 mb-3 align-items-end text-start">
-                    <button type="submit" class="btn btn-primary text-white form-control text-center">Pesquisar</button>
-                </div>
-                <!--Adiconado FILTRO NOVO-->
                 <div class="col-12 mb-3">
                     @if (User.Identity.IsAuthenticated && User.Claims.First(c => c.Type == "Permissoes").Value == "3")
                     {
@@ -43,139 +39,140 @@
                         </div>
                     }
                 </div>
-
-                
-                    
-
-                
             </div>
         </div>
     </form>
 
-</div>
+
+    </div>
 
 
 
-<div class="row mt-3">
-   
-   
+    <div class="row mt-3">
 
-    @foreach (var item in Model){
-        <div class="col-md-3 mb-3">
-            <div class="card d-flex flex-column h-100" style="transition: box-shadow 0.9s ease-in-out;">
-                @if (item.Usuario.Ativo) {
-                    <div class="mt-auto card-header d-flex justify-content-start text-white header-azul ">
-                        <span>
-                            @Html.DisplayFor(modelItem => item.Tematica.Descricao)
-                        </span>
-                    </div>
-                } else {
-                    <div class="mt-auto card-header d-flex justify-content-start bg-danger text-white">
-                        <span>Inativo</span>
-                    </div>
-                }
-                <div class="card-body">
-                    <div class="text-center">
-                       @* <h5 class="card-title mb-2">
-                            <div style="display: flex; flex-direction: column; align-items: center;">
-                                <span id="statusMatricula_@item.Id"></span>
-                                <img src="@Url.Content(item.Usuario.CaminhoFoto)" alt="User Icon" style="width: 100px; height: 100px; border-radius: 50%;" />
-                                <span>@Html.DisplayFor(modelItem => item.Usuario.Nome)</span>
-                            </div>
-                        </h5>
-                        *@
-                        <div style="display: flex; flex-direction: column;" class="mb-2">
-                            <div style="display: flex; justify-content: space-between; align-items: center;">
-                                <span id="statusMatricula_@item.Id" style="font-size: 0.9em;"></span>
-                                <button id="botaoMatricular_@item.Id" class="btn btn-primary botaoMatricular" style="display: none; font-size: 0.9em; padding: 0.2em;"
-                                        data-item-id="@Convert.ToInt32(@item.Id)" data-aprendiz-id="@Convert.ToInt32(User.Identity.Name)">
-                                    Matricular
-                                </button>
-                                <span id="statusFavoritado_@item.Id" style="font-size: 1.2em;"></span>
-                            </div>
-                        </div>
-                        <div style="display: flex; flex-direction: column; align-items: center;">
-                            <img src="@Url.Content(item.Usuario.CaminhoFoto)" alt="User Icon" style="width: 100px; height: 100px; border-radius: 50%;" />
-                            <span style="text-align: right;">@Html.DisplayFor(modelItem => item.Usuario.Nome)</span>
-                        </div>
-
-                    </div>
-                    @if (User.Identity.IsAuthenticated) {
-                        var idUsuario = User.FindFirst(ClaimTypes.Name)?.Value;
-                        var permissoes = User.Claims.First(c => c.Type == "Permissoes").Value;
-
-                       @*if (!string.IsNullOrEmpty(idUsuario) && permissoes == "3")
-                        {
-                            int idUsuarioInt = Convert.ToInt32(idUsuario);
-
-                            // Verifica se o tema já foi favoritado pelo aprendiz
-
-                            bool favoritado = item?.Favoritos?.Any(f => f.AprendizId == idUsuarioInt && f.TematicaMestreId == item.Id) ?? false;
-
-                            <button class="btn btn-primary" onclick="favoritarDesfavoritar(this, '@item.Id', '@idUsuarioInt', '@favoritado')">@(favoritado ? "Favoritado" : "Favoritar")</button>
-
-                        }*@
-                    }
-                    <p class="card-subtitle mb-2 mt-2 text-muted">
-                        Categoria: @Html.DisplayFor(modelItem => item.Tematica.Categoria.Descricao)
-                    </p>
-                    <p class="card-subtitle mb-2 text-muted">Modelo: @Html.DisplayFor(modelItem => item.Modelo.Descricao)</p>
-                    <div class="accept-policyaccept-policy mt-2" style="text-align:justify;">
-                        <p class="card-text" id="biografia">
-                            @Html.DisplayFor(modelItem => item.Biografia)
-                        </p>
-                    </div>
-                </div>
-                <div class="mt-auto card-footer d-flex justify-content-center" style="border:none;">
-                    @*<button class="btn btn-primary" onclick="saibaMais('@item.Id')">Saiba Mais</button>*@
-                    
-                     <button class="btn btn-dark text-white" onclick="abrirModal('@item.Id')">Saiba Mais</button>
-                    
-
-                    @*Aqui vou prototipar o botao de matricular - depois o leon ajusta*@
-
-                    @if (User.Identity.IsAuthenticated && User.Claims.First(c => c.Type == "Permissoes").Value == "3" )
+        @if(Model.Any())
+    {
+        @foreach (var item in Model)
+        {
+            <div class="col-md-3 mb-3">
+                <div class="card d-flex flex-column h-100" style="transition: box-shadow 0.9s ease-in-out;">
+                    @if (item.Usuario.Ativo)
                     {
+                        <div class="mt-auto card-header d-flex justify-content-start text-white header-azul ">
+                            <span>
+                                @Html.DisplayFor(modelItem => item.Tematica.Descricao)
+                            </span>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="mt-auto card-header d-flex justify-content-start bg-danger text-white">
+                            <span>Inativo</span>
+                        </div>
+                    }
+                    <div class="card-body">
+                        <div class="text-center">
+                            @* <h5 class="card-title mb-2">
+                    <div style="display: flex; flex-direction: column; align-items: center;">
+                    <span id="statusMatricula_@item.Id"></span>
+                    <img src="@Url.Content(item.Usuario.CaminhoFoto)" alt="User Icon" style="width: 100px; height: 100px; border-radius: 50%;" />
+                    <span>@Html.DisplayFor(modelItem => item.Usuario.Nome)</span>
+                    </div>
+                    </h5>
+                    *@
+                            <div style="display: flex; flex-direction: column;" class="mb-2">
+                                <div style="display: flex; justify-content: space-between; align-items: center;">
+                                    <span id="statusMatricula_@item.Id" style="font-size: 0.9em;"></span>
+                                    <button id="botaoMatricular_@item.Id" class="btn btn-primary botaoMatricular" style="display: none; font-size: 0.9em; padding: 0.2em;"
+                                            data-item-id="@Convert.ToInt32(@item.Id)" data-aprendiz-id="@Convert.ToInt32(User.Identity.Name)">
+                                        Matricular
+                                    </button>
+                                    <span id="statusFavoritado_@item.Id" style="font-size: 1.2em;"></span>
+                                </div>
+                            </div>
+                            <div style="display: flex; flex-direction: column; align-items: center;">
+                                <img src="@Url.Content(item.Usuario.CaminhoFoto)" alt="User Icon" style="width: 100px; height: 100px; border-radius: 50%;" />
+                                <span style="text-align: right;">@Html.DisplayFor(modelItem => item.Usuario.Nome)</span>
+                            </div>
 
-                       
-                        <script>
-                            document.addEventListener("DOMContentLoaded", function () {
-                                // Chama a função verificarMatriculaWrapper ao carregar a página
-                                verificarMatriculaWrapper(@item.Id, @Convert.ToInt32(User.Identity.Name));
+                        </div>
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            var idUsuario = User.FindFirst(ClaimTypes.Name)?.Value;
+                            var permissoes = User.Claims.First(c => c.Type == "Permissoes").Value;
 
-                                //Verifica Favoritados
-                                verificarFavoritados(@item.Id, @Convert.ToInt32(User.Identity.Name));
+                            @*if (!string.IsNullOrEmpty(idUsuario) && permissoes == "3")
+                {
+                int idUsuarioInt = Convert.ToInt32(idUsuario);
 
-                                // Função para manipular a matrícula quando o botão é clicado
-                                function solicitarMatriculaButton() {
-                                    var idTematicaMestre = $(this).data('item-id');
-                                    var idAprendiz = $(this).data('aprendiz-id');
+                // Verifica se o tema já foi favoritado pelo aprendiz
+
+                bool favoritado = item?.Favoritos?.Any(f => f.AprendizId == idUsuarioInt && f.TematicaMestreId == item.Id) ?? false;
+
+                <button class="btn btn-primary" onclick="favoritarDesfavoritar(this, '@item.Id', '@idUsuarioInt', '@favoritado')">@(favoritado ? "Favoritado" : "Favoritar")</button>
+
+                }*@
+                        }
+                        <p class="card-subtitle mb-2 mt-2 text-muted">
+                            Categoria: @Html.DisplayFor(modelItem => item.Tematica.Categoria.Descricao)
+                        </p>
+                        <p class="card-subtitle mb-2 text-muted">Modelo: @Html.DisplayFor(modelItem => item.Modelo.Descricao)</p>
+                        <div class="accept-policyaccept-policy mt-2" style="text-align:justify;">
+                            <p class="card-text" id="biografia">
+                                @Html.DisplayFor(modelItem => item.Biografia)
+                            </p>
+                        </div>
+                    </div>
+                    <div class="mt-auto card-footer d-flex justify-content-center" style="border:none;">
+                        @*<button class="btn btn-primary" onclick="saibaMais('@item.Id')">Saiba Mais</button>*@
+
+                        <button class="btn btn-dark text-white" onclick="abrirModal('@item.Id')">Saiba Mais</button>
 
 
-                                    // Chama a função para solicitar a matrícula
-                                    solicitarMatricula(idTematicaMestre, idAprendiz);
-                                }
+                        @*Aqui vou prototipar o botao de matricular - depois o leon ajusta*@
 
-                                // Adicionar evento de clique para o botão de matrícula
-                                $('#botaoMatricular_@item.Id').click(function () {
-                                    solicitarMatriculaButton.call(this); // Garante que o contexto do this seja mantido
+                        @if (User.Identity.IsAuthenticated && User.Claims.First(c => c.Type == "Permissoes").Value == "3")
+                        {
+
+
+                            <script>
+                                document.addEventListener("DOMContentLoaded", function () {
+                                    // Chama a função verificarMatriculaWrapper ao carregar a página
+                                    verificarMatriculaWrapper(@item.Id, @Convert.ToInt32(User.Identity.Name));
+
+                                    //Verifica Favoritados
+                                    verificarFavoritados(@item.Id, @Convert.ToInt32(User.Identity.Name));
+
+                                    // Função para manipular a matrícula quando o botão é clicado
+                                    function solicitarMatriculaButton() {
+                                        var idTematicaMestre = $(this).data('item-id');
+                                        var idAprendiz = $(this).data('aprendiz-id');
+
+
+                                        // Chama a função para solicitar a matrícula
+                                        solicitarMatricula(idTematicaMestre, idAprendiz);
+                                    }
+
+                                    // Adicionar evento de clique para o botão de matrícula
+                                    $('#botaoMatricular_@item.Id').click(function () {
+                                        solicitarMatriculaButton.call(this); // Garante que o contexto do this seja mantido
+                                    });
                                 });
-                            });
 
-                        </script>
-                        
-                    }
+                            </script>
 
+                        }
 
 
-                </div>
-                <style>
-                    .card:hover {
-                        box-shadow: 0 10px 10px rgba(0, 0, 0, 0.1);
-                    }
-                </style>
 
-                @*<div class="mt-auto card-footer d-flex justify-content-end">
+                    </div>
+                    <style>
+                        .card:hover {
+                            box-shadow: 0 10px 10px rgba(0, 0, 0, 0.1);
+                        }
+                    </style>
+
+                    @*<div class="mt-auto card-footer d-flex justify-content-end">
 
             <a asp-action="Edit" asp-route-id="@item.Id" class="mx-3">
             <img width="20" height="20" src="https://img.icons8.com/ios-glyphs/30/0d6efd/edit--v1.png" alt="edit--v1" />
@@ -185,11 +182,22 @@
             <img width="20" height="20" src="https://img.icons8.com/ios-filled/50/0d6efd/waste.png" alt="filled-trash" />
             </a>
             </div>*@
+                </div>
             </div>
-        </div>
+        }
     }
-</div>
-<!-- Modal -->
+    else
+        {
+            <div class="col-md-12 text-center">
+                <h3>Sem resultados encontrados</h3>
+            </div>
+        }
+   
+
+
+    </div>
+    <!-- Modal -->
+
 <div class="modal fade" id="infoModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -203,7 +211,13 @@
         </div>
     </div>
 </div>
+@*<link rel="stylesheet" href="https://cdn.datatables.net/2.0.3/css/dataTables.dataTables.css" />
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+<script src="https://cdn.datatables.net/2.0.3/js/dataTables.js"></script>*@
 
+<script type="text/javascript">
+    var js = jQuery.noConflict(true);
+</script>
 <script>
     function toggleFiltro() {
         var filtroBox = document.getElementById('filtroBox');
@@ -223,12 +237,14 @@
             // Redirecionar para a tela de acesso
             window.location.href = '@Url.Action("Acesso", "Usuarios")';
         } else {
+            alert("Chegou no botao do saiba mais");
             // Se estiver autenticado, continuar com a lógica para abrir o modal
             // Faça uma requisição AJAX ou manipule os dados diretamente, dependendo do que preferir
             $.ajax({
                 url: '/Home/Detalhes/' + id, // Substitua pelo caminho real da sua action Detalhes
                 type: 'GET',
                 success: function (data) {
+                    alert("Chegou no sucess do saiba mais");
                     // Preencha o conteúdo do modal com os dados retornados pela action
                     $('#modalBody').html(data);
                     // Abra o modal
@@ -254,11 +270,11 @@
 <script>
     function verificarMatriculaWrapper(id, aprendizId) {
         verificarMatricula(id, aprendizId);
-       
+
     }
 
-    function verificarFavoritados(id, idAprendiz){
-        if(isUserAuthenticated){
+    function verificarFavoritados(id, idAprendiz) {
+        if (isUserAuthenticated) {
             $.ajax({
                 url: '@Url.Action("VerificarFavoritado","Home")',
                 type: 'POST',
@@ -313,7 +329,7 @@
 
 
 
-    function solicitarMatricula(idTematicaMestre, idAprendiz) { 
+    function solicitarMatricula(idTematicaMestre, idAprendiz) {
         $.ajax({
             url: '@Url.Action("SolicitarMatricula", "Home")',
             type: 'POST',
@@ -378,6 +394,30 @@
         }
     });
 </script>
+
+<script>
+ 
+    // Captura mudanças nos selects
+    $('#CategoriaId, #TematicaId, #ModeloId').change(function () {
+        submitForm();
+    });
+
+    // Captura mudanças no campo de busca
+    $('#searchTerm').keyup(function () {
+        submitForm();
+    });
+
+
+
+    function submitForm() {
+        // Submete o formulário
+        $('#filtroForm').submit();
+    }
+
+
+</script>
+
+
 
 @*<script>
     var isUserAuthenticated = @(User.Identity.IsAuthenticated.ToString().ToLower());

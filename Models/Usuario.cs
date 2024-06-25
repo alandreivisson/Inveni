@@ -28,6 +28,8 @@ namespace Inveni.Models {
         public string? Telefone { get; set; }
 
         [PasswordPropertyText]
+        [Required(ErrorMessage = "O campo Senha é obrigatório!")]
+        [RegularExpression("^(?=.{8,})(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*()_+{}:;|<>,/?\\]]).*$", ErrorMessage = "A senha deve conter no mínimo 8 caracteres, um símbolo especial, 1 número, 1 letra maiúscula e 1 minúscula.")]
         public required string Senha { get; set; }
 
         [MaxLength(500)]

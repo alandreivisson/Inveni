@@ -109,7 +109,7 @@ namespace Inveni.Controllers {
 
                 // Definir o CaminhoArquivo
                 // Atualize o caminho da foto no usuário
-                material.CaminhoArquivo = $"~/arquivos/{userId}/{fileName}";
+                material.CaminhoArquivo = $"/arquivos/{userId}/{fileName}";
             }
 
             _context.Add(material);
@@ -352,17 +352,24 @@ namespace Inveni.Controllers {
         }
 
 
-        [Authorize]
-        public IActionResult Download(int materialId) {
+       [Authorize]
+        public IActionResult Download(int materialId)
+        {
             var material = _context.Material.Find(materialId);
 
-            if (material == null)
+            if (material == null || string.IsNullOrEmpty(material.CaminhoArquivo))
             {
                 return NotFound();
             }
 
-            // Realize a lógica necessária para obter o caminho do arquivo
-            var filePath = material.CaminhoArquivo;
+            // Obtenha o caminho completo do arquivo físico no servidor
+            var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", material.CaminhoArquivo.TrimStart('/'));
+
+            // Verifique se o arquivo existe no caminho fornecido
+            if (!System.IO.File.Exists(filePath))
+            {
+                return NotFound(); // Arquivo não encontrado
+            }
 
             // Obtenha o conteúdo do arquivo como bytes
             var fileBytes = System.IO.File.ReadAllBytes(filePath);
@@ -375,9 +382,10 @@ namespace Inveni.Controllers {
                 contentType = "application/octet-stream";
             }
 
-            // Retorne o arquivo para download com a extensão original e o nome correto do arquivo
+            // Retorne o arquivo para download com o nome correto do arquivo
             return File(fileBytes, contentType, material.NomeArquivo);
         }
+
 
 
 

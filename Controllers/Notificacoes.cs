@@ -27,17 +27,29 @@ namespace Inveni.Controllers {
             return View(notificacoes);
         }
 
+        [HttpGet]
+        public IActionResult GetNotifications() {
+            var userId = Convert.ToInt32(User.FindFirstValue(ClaimTypes.Name));
+            var notifications = _context.Notificacao
+                .Where(n => n.UsuarioId == userId && n.Aberto)
+                .OrderBy(n => n.Id)
+                .Select(n => new { n.Id, n.Descricao })
+                .ToList();
+
+            return Json(notifications);
+        }
+
         // Ação para marcar uma notificação como lida
         [HttpPost]
-        public async Task<IActionResult> MarcarComoLida(int id) {
-            var notificacao = await _context.Notificacao.FindAsync(id);
-            if (notificacao != null)
+        public IActionResult MarkAsRead(int id) {
+            var notification = _context.Notificacao.Find(id);
+            if (notification != null)
             {
-                notificacao.Aberto = false;
-                await _context.SaveChangesAsync();
-                return Ok(); // Retorno OK se sucesso
+                notification.Aberto = false;
+                _context.SaveChanges();
             }
-            return NotFound(); // Retorno NotFound se não encontrou a notificação
+
+            return Ok();
         }
     }
 }

@@ -1,0 +1,15 @@
+﻿@model Inveni.ViewModel.EsqueciSenhaViewModel
+@{
+    ViewBag.Subtitulo = "E-mail de Redefinição de Senha Enviado";
+}
+
+<h1 class="text-primary">Email de Redefinição de Senha Enviado</h1>
+<hr>
+<p>
+    Uma mensagem contendo o link de redefinição de sua senha foi enviado para seu e-mail. Acesse sua caixa de mensagens e clique no link recebido para redefinir sua senha.
+</p>
+<p>
+    Caso queira retornar a pagina de login, clique no botão abaixo.
+</p>
+<a asp-action="Acesso" asp-controller="Usuarios" class="btn btn-outline-secondary">Voltar ao Login</a>
+

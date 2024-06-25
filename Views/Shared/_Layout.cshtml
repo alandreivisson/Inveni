@@ -19,7 +19,7 @@
 
     <!-- Popper.js -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
-    @*<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>*@
+    
     <!-- Bootstrap JS -->
     <script src="~/js/site.js" asp-append-version="true"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
@@ -55,31 +55,35 @@
                             @if (permissoes == "1")
                             {
                                 <li class="nav-item">
-                                    <a class="nav-link text-white ms-auto" asp-area="" asp-controller="Categorias" asp-action="Index">Categorias</a>
+                                    <a class="nav-link text-white ms-auto ms-sm-auto ms-md-auto" asp-area="" asp-controller="Categorias" asp-action="Index">Categorias</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link text-white ms-auto" asp-area="" asp-controller="Tematicas" asp-action="Index">Temáticas</a>
+                                    <a class="nav-link text-white ms-auto ms-sm-auto ms-md-auto" asp-area="" asp-controller="Tematicas" asp-action="Index">Temáticas</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link text-white ms-auto" asp-area="" asp-controller="Usuarios" asp-action="Index">Usuários</a>
+                                    <a class="nav-link text-white ms-auto ms-sm-auto ms-md-auto" asp-area="" asp-controller="Usuarios" asp-action="Index">Usuários</a>
                                 </li>
                             }
                             @if (permissoes == "2")
                             {
                                 <li class="nav-item">
-                                    <a class="nav-link text-white ms-auto" asp-area="" asp-controller="TematicaMestres" asp-action="Index">Temáticas</a>
+                                    <a class="nav-link text-white ms-auto ms-sm-auto ms-md-auto" asp-area="" asp-controller="MatriculaMestre" asp-action="Index">Aprendizes</a>
                                 </li>
+
                                 <li class="nav-item">
-                                    <a class="nav-link text-white ms-auto" asp-area="" asp-controller="Material" asp-action="Index">Material</a>
+                                    <a class="nav-link text-white ms-auto ms-sm-auto ms-md-auto" asp-area="" asp-controller="Material" asp-action="Index">Material</a>
                                 </li>
+
                                 <li class="nav-item">
-                                    <a class="nav-link text-white ms-auto" asp-area="" asp-controller="MatriculaMestre" asp-action="Index">Aprendizes</a>
+                                    <a class="nav-link text-white ms-auto ms-sm-auto ms-md-auto" asp-area="" asp-controller="TematicaMestres" asp-action="Index">Temáticas</a>
                                 </li>
+                                
+                                
                             }
                             @if (permissoes == "3")
                             {
                                 <li class="nav-item">
-                                    <a class="nav-link text-white ms-auto" asp-area="" asp-controller="Material" asp-action="MateriaisEnviados">Materiais</a>
+                                    <a class="nav-link text-white ms-auto ms-sm-auto ms-md-auto" asp-area="" asp-controller="Material" asp-action="MateriaisEnviados">Materiais</a>
                                 </li>
 
                             }
@@ -87,6 +91,20 @@
 
                         @if (User.Identity.IsAuthenticated)
                         {
+                            <!--Notificacao-->
+                            <li class="nav-item dropdown ms-auto ms-sm-auto ms-md-auto ">
+                                <a class="nav-link position-relative" href="#" id="notificationDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="fa fa-bell text-white" style="font-size: 1.5em;"></i>
+                                    <span id="notificationBadge" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="display: none;">
+                                        •
+                                    </span>
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="notificationDropdown">
+                                    <li>
+                                        <div class="dropdown-item" id="notificationContainer">Carregando...</div>
+                                    </li>
+                                </ul>
+                            </li>
 
                             <li class="nav-item dropdown ms-auto ms-sm-auto ms-md-auto ">
                                 <ul class="nav-link dropdown-toggle text-info text-white text-end" href="#" role="button" data-bs-toggle="dropdown">
@@ -143,13 +161,31 @@
         </div>
     </div>
 
-    
+    <!-- Adicione este bloco dentro do <body> -->
+    <div class="modal fade" id="notificationModal" tabindex="-1" role="dialog" aria-labelledby="notificationModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="notificationModalLabel">Notificações</h5>
+                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" id="notificationList">
+                    Carregando notificações...
+                </div>
+            </div>
+        </div>
+    </div>
+
+
     <!-- Inclua o jQuery primeiro -->
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     <!-- Inclua Popper.js (necessário para alguns componentes do Bootstrap) -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>*
 
     <!-- Inclua o Bootstrap JS depois do jQuery e Popper.js -->
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
@@ -170,6 +206,63 @@
             });
         });
     </script>
+    <script>
+        $(document).ready(function () {
+            function loadNotifications() {
+                $.ajax({
+                    url: '@Url.Action("GetNotifications", "Notificacoes")',
+                    type: 'GET',
+                    success: function (data) {
+                        let notificationList = $('#notificationList');
+                        notificationList.empty();
+
+                        if (data.length === 0) {
+                            notificationList.append('<p>Nenhuma nova notificação.</p>');
+                        } 
+                        else 
+                        {
+                            data.forEach(notification => {
+                                notificationList.append(
+                                    `<div class="notification-item">
+                        <p>${notification.descricao}</p>
+                        <div class="text-end mt-5">
+                            <button class="btn btn-sm btn-outline-danger" onclick="markAsRead(${notification.id})">Fechar</button>
+                        </div>
+                    </div>`
+                                );
+                            });
+                            $('#notificationBadge').show();
+                        }
+
+
+                    }
+                });
+            }
+
+            function markAsRead(notificationId) {
+                $.ajax({
+                    url: '@Url.Action("MarkAsRead", "Notificacoes")',
+                    type: 'POST',
+                    data: { id: notificationId },
+                    success: function () {
+                        loadNotifications();
+                    }
+                });
+            }
+
+            $('#notificationDropdown').on('click', function () {
+                $('#notificationModal').modal('show');
+                loadNotifications();
+            });
+
+            loadNotifications(); // Call this on page load to check for notifications
+
+            window.markAsRead = markAsRead;
+        });
+    </script>
+
+
+
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

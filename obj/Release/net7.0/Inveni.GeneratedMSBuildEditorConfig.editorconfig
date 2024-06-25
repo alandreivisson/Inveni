@@ -9,185 +9,197 @@ build_property.EnforceExtendedAnalyzerRules =
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = Inveni
 build_property.RootNamespace = Inveni
-build_property.ProjectDir = C:\Users\marqu\source\repos\TCC-INVENI-6-SEMESTRE\Inveni\
+build_property.ProjectDir = C:\Users\marqu\source\repos\TCC-Conflitos\Inveni\
 build_property.RazorLangVersion = 7.0
 build_property.SupportLocalizedComponentNames = 
 build_property.GenerateRazorMetadataSourceChecksumAttributes = 
-build_property.MSBuildProjectDirectory = C:\Users\marqu\source\repos\TCC-INVENI-6-SEMESTRE\Inveni
+build_property.MSBuildProjectDirectory = C:\Users\marqu\source\repos\TCC-Conflitos\Inveni
 build_property._RazorSourceGeneratorDebug = 
 
-[C:/Users/marqu/source/repos/TCC-INVENI-6-SEMESTRE/Inveni/Views/Categorias/Create.cshtml]
+[C:/Users/marqu/source/repos/TCC-Conflitos/Inveni/Views/Categorias/Create.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2F0ZWdvcmlhc1xDcmVhdGUuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/marqu/source/repos/TCC-INVENI-6-SEMESTRE/Inveni/Views/Categorias/Delete.cshtml]
+[C:/Users/marqu/source/repos/TCC-Conflitos/Inveni/Views/Categorias/Delete.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2F0ZWdvcmlhc1xEZWxldGUuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/marqu/source/repos/TCC-INVENI-6-SEMESTRE/Inveni/Views/Categorias/Index.cshtml]
+[C:/Users/marqu/source/repos/TCC-Conflitos/Inveni/Views/Categorias/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2F0ZWdvcmlhc1xJbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/marqu/source/repos/TCC-INVENI-6-SEMESTRE/Inveni/Views/Home/Index.cshtml]
+[C:/Users/marqu/source/repos/TCC-Conflitos/Inveni/Views/Home/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxJbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/marqu/source/repos/TCC-INVENI-6-SEMESTRE/Inveni/Views/Home/_DetalhesModal.cshtml]
+[C:/Users/marqu/source/repos/TCC-Conflitos/Inveni/Views/Home/_DetalhesModal.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxfRGV0YWxoZXNNb2RhbC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/marqu/source/repos/TCC-INVENI-6-SEMESTRE/Inveni/Views/Home/_Dropdowns.cshtml]
+[C:/Users/marqu/source/repos/TCC-Conflitos/Inveni/Views/Home/_Dropdowns.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxfRHJvcGRvd25zLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/marqu/source/repos/TCC-INVENI-6-SEMESTRE/Inveni/Views/Material/Create.cshtml]
+[C:/Users/marqu/source/repos/TCC-Conflitos/Inveni/Views/Home/_ResultadoFiltro.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxfUmVzdWx0YWRvRmlsdHJvLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/marqu/source/repos/TCC-Conflitos/Inveni/Views/Material/Create.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTWF0ZXJpYWxcQ3JlYXRlLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/marqu/source/repos/TCC-INVENI-6-SEMESTRE/Inveni/Views/Material/Delete.cshtml]
+[C:/Users/marqu/source/repos/TCC-Conflitos/Inveni/Views/Material/Delete.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTWF0ZXJpYWxcRGVsZXRlLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/marqu/source/repos/TCC-INVENI-6-SEMESTRE/Inveni/Views/Material/Index.cshtml]
+[C:/Users/marqu/source/repos/TCC-Conflitos/Inveni/Views/Material/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTWF0ZXJpYWxcSW5kZXguY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/marqu/source/repos/TCC-INVENI-6-SEMESTRE/Inveni/Views/Material/MateriaisEnviados.cshtml]
+[C:/Users/marqu/source/repos/TCC-Conflitos/Inveni/Views/Material/MateriaisEnviados.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTWF0ZXJpYWxcTWF0ZXJpYWlzRW52aWFkb3MuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/marqu/source/repos/TCC-INVENI-6-SEMESTRE/Inveni/Views/Material/MaterialEnviadoHistorico.cshtml]
+[C:/Users/marqu/source/repos/TCC-Conflitos/Inveni/Views/Material/MaterialEnviadoHistorico.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTWF0ZXJpYWxcTWF0ZXJpYWxFbnZpYWRvSGlzdG9yaWNvLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/marqu/source/repos/TCC-INVENI-6-SEMESTRE/Inveni/Views/Material/Privacy.cshtml]
+[C:/Users/marqu/source/repos/TCC-Conflitos/Inveni/Views/Material/Privacy.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTWF0ZXJpYWxcUHJpdmFjeS5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/marqu/source/repos/TCC-INVENI-6-SEMESTRE/Inveni/Views/Material/_CompartilharMaterialModal.cshtml]
+[C:/Users/marqu/source/repos/TCC-Conflitos/Inveni/Views/Material/_CompartilharMaterialModal.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTWF0ZXJpYWxcX0NvbXBhcnRpbGhhck1hdGVyaWFsTW9kYWwuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/marqu/source/repos/TCC-INVENI-6-SEMESTRE/Inveni/Views/MatriculaMestre/Create.cshtml]
+[C:/Users/marqu/source/repos/TCC-Conflitos/Inveni/Views/MatriculaMestre/Create.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTWF0cmljdWxhTWVzdHJlXENyZWF0ZS5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/marqu/source/repos/TCC-INVENI-6-SEMESTRE/Inveni/Views/MatriculaMestre/Delete.cshtml]
+[C:/Users/marqu/source/repos/TCC-Conflitos/Inveni/Views/MatriculaMestre/Delete.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTWF0cmljdWxhTWVzdHJlXERlbGV0ZS5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/marqu/source/repos/TCC-INVENI-6-SEMESTRE/Inveni/Views/MatriculaMestre/Index.cshtml]
+[C:/Users/marqu/source/repos/TCC-Conflitos/Inveni/Views/MatriculaMestre/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTWF0cmljdWxhTWVzdHJlXEluZGV4LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/marqu/source/repos/TCC-INVENI-6-SEMESTRE/Inveni/Views/Matriculas/Create.cshtml]
+[C:/Users/marqu/source/repos/TCC-Conflitos/Inveni/Views/MatriculaMestre/_ConfirmacaoFinalizarMatricula.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTWF0cmljdWxhTWVzdHJlXF9Db25maXJtYWNhb0ZpbmFsaXphck1hdHJpY3VsYS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/marqu/source/repos/TCC-Conflitos/Inveni/Views/MatriculaMestre/_MatriculasList.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTWF0cmljdWxhTWVzdHJlXF9NYXRyaWN1bGFzTGlzdC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/marqu/source/repos/TCC-Conflitos/Inveni/Views/Matriculas/Create.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTWF0cmljdWxhc1xDcmVhdGUuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/marqu/source/repos/TCC-INVENI-6-SEMESTRE/Inveni/Views/Matriculas/Delete.cshtml]
+[C:/Users/marqu/source/repos/TCC-Conflitos/Inveni/Views/Matriculas/Delete.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTWF0cmljdWxhc1xEZWxldGUuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/marqu/source/repos/TCC-INVENI-6-SEMESTRE/Inveni/Views/Matriculas/Details.cshtml]
+[C:/Users/marqu/source/repos/TCC-Conflitos/Inveni/Views/Matriculas/Details.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTWF0cmljdWxhc1xEZXRhaWxzLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/marqu/source/repos/TCC-INVENI-6-SEMESTRE/Inveni/Views/Matriculas/Edit.cshtml]
+[C:/Users/marqu/source/repos/TCC-Conflitos/Inveni/Views/Matriculas/Edit.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTWF0cmljdWxhc1xFZGl0LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/marqu/source/repos/TCC-INVENI-6-SEMESTRE/Inveni/Views/Matriculas/Index.cshtml]
+[C:/Users/marqu/source/repos/TCC-Conflitos/Inveni/Views/Matriculas/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTWF0cmljdWxhc1xJbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/marqu/source/repos/TCC-INVENI-6-SEMESTRE/Inveni/Views/Shared/Error.cshtml]
+[C:/Users/marqu/source/repos/TCC-Conflitos/Inveni/Views/Shared/Error.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXEVycm9yLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/marqu/source/repos/TCC-INVENI-6-SEMESTRE/Inveni/Views/Shared/_ValidationScriptsPartial.cshtml]
+[C:/Users/marqu/source/repos/TCC-Conflitos/Inveni/Views/Shared/_ValidationScriptsPartial.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9WYWxpZGF0aW9uU2NyaXB0c1BhcnRpYWwuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/marqu/source/repos/TCC-INVENI-6-SEMESTRE/Inveni/Views/TematicaMestres/Create.cshtml]
+[C:/Users/marqu/source/repos/TCC-Conflitos/Inveni/Views/TematicaMestres/Create.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVGVtYXRpY2FNZXN0cmVzXENyZWF0ZS5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/marqu/source/repos/TCC-INVENI-6-SEMESTRE/Inveni/Views/TematicaMestres/Delete.cshtml]
+[C:/Users/marqu/source/repos/TCC-Conflitos/Inveni/Views/TematicaMestres/Delete.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVGVtYXRpY2FNZXN0cmVzXERlbGV0ZS5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/marqu/source/repos/TCC-INVENI-6-SEMESTRE/Inveni/Views/TematicaMestres/Details.cshtml]
+[C:/Users/marqu/source/repos/TCC-Conflitos/Inveni/Views/TematicaMestres/Details.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVGVtYXRpY2FNZXN0cmVzXERldGFpbHMuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/marqu/source/repos/TCC-INVENI-6-SEMESTRE/Inveni/Views/TematicaMestres/Edit.cshtml]
+[C:/Users/marqu/source/repos/TCC-Conflitos/Inveni/Views/TematicaMestres/Edit.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVGVtYXRpY2FNZXN0cmVzXEVkaXQuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/marqu/source/repos/TCC-INVENI-6-SEMESTRE/Inveni/Views/TematicaMestres/Index.cshtml]
+[C:/Users/marqu/source/repos/TCC-Conflitos/Inveni/Views/TematicaMestres/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVGVtYXRpY2FNZXN0cmVzXEluZGV4LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/marqu/source/repos/TCC-INVENI-6-SEMESTRE/Inveni/Views/TematicaMestres/MatriculasTematicas.cshtml]
+[C:/Users/marqu/source/repos/TCC-Conflitos/Inveni/Views/TematicaMestres/MatriculasTematicas.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVGVtYXRpY2FNZXN0cmVzXE1hdHJpY3VsYXNUZW1hdGljYXMuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/marqu/source/repos/TCC-INVENI-6-SEMESTRE/Inveni/Views/Tematicas/Create.cshtml]
+[C:/Users/marqu/source/repos/TCC-Conflitos/Inveni/Views/Tematicas/Create.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVGVtYXRpY2FzXENyZWF0ZS5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/marqu/source/repos/TCC-INVENI-6-SEMESTRE/Inveni/Views/Tematicas/Delete.cshtml]
+[C:/Users/marqu/source/repos/TCC-Conflitos/Inveni/Views/Tematicas/Delete.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVGVtYXRpY2FzXERlbGV0ZS5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/marqu/source/repos/TCC-INVENI-6-SEMESTRE/Inveni/Views/Tematicas/Edit.cshtml]
+[C:/Users/marqu/source/repos/TCC-Conflitos/Inveni/Views/Tematicas/Edit.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVGVtYXRpY2FzXEVkaXQuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/marqu/source/repos/TCC-INVENI-6-SEMESTRE/Inveni/Views/Tematicas/Index.cshtml]
+[C:/Users/marqu/source/repos/TCC-Conflitos/Inveni/Views/Tematicas/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVGVtYXRpY2FzXEluZGV4LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/marqu/source/repos/TCC-INVENI-6-SEMESTRE/Inveni/Views/Usuarios/Acesso.cshtml]
+[C:/Users/marqu/source/repos/TCC-Conflitos/Inveni/Views/Usuarios/Acesso.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVXN1YXJpb3NcQWNlc3NvLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/marqu/source/repos/TCC-INVENI-6-SEMESTRE/Inveni/Views/Usuarios/Alterar.cshtml]
+[C:/Users/marqu/source/repos/TCC-Conflitos/Inveni/Views/Usuarios/Alterar.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVXN1YXJpb3NcQWx0ZXJhci5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/marqu/source/repos/TCC-INVENI-6-SEMESTRE/Inveni/Views/Usuarios/Cadastrar.cshtml]
+[C:/Users/marqu/source/repos/TCC-Conflitos/Inveni/Views/Usuarios/Cadastrar.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVXN1YXJpb3NcQ2FkYXN0cmFyLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/marqu/source/repos/TCC-INVENI-6-SEMESTRE/Inveni/Views/Usuarios/Create.cshtml]
+[C:/Users/marqu/source/repos/TCC-Conflitos/Inveni/Views/Usuarios/Create.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVXN1YXJpb3NcQ3JlYXRlLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/marqu/source/repos/TCC-INVENI-6-SEMESTRE/Inveni/Views/Usuarios/Edit.cshtml]
+[C:/Users/marqu/source/repos/TCC-Conflitos/Inveni/Views/Usuarios/Edit.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVXN1YXJpb3NcRWRpdC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/marqu/source/repos/TCC-INVENI-6-SEMESTRE/Inveni/Views/Usuarios/ErrorPaginaNaoEncontrada.cshtml]
+[C:/Users/marqu/source/repos/TCC-Conflitos/Inveni/Views/Usuarios/ErrorPaginaNaoEncontrada.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVXN1YXJpb3NcRXJyb3JQYWdpbmFOYW9FbmNvbnRyYWRhLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/marqu/source/repos/TCC-INVENI-6-SEMESTRE/Inveni/Views/Usuarios/ErrorPermissaoAcesso.cshtml]
+[C:/Users/marqu/source/repos/TCC-Conflitos/Inveni/Views/Usuarios/ErrorPermissaoAcesso.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVXN1YXJpb3NcRXJyb3JQZXJtaXNzYW9BY2Vzc28uY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/marqu/source/repos/TCC-INVENI-6-SEMESTRE/Inveni/Views/Usuarios/Index.cshtml]
+[C:/Users/marqu/source/repos/TCC-Conflitos/Inveni/Views/Usuarios/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVXN1YXJpb3NcSW5kZXguY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/marqu/source/repos/TCC-INVENI-6-SEMESTRE/Inveni/Views/_ViewImports.cshtml]
+[C:/Users/marqu/source/repos/TCC-Conflitos/Inveni/Views/_ViewImports.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcX1ZpZXdJbXBvcnRzLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/marqu/source/repos/TCC-INVENI-6-SEMESTRE/Inveni/Views/_ViewStart.cshtml]
+[C:/Users/marqu/source/repos/TCC-Conflitos/Inveni/Views/_ViewStart.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcX1ZpZXdTdGFydC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/marqu/source/repos/TCC-INVENI-6-SEMESTRE/Inveni/Views/Shared/_Layout.cshtml]
+[C:/Users/marqu/source/repos/TCC-Conflitos/Inveni/Views/Shared/_Layout.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9MYXlvdXQuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = b-tbt784pk7e

@@ -1,13 +1,23 @@
 ﻿@model Inveni.ViewModel.CadastroVM
 @{
     ViewData["Title"] = "Cadastrar";
+    var mensagem = ViewData["Mensagem"] as string;
 }
 <div class="row">
     <div class="col-1">
     </div><div class="col-10 align-self-center">
         <div class="card my-5 mx-auto" style="padding: 0px 40px; width: 50%">
+
             <div class="text-center align-items-center">
                 <img src="~/img/logo.png" alt="" />
+            </div>
+            <div class="text-center align-items-center">
+                @if (!string.IsNullOrEmpty(mensagem))
+                {
+                    <div class="alert alert-info">
+                        @mensagem
+                    </div>
+                }
             </div>
             <form asp-action="Cadastrar" asp-controller="Usuarios">
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
@@ -44,13 +54,12 @@
                         <option value="3">Aprendiz</option>
                     </select>
                 </div>
-                
+
                 <div class="form-check">
-                    <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
-                    <label class="form-check-label" for="defaultCheck1">
+                    <input class="form-check-input" type="checkbox" id="termosUso" name="termosUso" required>
+                    <label class="form-check-label" for="termosUso">
                         Aceito os
-                        <a asp-action="" class="text-primary text-gradient font-weight-bold"> termos de uso</a>
-                       
+                        <a href="~/Usuarios/TermosDeUso" class="text-primary text-gradient font-weight-bold" target="_blank">termos de uso</a>
                     </label>
                 </div>
 

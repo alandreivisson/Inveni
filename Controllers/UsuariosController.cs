@@ -14,16 +14,21 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using System.Drawing;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.CodeAnalysis.Scripting;
+using Inveni.Services;
+using System.Text;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace Inveni.Controllers
 {
     public class UsuariosController : Controller
     {
         private readonly Contexto _context;
+        private readonly IEmailService _emailService;
 
-        public UsuariosController(Contexto context)
-        {
+        public UsuariosController(Contexto context, IEmailService emailService) {
             _context = context;
+            _emailService = emailService;
         }
 
         // GET: Usuarios
@@ -326,7 +331,7 @@ namespace Inveni.Controllers
         // POST: /Usuarios/Cadastrar
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Cadastrar([Bind("Nome,Localizacao,Email,Senha")] Usuario usuario)
+        public async Task<IActionResult> Cadastrar([Bind("Nome,Localizacao,Email,Senha")] Usuario usuario, string termosUso)
         {
 
             if (!ModelState.IsValid)
@@ -334,17 +339,23 @@ namespace Inveni.Controllers
                 return View();
             }
 
+            if (string.IsNullOrEmpty(termosUso))
+            {
+                ViewData["Mensagem"] = "Você deve aceitar os termos de uso para continuar";
+                return View(usuario);
+            }
+
             if (!usuario.ValidarPasswordComplexity())
             {
-                ModelState.AddModelError("Senha", "A senha deve ter pelo menos 8 caracteres, uma letra minúscula, uma letra maiúscula, um dígito e um caractere especial.");
+                ViewData["Mensagem"] = "A senha deve ter pelo menos 8 caracteres, uma letra minúscula, uma letra maiúscula, um dígito e um caractere especial.";
                 return View();
             }
 
             if (await _context.Usuario.AnyAsync(u => u.Email == usuario.Email))
             {
-                ModelState.AddModelError("Email", "Este endereço de e-mail já está registrado.");
-                return View();
-            }
+                ViewData["Mensagem"] = "Este endereço de e-mail já está registrado.";
+                return View();           
+           }
 
             if (usuario is null)
             {
@@ -382,7 +393,147 @@ namespace Inveni.Controllers
             }
 
 
-            return RedirectToAction("Index");
+            ViewData["Mensagem"] = "Usuário Cadastrado com sucesso!";
+            return View(nameof(Acesso));
         }
+        [HttpGet]
+        public IActionResult EsqueciSenha() {
+            return View();
+        }
+        [HttpPost]
+        public async Task<IActionResult> EsqueciSenha([FromForm] EsqueciSenhaViewModel dados) 
+        {
+            if (ModelState.IsValid)
+            {
+                //if (_context.Usuario.AsNoTracking().Any(u => u.Email == dados.Email.ToUpper()))
+                //{
+                    var usuario = await _context.Usuario.FirstOrDefaultAsync(u => u.Email == dados.Email);
+                    var token = GenerateJwtToken(usuario.Email);
+                    var urlConfirmacao = Url.Action(nameof(RedefinirSenha), "Usuarios", new { token }, Request.Scheme);
+                    var mensagem = new StringBuilder();
+                    mensagem.Append("<p>Olá, {usuario.Nome}. </p>");
+                    mensagem.Append("<p>Houve uma solicitacção de redefinição de senha para seu usuário em nosso site. Senão foi você quem fez a solicitação, ignore essa" +
+                        " mensagem. Caso tenha sido você, clique no link abaixo para criar sua nova senha:</p>");
+                    mensagem.Append($"<p><a href='{urlConfirmacao}'>Redefinir Senha</a></p>");
+                    mensagem.Append("<p>Atenciosamente, <br>Equipe EstudeFacil</p>");
+                    await _emailService.SendEmailAsync(usuario.Email, "Redefinição de Senha", "", mensagem.ToString());
+                    return View(nameof(EmailRedefinicaoEnviado));
+                //}
+            }
+            else {
+                return View(dados);
+            }
+        }
+        public IActionResult EmailRedefinicaoEnviado() {
+            return View();
+        }
+        [HttpGet]
+        public IActionResult RedefinirSenha(string token) 
+        {
+            var modelo = new RedefinirSenhaViewModel
+            {
+                Email = null,
+                NovaSenha = null,
+                ConfNovaSenha = null,
+                Token = token
+            };
+
+            return View(modelo);
+        }
+        [HttpPost]
+        public async Task<IActionResult> RedefinirSenha([FromForm] RedefinirSenhaViewModel dados) {
+            if (ModelState.IsValid)
+            {
+                var usuario = await _context.Usuario.FirstOrDefaultAsync(u => u.Email == dados.Email);
+                if (usuario != null)
+                {
+                    if (ValidarToken(dados.Token, usuario.Email))
+                    {
+                        try
+                        {
+
+                            usuario.Senha = BCrypt.Net.BCrypt.HashPassword(dados.NovaSenha);
+                            _context.Usuario.Update(usuario);
+                            await _context.SaveChangesAsync();
+
+                            ViewData["Mensagem"] = "Senha redefinida com sucesso!";
+                            return View(nameof(Acesso));
+                        }
+                        catch (Exception ex)
+                        {
+                            ViewData["Mensagem"] = "Não foi possível redefinir a senha. Verifique se preencheu a senha corretamente. Se o problema persistir, entre em contato com o suporte.";
+                            return View(dados);
+                        }
+                    }
+                    else
+                    {
+                        ViewData["Mensagem"] = "Token inválido ou expirado.";
+                        return View(dados);
+                    }
+                }
+                else
+                {
+                    ViewData["Mensagem"] = "Usuário não encontrado.";
+                    return View(dados);
+                }
+            }
+            else
+            {
+                return View(dados);
+            }
+        }
+
+
+        private string GenerateJwtToken(string email) {
+            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Funcoes.Hash("@Estudefacil2024"))); // Usando a função Hash
+
+            var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha512); // Alterando para HmacSha512
+
+            var claims = new[]
+            {
+                new Claim(JwtRegisteredClaimNames.Sub, email),
+                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+            };
+
+            var token = new JwtSecurityToken(
+                issuer: "EstudeFacil",
+                audience: "EstudeFacil",
+                claims: claims,
+                expires: DateTime.Now.AddHours(1),
+                signingCredentials: credentials);
+
+            return new JwtSecurityTokenHandler().WriteToken(token);
+        }
+        private bool ValidarToken(string token, string email) {
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var key = Encoding.UTF8.GetBytes(Funcoes.Hash("@Estudefacil2024")); // Usar a mesma lógica de chave usada no GenerateJwtToken
+
+            try
+            {
+                tokenHandler.ValidateToken(token, new TokenValidationParameters
+                {
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(key),
+                    ValidateIssuer = false,
+                    ValidateAudience = false,
+                    ClockSkew = TimeSpan.Zero
+                }, out SecurityToken validatedToken);
+
+                var jwtToken = (JwtSecurityToken)validatedToken;
+                var tokenEmail = jwtToken.Claims.First(x => x.Type == JwtRegisteredClaimNames.Sub).Value;
+
+                return tokenEmail == email;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        [HttpGet]
+        public IActionResult TermosDeUso() {
+            return View();
+        }
+
     }
 }

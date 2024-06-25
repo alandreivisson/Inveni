@@ -19,11 +19,12 @@ namespace Inveni.ViewModel
         public required string Localizacao { get; set; }*/
 
         [MaxLength(200)]
-        [EmailAddress]
+        [EmailAddress (ErrorMessage = "O campo deve ser preenchido com um e-mail.")]
         [Required (ErrorMessage= "O campo Email é obrigatório!")]
         public required string Email { get; set; }
         [PasswordPropertyText]
         [Required(ErrorMessage = "O campo Senha é obrigatório!")]
+        [RegularExpression("^(?=.{8,})(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*()_+{}:;|<>,/?\\]]).*$", ErrorMessage = "A senha deve conter no mínimo 8 caracteres, um símbolo especial, 1 número, 1 letra maiúscula e 1 minúscula.")]
         public required string Senha { get; set; }
    
         [Compare(nameof(Senha), ErrorMessage = "As senhas devem ser iguais")]

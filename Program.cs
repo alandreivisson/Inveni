@@ -1,21 +1,27 @@
 using Inveni.Models;
 using Inveni.Persistence;
+using Inveni.Services;
+using Inveni.Settings;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+builder.Services.Configure<GMailSettings>(builder.Configuration.GetSection(nameof(GMailSettings)));
+builder.Services.AddSingleton<IEmailService, GMailService>();
+
 
 builder.Services.AddDbContext<Contexto>(options =>
 {
     //Quando for usar a conexão local, descomenta aqui
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
     //Quando for usar a conexão do site, descomenta aqui 
-    //options.UseSqlServer(@"Server=estudefacilservidor.database.windows.net;DataBase=estudefacilOficial;User Id=administrador;Password=@Estudefacil2024;");
+    //options.UseSqlServer(@"Server=estudefacilservidor.database.windows.net;DataBase=estudefacilBancoHomologacao;User Id=administrador;Password=@Estudefacil2024;");
 });
 
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)

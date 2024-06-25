@@ -3,14 +3,14 @@
 <div class="row">
     <div class="form-group col-4">
         <label asp-for="CategoriaId" class="control-label">Categoria</label>
-        <select asp-for="CategoriaId" class="form-control" asp-items="ViewBag.Categorias"></select>
+        <select asp-for="CategoriaId" id="CategoriaId" class="form-control" asp-items="ViewBag.Categorias"></select>
     </div>
     <div class="form-group col-4">
         <label asp-for="TematicaId" class="control-label">Temática</label>
-        <select asp-for="TematicaId" class="form-control" asp-items="ViewBag.Tematicas"></select>
+        <select asp-for="TematicaId" id="TematicaId" class="form-control" asp-items="ViewBag.Tematicas"></select>
     </div>
     <div class="form-group col-4">
         <label asp-for="ModeloId" class="control-label">Modelo</label>
-        <select asp-for="ModeloId" class="form-control" asp-items="ViewBag.Modelos"></select>
+        <select asp-for="ModeloId" id="ModeloId" class="form-control" asp-items="ViewBag.Modelos"></select>
     </div>
 </div>

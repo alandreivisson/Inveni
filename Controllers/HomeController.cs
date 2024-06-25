@@ -222,12 +222,11 @@ namespace Inveni.Controllers {
             }
 
             var detalhes = _context.TematicaMestre
-        .Include(t => t.Tematica)
-        .ThenInclude(t => t.Categoria)
-        .Include(t => t.Usuario)
-        .Include(t => t.Modelo)
-        .Include(t => t.Matriculas) // Inclua as matrículas
-        .FirstOrDefault(t => t.Id == id);
+      .Include(t => t.Tematica)
+      .ThenInclude(t => t.Categoria)
+      .Include(t => t.Usuario)
+      .Include(t => t.Modelo)
+      .FirstOrDefault(t => t.Id == id && t.Ativo);
 
             return PartialView("_DetalhesModal", detalhes); // Crie uma PartialView para formatar os detalhes como desejar
         }

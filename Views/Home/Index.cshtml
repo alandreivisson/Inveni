@@ -126,7 +126,7 @@
                     <div class="mt-auto card-footer d-flex justify-content-center" style="border:none;">
                         @*<button class="btn btn-primary" onclick="saibaMais('@item.Id')">Saiba Mais</button>*@
 
-                        <button class="btn btn-dark text-white" onclick="abrirModal('@item.Id')">Saiba Mais</button>
+                        <button class="btn btn-outline-primary" onclick="abrirModal('@item.Id')">Saiba Mais</button>
 
 
                         @*Aqui vou prototipar o botao de matricular - depois o leon ajusta*@
@@ -237,7 +237,6 @@
             // Redirecionar para a tela de acesso
             window.location.href = '@Url.Action("Acesso", "Usuarios")';
         } else {
-            alert("Chegou no botao do saiba mais");
             // Se estiver autenticado, continuar com a lógica para abrir o modal
             // Faça uma requisição AJAX ou manipule os dados diretamente, dependendo do que preferir
             $.ajax({

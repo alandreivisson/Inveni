@@ -41,7 +41,7 @@
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <div class="navbar-collapse collapse row justify-content-end ">
+                <div class="navbar-collapse collapse row d-flex">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
                             <a class="nav-link m-0 me-5 text-white" asp-area="" asp-controller="Home" asp-action="Index">
@@ -92,7 +92,7 @@
                         @if (User.Identity.IsAuthenticated)
                         {
                             <!--Notificacao-->
-                            <li class="nav-item dropdown ms-auto ms-sm-auto ms-md-auto ">
+                            <li class="nav-item dropdown" style="margin-left: 57%;">
                                 <a class="nav-link position-relative" href="#" id="notificationDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                     <i class="fa fa-bell text-white" style="font-size: 1.5em;"></i>
                                     <span id="notificationBadge" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="display: none;">

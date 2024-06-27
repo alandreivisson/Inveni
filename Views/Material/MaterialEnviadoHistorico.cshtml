@@ -39,8 +39,8 @@
                             <th>Aprendiz</th>
                             <th>Material</th>
                             <th>
-                                 Data de envio
-                           </th>
+                                Data de envio
+                            </th>
                             <th></th>
                         </tr>
                     </thead>
@@ -48,7 +48,7 @@
                         @foreach (var item in Model)
                         {
                             <tr>
-                                <td class="align-middle">
+                                <td id="tdid" class="align-middle">
                                     <img src="@Url.Content(item.Aprendiz.CaminhoFoto)" alt="User Icon" style="height: 50px; border-radius: 50%;" />
                                 </td>
                                 <td class="align-middle">
@@ -59,8 +59,8 @@
                                     @item.DataEnviado.ToString("dd/MM/yyyy 'às' HH:mm")
                                 </td>
                                 <td class="align-middle">
-                                    <a href="#" class="delete-material" data-material-id="@item.MaterialId" data-toggle="modal" data-target="#confirmDeleteModal">
-                                        <img width="20" height="20" src="https://img.icons8.com/ios-filled/50/FD7E14/trash.png" alt="filled-trash" />
+                                    <a href="#" class="delete-material" data-material-id="@item.MaterialId" data-toggle="modal">
+                                        <img width="20" height="20" src="https://img.icons8.com/ios-filled/50/007BFF/trash.png" alt="filled-trash" />
                                     </a>
                                 </td>
                             </tr>
@@ -70,42 +70,29 @@
             </div>
         </div>
 
-     
+
     </div>
     <div class="col-2"></div>
-</div>
-
-<!-- Modal de Confirmação de Exclusão -->
-<div class="modal fade" id="confirmDeleteModal" tabindex="-1" role="dialog" aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="confirmDeleteModalLabel">Confirmar Exclusão</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                Tem certeza de que deseja excluir os registros relacionados a este material?
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                <button type="button" class="btn btn-danger" id="confirmDeleteBtn">Excluir</button>
-            </div>
-        </div>
-    </div>
 </div>
 
 <link rel="stylesheet" href="https://cdn.datatables.net/2.0.3/css/dataTables.dataTables.css" />
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
 <script src="https://cdn.datatables.net/2.0.3/js/dataTables.js"></script>
 
+
 <script type="text/javascript">
     var js = jQuery.noConflict(true);
     js(document).ready(function () {
-        js('#tabela-material').DataTable();
+        js('#tabela-material').DataTable({
+            language: {
+                url: '//cdn.datatables.net/plug-ins/2.0.8/i18n/pt-BR.json'
+            }
+        });
     });
+</script>
 
+
+<script type="text/javascript">
     document.querySelectorAll('.toggle-group').forEach(button => {
         button.addEventListener('click', () => {
             const groupId = button.getAttribute('data-group-id');
@@ -125,29 +112,40 @@
     document.querySelectorAll('.delete-material').forEach(button => {
         button.addEventListener('click', () => {
             const materialId = button.getAttribute('data-material-id');
-            const confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
-            confirmDeleteBtn.addEventListener('click', () => {
-                // Envie uma solicitação para o servidor para excluir os registros
-                fetch(`/Material/DeleteMaterialEnviadoHistorico?materialId=${materialId}`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-Requested-With': 'XMLHttpRequest',
-                        'RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val()
-                    }
-                })
-                    .then(response => {
-                        if (response.ok) {
-                            // Recarregar a página para atualizar a exibição
-                            location.reload();
-                        } else {
-                            alert('Erro ao excluir os registros.');
+            // Mostrar SweetAlert para confirmar a exclusão
+            Swal.fire({
+                title: 'Tem certeza?',
+                text: 'Deseja excluir esse registro do histórico?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Excluir',
+                cancelButtonText: 'Cancelar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Se confirmado, enviar a solicitação para excluir
+                    fetch(`/Material/DeleteMaterialEnviadoHistorico?id=${materialId}`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-Requested-With': 'XMLHttpRequest',
+                            'RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val()
                         }
                     })
-                    .catch(error => {
-                        console.error('Erro ao excluir os registros:', error);
-                        alert('Erro ao excluir os registros.');
-                    });
+                        .then(response => {
+                            if (response.ok) {
+                                // Recarregar a página para atualizar a exibição
+                                location.reload();
+                            } else {
+                                Swal.fire('Erro!', 'Erro ao excluir o registro.', 'error');
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Erro ao excluir o registro:', error);
+                            Swal.fire('Erro!', 'Erro ao excluir o registro.', 'error');
+                        });
+                }
             });
         });
     });

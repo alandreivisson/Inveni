@@ -17,27 +17,27 @@
         <div class="d-flex flex-column align-items-center mt-2 mb-1">
             <p class="d-flex align-items-center">
                 <a asp-action="Create" class="ml-2 me-2 btn btn-outline-primary align-items-center" style="text-decoration: none; font-size: 25px;">Carregar</a>
-                @*   <img id="cadastrar-imagem"
-                width="30"
-                height="30"
-                src="https://img.icons8.com/ios-filled/50/007BFF/plus.png"
-                alt="plus--v1"
-                style="cursor: pointer;" />*@
+             @*   <img id="cadastrar-imagem"
+                     width="30"
+                     height="30"
+                     src="https://img.icons8.com/ios-filled/50/007BFF/plus.png"
+                     alt="plus--v1"
+                     style="cursor: pointer;" />*@
             </p>
         </div>
         @*<hr/>*@
     </div>
-
+    
     <div class="col-3">
         <div class="d-flex flex-column align-items-center mt-2 mb-1">
             <p class="d-flex align-items-center">
                 <a asp-action="MaterialEnviadoHistorico" class="ml-2 me-2 btn btn-outline-primary align-items-center" style="text-decoration: none; font-size: 25px;">Enviados</a>
-                @*   <img id="historico-imagem"
-                width="30"
-                height="30"
-                src="https://img.icons8.com/pastel-glyph/64/007BFF/surprise--v2.png"
-                alt="plus--v1"
-                style="cursor: pointer;" />*@
+             @*   <img id="historico-imagem"
+                     width="30"
+                     height="30"
+                     src="https://img.icons8.com/pastel-glyph/64/007BFF/surprise--v2.png"
+                     alt="plus--v1"
+                     style="cursor: pointer;" />*@
             </p>
         </div>
     </div>
@@ -45,7 +45,7 @@
 </div>
 <div class="row">
     <div class="col-3"></div>
-    <div class="col-6">
+    <div    class="col-6">
         <div class="card blue-bordered-card">
             <div class="card-body">
                 <table id="tabela-material" class="table">
@@ -67,18 +67,22 @@
                                     @Html.DisplayFor(modelItem => item.NomeArquivo)
                                 </td>
                                 <td class="text-right align-items-end text-end">
-                                    <a data-material-id="@item.Id" class="compartilhar-link" style="text-decoration: none; color: inherit;">
+                                    <a data-material-id="@item.Id" class="mx-3 compartilhar-link" style="text-decoration: none; color: inherit;">
                                         <img width="20" height="20" src="https://img.icons8.com/ios-filled/50/0d6efd/forward-arrow.png" alt="forward-arrow" />
                                     </a>
+                                    |
                                 </td>
                                 <td class="text-right align-items-end text-end">
+                                    
                                     <a href="@Url.Action("Download", "Material", new { materialId = @item.Id })">
                                         <img width="20" height="20" src="https://img.icons8.com/material-sharp/24/007BFF/download--v1.png" alt="Ícone de Download" />
                                     </a>
+                                    |
                                 </td>
                                 <td class="text-right align-items-end text-end">
-                                    <a asp-action="Delete" asp-route-id="@Funcoes.EncodeId(item.Id)">
-                                        <img width="20" height="20" src="https://img.icons8.com/ios-filled/50/007BFF/trash.png" alt="filled-trash" />
+                                    <a asp-action="Delete" asp-route-id="@Funcoes.EncodeId(item.Id)" class="mx-3">
+                                        <img width="20" height="20" src="https://img.icons8.com/ios-filled/50/FD7E14/trash.png" alt="filled-trash" />
+
                                     </a>
                                 </td>
                             </tr>
@@ -111,20 +115,14 @@
 <link rel="stylesheet" href="https://cdn.datatables.net/2.0.3/css/dataTables.dataTables.css" />
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
 
+
+
 <script type="text/javascript">
     var js = jQuery.noConflict(true);
     js(document).ready(function () {
-        js('#tabela-material').DataTable({
-            language: {
-                url: '//cdn.datatables.net/plug-ins/2.0.8/i18n/pt-BR.json'
-            }
-        });
+        js('#tabela-material').DataTable();
     });
-</script>
 
-
-<script type="text/javascript">
-   
     $(document).ready(function () {
         // Definindo a função toggleMatriculas no escopo global
         window.toggleMatriculas = function (tematicaId) {
@@ -162,7 +160,7 @@
     function abrirModal(id) {
         // Faça uma requisição AJAX ou manipule os dados diretamente, dependendo do que preferir
         $.ajax({
-            url: '/Material/CompartilharMaterial/' + id,
+            url: '/Material/CompartilharMaterial/' + id, 
             type: 'GET',
             success: function (data) {
                 // Preencha o conteúdo do modal com os dados retornados pela action
@@ -199,43 +197,5 @@
     document.getElementById("historico-imagem").addEventListener("click", function () {
         // Quando a imagem for clicada, redirecionar para a ação "MaterialEnviadoHistorico"
         window.location.href = "/Material/MaterialEnviadoHistorico"; // Substitua "ControllerName" pelo nome real do seu controlador
-    });
-</script>
-<script>
-    $(document).ready(function () {
-        $("#compartilharMaterialForm").submit(function (event) {
-            event.preventDefault();
-
-            var formData = $(this).serialize();
-
-            $.ajax({
-                type: "POST",
-                url: $(this).attr("action"),
-                data: formData,
-                success: function (response) {
-                    if (response.success) {
-                        Swal.fire({
-                            title: 'Sucesso!',
-                            text: response.message,
-                            icon: 'success',
-                            timer: 60000,
-                            showConfirmButton: false
-                        }).then(() => {
-                            window.location.href = '/Material/Index';
-                        });
-                    } else {
-                        Swal.fire({
-                            title: 'Erro!',
-                            text: response.message,
-                            icon: 'error',
-                            timer: 50000, // Duração do alerta em milissegundos
-                            showConfirmButton: false // Remove o botão de confirmação
-                        }).then(() => {
-                            window.location.href = '/Material/Index';
-                        });
-                    }
-                }
-            });
-        });
     });
 </script>

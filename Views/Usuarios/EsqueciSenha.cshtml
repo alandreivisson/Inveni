@@ -3,34 +3,32 @@
     ViewBag.Subtitulo = "Esqueci Minha Senha";
 }
 
-<div class="container">
-    <div class="row justify-content-center align-items-center h-100">
-        <div class="col-md-6">
-            <div class="card my-5 mx-auto" style="max-width: 50rem;">
-                <div class="card-header text-center">
-                    <h2 class="mb-0">Esqueci Minha Senha</h2>
-                </div>
-                <div class="card-body">
-                    <p class="lead text-center">
-                        Informe seu e-mail no campo abaixo e clique no botão "Solicitar Redefinição de Senha". Se o e-mail pertencer a algum usuário do sistema, uma mensagem de confirmação contendo
-                        um link para redefinição da senha será enviado para o e-mail em questão.
-                    </p>
 
-                    <form asp-action="EsqueciSenha" class="row">
-                        <div class="form-group mb-3 col-12">
-                            <label for="email" class="form-label">E-mail *</label>
-                            <input type="email" class="form-control" id="email" aria-describedby="emailHelp" placeholder="E-mail" autofocus>
-                            <span asp-validation-for="Email" class="text-danger"></span>
-                        </div>
+<div class="container d-flex justify-content-end">
+    <h1 class="text-primary"> Esqueci Minha Senha</h1>
 
-                        <div class="w-100"></div>
-                        <div class="mt-3 text-center">
-                            <a asp-action="Acesso" asp-controller="Usuarios" class="btn btn-outline-secondary">Cancelar</a>
-                            <button class="btn btn-primary" type="submit">Solicitar Redefinição de Senha</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
+
+    <div asp-validation-summary="ModelOnly" class="val-sumamary text-danger my-3"></div>
+
+    <p>
+        Informe seu e-mail no campo abaixo e clique no botão "Solicitar Redefinição de Senha". Se o e-mail pertencer a algum usuário do sistema, uma mensagem de confirmação contendo
+        um link para redefinição da senha será enviado para o e-mail em questão.
+    </p>
+    <form asp-action="EsqueciSenha" class="row justify-content-center">
+        <div class="form-group mb-3 col-4">
+            <label asp-for="@Model.Email"></label><br />
+            <input asp-for="@Model.Email" class="form-control" autofocus autocomplete="off" />
         </div>
-    </div>
+        <span asp-validation-for="@Model.Email" class="text-danger"></span>
+
+        <div class="w-100"></div>
+        <div class="mt-3">
+            <a asp-action="Acesso" asp-controller="Usuarios" class="btn btn-outline-secondary">Cancelar</a>
+            <button class="btn btn-primary" type="submit">Solicitar Redefinição de Senha</button>
+        </div>
+    </form>
+
 </div>
+
+
+

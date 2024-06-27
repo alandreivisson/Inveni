@@ -199,3 +199,41 @@
         window.location.href = "/Material/MaterialEnviadoHistorico"; // Substitua "ControllerName" pelo nome real do seu controlador
     });
 </script>
+<script>
+    $(document).ready(function () {
+        $("#compartilharMaterialForm").submit(function (event) {
+            event.preventDefault();
+
+            var formData = $(this).serialize();
+
+            $.ajax({
+                type: "POST",
+                url: $(this).attr("action"),
+                data: formData,
+                success: function (response) {
+                    if (response.success) {
+                        Swal.fire({
+                            title: 'Sucesso!',
+                            text: response.message,
+                            icon: 'success',
+                            timer: 60000,
+                            showConfirmButton: false
+                        }).then(() => {
+                            window.location.href = '/Material/Index';
+                        });
+                    } else {
+                        Swal.fire({
+                            title: 'Erro!',
+                            text: response.message,
+                            icon: 'error',
+                            timer: 50000, // Duração do alerta em milissegundos
+                            showConfirmButton: false // Remove o botão de confirmação
+                        }).then(() => {
+                            window.location.href = '/Material/Index';
+                        });
+                    }
+                }
+            });
+        });
+    });
+</script>

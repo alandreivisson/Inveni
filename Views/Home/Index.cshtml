@@ -243,7 +243,6 @@
                 url: '/Home/Detalhes/' + id, // Substitua pelo caminho real da sua action Detalhes
                 type: 'GET',
                 success: function (data) {
-                    alert("Chegou no sucess do saiba mais");
                     // Preencha o conteúdo do modal com os dados retornados pela action
                     $('#modalBody').html(data);
                     // Abra o modal
@@ -394,7 +393,7 @@
     });
 </script>
 
-<script>
+@*<script>
  
     // Captura mudanças nos selects
     $('#CategoriaId, #TematicaId, #ModeloId').change(function () {
@@ -414,7 +413,34 @@
     }
 
 
+</script>*@
+<script>
+    var typingTimer;                // Timer para atraso
+    var doneTypingInterval = 800;   // Tempo em milissegundos para esperar após digitação (500ms neste exemplo)
+    var $searchTerm = $('#searchTerm');
+
+    // Captura mudanças nos selects
+    $('#CategoriaId, #TematicaId, #ModeloId').change(function () {
+        submitForm();
+    });
+
+    // Captura mudanças no campo de busca
+    $searchTerm.keyup(function () {
+        clearTimeout(typingTimer);
+        typingTimer = setTimeout(submitForm, doneTypingInterval);
+    });
+
+    // Limpa o timer se o usuário ainda estiver digitando
+    $searchTerm.keydown(function () {
+        clearTimeout(typingTimer);
+    });
+
+    function submitForm() {
+        // Submete o formulário
+        $('#filtroForm').submit();
+    }
 </script>
+
 
 
 

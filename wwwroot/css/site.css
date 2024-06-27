@@ -190,3 +190,14 @@ body {
         margin: 0;
         flex-grow: 1;
     }
+.navbar-toggler {
+    border: none;
+}
+
+.navbar-toggler-icon {
+    color: white; /* Set the color to white */
+}
+
+.offcanvas-start {
+    background-color: white; /* Change the background color of the offcanvas menu */
+}

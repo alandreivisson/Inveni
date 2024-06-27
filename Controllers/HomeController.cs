@@ -155,7 +155,11 @@ namespace Inveni.Controllers {
            
 
             contexto = contexto.OrderBy(t => t.Tematica.Descricao);
-
+            if (!string.IsNullOrEmpty(searchTerm))
+            {
+                ViewBag.SearchTerm = searchTerm;
+            }
+            
             ViewBag.Categorias = new SelectList(await _context.Categoria.OrderBy(c => c.Descricao).ToListAsync(), "Id", "Descricao");
             ViewBag.Categorias = AddDefaultItem(ViewBag.Categorias, "Todas as Categorias");
             ViewBag.Tematicas = new SelectList(await _context.Tematica.OrderBy(t => t.Descricao).ToListAsync(), "Id", "Descricao");

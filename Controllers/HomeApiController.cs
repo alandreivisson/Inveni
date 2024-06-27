@@ -211,6 +211,7 @@ namespace Inveni.Controllers {
                     TematicaDescricao = t.Tematica.Descricao,
                     CategoriaDescricao = t.Tematica.Categoria.Descricao,
                     ModeloDescricao = t.Modelo.Descricao,
+                    Telefone = t.Usuario.Telefone
                 })
                 .OrderBy(t => t.TematicaDescricao)
                 .ToListAsync();

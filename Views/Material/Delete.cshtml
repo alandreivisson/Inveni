@@ -9,7 +9,7 @@
     <div class="col-6">
         <div class="card">
             <div class="card-body pt-5">
-                <form asp-action="Delete">
+                <form id="deleteForm" asp-action="Delete">
                     <dl class="row">
                         <dt class="col-sm-4">
                             @Html.DisplayNameFor(model => model.NomeArquivo)
@@ -32,6 +32,43 @@
 
 
 
+<script>
+    $(document).ready(function () {
+        $("#deleteForm").submit(function (event) {
+            event.preventDefault();
 
+            var formData = $(this).serialize();
+
+            $.ajax({
+                type: "POST",
+                url: $(this).attr("action"),
+                data: formData,
+                success: function (response) {
+                    if (response.success) {
+                        Swal.fire({
+                            title: 'Sucesso!',
+                            text: response.message,
+                            icon: 'success',
+                            timer: 4000,
+                            showConfirmButton: false
+                        }).then(() => {
+                            window.location.href = '/Material/Index';
+                        });
+                    } else {
+                        Swal.fire({
+                            title: 'Erro!',
+                            text: response.message,
+                            icon: 'error',
+                            timer: 50000, // Duração do alerta em milissegundos
+                            showConfirmButton: false // Remove o botão de confirmação
+                        }).then(() => {
+                            window.location.href = '/Material/Create';
+                        });
+                    }
+                }
+            });
+        });
+    });
+</script>
 
 

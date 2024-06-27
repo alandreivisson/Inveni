@@ -74,7 +74,7 @@
                                    
                                 </td>
                                 <td>
-                                    <a asp-action="DeleteMaterialAprendiz" asp-route-id="@materialMatriculaMestre.Id">
+                                    <a href="#" class="delete-material" data-material-id="@materialMatriculaMestre.Id">
                                         <img width="20" height="20" src="https://img.icons8.com/ios-filled/50/waste.png" alt="Cadastrar" />
                                     </a>
                                 </td>
@@ -97,6 +97,54 @@
     js(document).ready(function () {
         js('#tabela-materiais-enviados').DataTable();
     });
+
+    js(document).on('click', '.delete-material', function (e) {
+        e.preventDefault();
+        var materialId = js(this).data('material-id');
+
+        Swal.fire({
+            title: 'Tem certeza?',
+            text: 'Deseja excluir este registro do histórico?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Excluir',
+            cancelButtonText: 'Cancelar'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                deleteMaterial(materialId);
+            }
+        });
+    });
+
+    function deleteMaterial(materialId) {
+        js.ajax({
+            url: '@Url.Action("DeleteMaterialAprendiz", "Material")',
+            type: 'POST',
+            data: { id: materialId },
+            success: function (response) {
+                Swal.fire({
+                    title: 'Excluído!',
+                    text: 'O registro foi excluído com sucesso.',
+                    icon: 'success',
+                    timer: 1500,
+                    timerProgressBar: true,
+                    showConfirmButton: false
+                });
+                setTimeout(function () {
+                    location.reload(); // Recarregar a página após a exclusão
+                }, 1500);
+            },
+            error: function (xhr, status, error) {
+                Swal.fire({
+                    title: 'Erro!',
+                    text: 'Ocorreu um erro ao excluir o registro.',
+                    icon: 'error'
+                });
+            }
+        });
+    }
 </script>
 
 @*@foreach (var materialMatriculaMestre in Model.Matriculas)

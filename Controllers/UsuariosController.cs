@@ -156,10 +156,18 @@ namespace Inveni.Controllers
         [HttpPost]
         [Authorize(Policy = "Anonimo")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Acesso(UsuarioVM login)
-        {
+        public async Task<IActionResult> Acesso(UsuarioVM login) {
             // Buscar o usuário pelo email
             Usuario usu = _context.Usuario.FirstOrDefault(t => t.Email == login.Email);
+
+            if (string.IsNullOrEmpty(login.Email) || string.IsNullOrEmpty(login.Senha))
+            {
+                return Json(new { success = false, message = "Os campos senha e e-mail devem ser preenchidos." });
+            }
+            if (login.Opcoes == null)
+            {
+                return Json(new { success = false, message = "Selecione o tipo de usuário." });
+            }
 
             // Verificar se o usuário existe
             if (usu != null)
@@ -174,8 +182,7 @@ namespace Inveni.Controllers
                         // Verificar se o usuário está ativo
                         if (!usu.Ativo)
                         {
-                            ModelState.AddModelError("", "Usuário está com o perfil inativado, contatar suporte para mais informações!");
-                            return View();
+                            return Json(new { success = false, message = "Usuário está com o perfil inativado, contatar suporte para mais informações!" });
                         }
 
                         // Obter as permissões do usuário
@@ -207,26 +214,23 @@ namespace Inveni.Controllers
                         var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
                         var authProperties = new AuthenticationProperties
                         {
-
                             IsPersistent = false // Defina como verdadeiro se desejar manter o usuário autenticado
                         };
 
                         // Autenticar o usuário
                         await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity), authProperties);
 
-                        // Redirecionar para a página inicial
-                        return RedirectToAction("Index", "Home");
+                        // Retornar JSON indicando sucesso
+                        return Json(new { success = true });
                     }
                 }
                 else
                 {
-                    ModelState.AddModelError("", login.Opcoes == "2" ? "Usuário não está cadastrado como Mestre!" : "Usuário não está cadastrado como Aprendiz!");
-                    return View();
+                    return Json(new { success = false, message = login.Opcoes == "2" ? "Usuário não está cadastrado como Mestre!" : "Usuário não está cadastrado como Aprendiz!" });
                 }
             }
 
-            ModelState.AddModelError("", "Usuário ou Senha Inválidos!");
-            return View();
+            return Json(new { success = false, message = "Email ou senha inválidos!" });
         }
         public IActionResult ErrorPermissaoAcesso()
         {
@@ -282,47 +286,53 @@ namespace Inveni.Controllers
                 Directory.CreateDirectory(userIdFolder);
             }
 
-            // Salve o arquivo da foto no diretório do usuário
-            if (usuario.Foto != null)
+            try
             {
-                var fileName = Path.GetFileName(usuario.Foto.FileName);
-                var filePath = Path.Combine(userIdFolder, fileName);
-
-                using (var fileStream = new FileStream(filePath, FileMode.Create))
+                // Salve o arquivo da foto no diretório do usuário, se uma nova foto for fornecida
+                if (usuario.Foto != null)
                 {
-                    await usuario.Foto.CopyToAsync(fileStream);
+                    var fileName = Path.GetFileName(usuario.Foto.FileName);
+                    var filePath = Path.Combine(userIdFolder, fileName);
+
+                    using (var fileStream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await usuario.Foto.CopyToAsync(fileStream);
+                    }
+                    // Atualize o caminho da foto no usuário
+                    usuarioBD.CaminhoFoto = $"/imagens/{usuarioBD.Id}/{fileName}";
                 }
-                // Atualize o caminho da foto no usuário
-                usuarioBD.CaminhoFoto = $"/imagens/{usuarioBD.Id}/{fileName}";
 
+                var oldClaim = User.Claims.FirstOrDefault(c => c.Type == "CaminhoFoto");
+                if (oldClaim != null)
+                {
+                    var identity = (ClaimsIdentity)User.Identity;
+                    identity.RemoveClaim(oldClaim);
+                }
+
+                // Adicionar a nova claim com o caminho da foto atualizado
+                var newClaim = new Claim("CaminhoFoto", usuarioBD.CaminhoFoto);
+                ((ClaimsIdentity)User.Identity).AddClaim(newClaim);
+
+                // Atualizar outras informações do perfil
+                usuarioBD.Nome = usuario.Nome;
+                usuarioBD.Telefone = usuario.Telefone;
+                usuarioBD.Biografia = usuario.Biografia;
+
+                _context.Update(usuarioBD);
+                await _context.SaveChangesAsync();
+
+                // Retornar um JSON indicando sucesso
+                return Json(new { success = true, message = "Perfil atualizado com sucesso." });
             }
-
-            var oldClaim = User.Claims.FirstOrDefault(c => c.Type == "CaminhoFoto");
-            if (oldClaim != null)
+            catch (Exception ex)
             {
-                var identity = (ClaimsIdentity)User.Identity;
-                identity.RemoveClaim(oldClaim);
+                // Retornar um JSON indicando falha
+                return Json(new { success = false, message = $"Erro ao atualizar perfil: {ex.Message}" });
             }
-
-            // Adicionar a nova claim com o caminho da foto atualizado
-            var newClaim = new Claim("CaminhoFoto", usuarioBD.CaminhoFoto);
-            ((ClaimsIdentity)User.Identity).AddClaim(newClaim);
-
-            // Atualizar a identidade do usuário
-            await HttpContext.SignInAsync(User);
-
-            usuarioBD.Nome = usuario.Nome;
-            usuarioBD.Telefone = usuario.Telefone;
-            usuarioBD.Biografia = usuario.Biografia;
-
-            _context.Update(usuarioBD);
-            await _context.SaveChangesAsync();
-
-            // Redireciona para a página inicial
-            return RedirectToAction("Index", "Home");
         }
 
-         [HttpGet]
+
+        [HttpGet]
         public IActionResult Cadastrar()
         {
             return View();
@@ -331,71 +341,51 @@ namespace Inveni.Controllers
         // POST: /Usuarios/Cadastrar
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Cadastrar([Bind("Nome,Localizacao,Email,Senha")] Usuario usuario, string termosUso)
-        {
-
+        public async Task<IActionResult> Cadastrar([Bind("Nome,Localizacao,Email,Senha")] Usuario usuario, string termosUso, int perfilId) {
             if (!ModelState.IsValid)
             {
-                return View();
+                return BadRequest(ModelState);
             }
 
             if (string.IsNullOrEmpty(termosUso))
             {
-                ViewData["Mensagem"] = "Você deve aceitar os termos de uso para continuar";
-                return View(usuario);
+                return BadRequest(new { success = false, message = "Você deve aceitar os termos de uso para continuar." });
             }
 
             if (!usuario.ValidarPasswordComplexity())
             {
-                ViewData["Mensagem"] = "A senha deve ter pelo menos 8 caracteres, uma letra minúscula, uma letra maiúscula, um dígito e um caractere especial.";
-                return View();
+                return BadRequest(new { success = false, message = "A senha deve ter pelo menos 8 caracteres, uma letra minúscula, uma letra maiúscula, um dígito e um caractere especial." });
             }
 
             if (await _context.Usuario.AnyAsync(u => u.Email == usuario.Email))
             {
-                ViewData["Mensagem"] = "Este endereço de e-mail já está registrado.";
-                return View();           
-           }
-
-            if (usuario is null)
-            {
-                return BadRequest("O formulário não foi preenchido corretamente.");
+                return BadRequest(new { success = false, message = "Este endereço de e-mail já está registrado." });
             }
 
+            // Hash da senha antes de salvar
+            usuario.Senha = BCrypt.Net.BCrypt.HashPassword(usuario.Senha);
+            usuario.CaminhoFoto = "/imagens/user.png";
             usuario.Ativo = true;
 
-            if (!string.IsNullOrEmpty(usuario.Senha))
+            await _context.Usuario.AddAsync(usuario);
+            await _context.SaveChangesAsync();
+
+            // Associação do usuário ao perfil selecionado
+            if (perfilId > 0)
             {
-                usuario.Senha = BCrypt.Net.BCrypt.HashPassword(usuario.Senha);
-            }
-
-            usuario.CaminhoFoto = $"/imagens/user.png";
-
-            await _context.Usuario.AddAsync(usuario).ConfigureAwait(false);
-
-            await _context.SaveChangesAsync().ConfigureAwait(false);
-
-            int perfilId;
-            if (int.TryParse(Request.Form["perfilId"], out perfilId))
-            {
-
-                int usuarioId = usuario.Id;
-
                 UsuarioPerfil usuarioPerfil = new UsuarioPerfil
                 {
-                    UsuarioId = usuarioId,
+                    UsuarioId = usuario.Id,
                     PerfilId = perfilId
                 };
 
                 await _context.UsuarioPerfil.AddAsync(usuarioPerfil);
-
                 await _context.SaveChangesAsync();
             }
 
-
-            ViewData["Mensagem"] = "Usuário Cadastrado com sucesso!";
-            return View(nameof(Acesso));
+            return Json(new { success = true, message = "Usuário cadastrado com sucesso." });
         }
+
         [HttpGet]
         public IActionResult EsqueciSenha() {
             return View();
@@ -411,7 +401,7 @@ namespace Inveni.Controllers
                     var token = GenerateJwtToken(usuario.Email);
                     var urlConfirmacao = Url.Action(nameof(RedefinirSenha), "Usuarios", new { token }, Request.Scheme);
                     var mensagem = new StringBuilder();
-                    mensagem.Append("<p>Olá, {usuario.Nome}. </p>");
+                    mensagem.Append("<p>Olá! </p>");
                     mensagem.Append("<p>Houve uma solicitacção de redefinição de senha para seu usuário em nosso site. Senão foi você quem fez a solicitação, ignore essa" +
                         " mensagem. Caso tenha sido você, clique no link abaixo para criar sua nova senha:</p>");
                     mensagem.Append($"<p><a href='{urlConfirmacao}'>Redefinir Senha</a></p>");

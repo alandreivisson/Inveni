@@ -38,7 +38,7 @@
     <div class="col-6">
         <div class="card blue-bordered-card">
             <div class="card-body">
-                <form asp-action="Create">
+                <form id="createForm" asp-action="Create">
                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                     <div class="form-group">
                         <label asp-for="TematicaId" class="control-label"></label>
@@ -84,6 +84,42 @@
 
 <script src="~/lib/jquery/dist/jquery.min.js"></script>
 <script>
+    $(document).ready(function () {
+        $("#createForm").submit(function (event) {
+            event.preventDefault();
+
+            var formData = $(this).serialize();
+
+            $.ajax({
+                type: "POST",
+                url: $(this).attr("action"),
+                data: formData,
+                success: function (response) {
+                    if (response.success) {
+                        Swal.fire({
+                            title: 'Sucesso!',
+                            text: response.message,
+                            icon: 'success',
+                            timer: 60000,
+                            showConfirmButton: false
+                        }).then(() => {
+                            window.location.href = '/TematicaMestres/Index';
+                        });
+                    } else {
+                        Swal.fire({
+                            title: 'Erro!',
+                            text: response.message,
+                            icon: 'error',
+                            timer: 50000,
+                            showConfirmButton: false
+                        }).then(() => {
+                            window.location.href = '/TematicaMestres/Index';
+                        });
+                    }
+                }
+            });
+        });
+    });
     $("#TematicaId").focusout(function () {
         var tematicaId = $(this).val();
         $.ajax({

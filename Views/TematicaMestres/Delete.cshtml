@@ -42,7 +42,7 @@
     <div class="col-6">
         <div class="card">
             <div class="card-body">
-                <form asp-action="Delete">
+                <form id="deleteForm" asp-action="Delete">
                     <dl class="row">
                         <div class="col-sm-12 text-center mb-3">
                             <h4>Dados da Temática</h4>
@@ -87,6 +87,43 @@
 
 
 <script>
+    $(document).ready(function () {
+        $("#deleteForm").submit(function (event) {
+            event.preventDefault();
+
+            var formData = $(this).serialize();
+
+            $.ajax({
+                type: "POST",
+                url: $(this).attr("action"),
+                data: formData,
+                success: function (response) {
+                    if (response.success) {
+                        Swal.fire({
+                            title: 'Sucesso!',
+                            text: response.message,
+                            icon: 'success',
+                            timer: 60000,
+                            showConfirmButton: false
+                        }).then(() => {
+                            window.location.href = '/TematicaMestres/Index';
+                        });
+                    } else {
+                        Swal.fire({
+                            title: 'Erro!',
+                            text: response.message,
+                            icon: 'error',
+                            timer: 50000,
+                            showConfirmButton: false
+                        }).then(() => {
+                            window.location.href = '/TematicaMestres/Index';
+                        });
+                    }
+                }
+            });
+        });
+    });
+
     document.getElementById("voltar-imagem").addEventListener("click", function () {
         // Quando a imagem for clicada, redirecionar para a ação "Create"
         window.location.href = "/TematicaMestres/Index"; // Substitua "ControllerName" pelo nome real do seu controlador

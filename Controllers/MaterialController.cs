@@ -74,50 +74,49 @@ namespace Inveni.Controllers {
         [ValidateAntiForgeryToken]
         [Authorize(Policy = "Mestre")]
         public async Task<IActionResult> Create([Bind("Id")] Material material, IFormFile arquivo) {
-
             if (arquivo != null && arquivo.Length > 0)
             {
-                // Obter o nome do arquivo
-                material.NomeArquivo = Path.GetFileName(arquivo.FileName);
+                try {
+                    material.NomeArquivo = Path.GetFileName(arquivo.FileName);
+                    var userId = Convert.ToInt32(User.Identity.Name);
+                    material.MestreId = userId;
+                    material.Ativo = true;
 
-                // Obter o ID do usuário da sessão
-                // (Substitua isso com a lógica real para obter o ID do usuário da sessão)
-                var userId = Convert.ToInt32(User.Identity.Name); // Exemplo: substitua isso com sua lógica real
+                    var userIdFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "arquivos", userId.ToString());
+                    if (!Directory.Exists(userIdFolder))
+                    {
+                        Directory.CreateDirectory(userIdFolder);
+                    }
 
-                // Definir o MestreId
-                material.MestreId = userId;
+                    var fileName = Path.GetFileName(arquivo.FileName);
+                    var filePath = Path.Combine(userIdFolder, fileName);
 
-                //Definir o Material como true
-                material.Ativo = true;
+                    using (var fileStream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await arquivo.CopyToAsync(fileStream);
+                    }
 
-                // Criar diretório se não existir
-                var userIdFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "arquivos", userId.ToString());
-                if (!Directory.Exists(userIdFolder))
-                {
-                    Directory.CreateDirectory(userIdFolder);
+                    material.CaminhoArquivo = $"/arquivos/{userId}/{fileName}";
+
+                    _context.Add(material);
+                    await _context.SaveChangesAsync();
+
+                    // Retorna um JSON indicando sucesso
+                    return Json(new { success = true, message = "Material carregado com sucesso!" });
                 }
-
-                // Definir o caminho do arquivo
-                var fileName = Path.GetFileName(arquivo.FileName);
-                var filePath = Path.Combine(userIdFolder, fileName);
-
-                // Salvar o arquivo
-                using (var fileStream = new FileStream(filePath, FileMode.Create))
+                catch (Exception ex) 
                 {
-                    await arquivo.CopyToAsync(fileStream);
+                    return Json(new { success = true, message = "Não foi possível carregar o material, contate o suporte!" });
                 }
-
-                // Definir o CaminhoArquivo
-                // Atualize o caminho da foto no usuário
-                material.CaminhoArquivo = $"/arquivos/{userId}/{fileName}";
+               
+            }
+            else {
+                return Json(new { success = false, message = "Material não carregado pelo usuário!" });
             }
 
-            _context.Add(material);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+          
 
-
-            // return View(material);
+            
         }
 
         // POST: Material/Edit/5
@@ -150,18 +149,20 @@ namespace Inveni.Controllers {
             int decodeId = Funcoes.DecodeId(id);
             if (_context.Material == null)
             {
-                return Problem("Entity set 'Contexto.Material' is null.");
+                return Json(new { success = false, message = "Entity set 'Contexto.Material' is null." });
             }
             var material = await _context.Material.FindAsync(decodeId);
             if (material != null)
             {
                 material.Ativo = false; // Atualiza o campo Ativo para false
                 _context.Material.Update(material); // Atualiza o contexto com a nova alteração
+                await _context.SaveChangesAsync();
+                return Json(new { success = true, message = "Material excluído com sucesso." });
             }
 
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return Json(new { success = false, message = "Material não encontrado." });
         }
+
 
 
         private bool MaterialExists(int id) {
@@ -252,27 +253,25 @@ namespace Inveni.Controllers {
 
             if (material == null)
             {
-                return NotFound();
+                return Json(new { success = false, message = "Material não encontrado." });
             }
 
             if (matriculasMestreList != null && matriculasMestreList.Any())
             {
                 foreach (var matriculamestre in matriculasMestreList)
                 {
-                    // Obter a matrícula do aprendiz para pegar o último atributo
-                    var matriculaMestre = _context.MatriculaMestre.
-                            Include(mm => mm.Mestre).
-                           Include(mm => mm.TematicaMestre).
-                                 ThenInclude(mm => mm.Tematica)
+                    var matriculaMestre = _context.MatriculaMestre
+                        .Include(mm => mm.Mestre)
+                        .Include(mm => mm.TematicaMestre)
+                            .ThenInclude(tm => tm.Tematica)
                         .Where(mm => mm.Id == matriculamestre)
-                        .OrderByDescending(mm => mm.Id)  // Supondo que o último atributo seja o de maior ID
+                        .OrderByDescending(mm => mm.Id)
                         .FirstOrDefault();
 
                     DateTime dataEnvio = DateTime.Now;
 
                     if (matriculaMestre != null)
                     {
-                        // Criar uma nova entrada em MaterialMatriculaMestre
                         var materialMatriculaMestre = new MaterialMatriculaMestre
                         {
                             MaterialId = material.Id,
@@ -282,7 +281,7 @@ namespace Inveni.Controllers {
                         };
 
                         var materialHistoricoEnviado = new MaterialEnviadoHistorico
-                        { 
+                        {
                             MaterialId = material.Id,
                             AprendizId = matriculaMestre.AprendizId,
                             MestreId = material.MestreId,
@@ -295,11 +294,10 @@ namespace Inveni.Controllers {
                         {
                             Descricao = mensagem,
                             Aberto = true,
-                            UsuarioId = matriculaMestre.AprendizId // Define o aprendiz como destinatário da notificação
+                            UsuarioId = matriculaMestre.AprendizId
                         };
 
                         _context.Notificacao.Add(notificacao);
-
                         _context.MaterialMatriculaMestre.Add(materialMatriculaMestre);
                         _context.MaterialEnviadoHistorico.Add(materialHistoricoEnviado);
                     }
@@ -308,8 +306,9 @@ namespace Inveni.Controllers {
                 _context.SaveChanges();
             }
 
-            return RedirectToAction(nameof(Index));
+            return Json(new { success = true, message = "Material compartilhado com sucesso." });
         }
+
         [Authorize(Policy = "Aprendiz")]
         public IActionResult MateriaisEnviados() {
             // Obter o ID do aprendiz da sessão (substitua isso pela lógica real)
@@ -337,22 +336,20 @@ namespace Inveni.Controllers {
         }
         [Authorize(Policy = "Aprendiz")]
         public async Task<IActionResult> DeleteMaterialAprendiz(int id) {
-            // Obter o ID do aprendiz da sessão (substitua isso pela lógica real)
-            var aprendizId = Convert.ToInt32(User.Identity.Name);
-
             var materialMatriculaMestre = await _context.MaterialMatriculaMestre.FindAsync(id);
 
             if (materialMatriculaMestre != null)
             {
-                _context.MaterialMatriculaMestre.Remove(materialMatriculaMestre); // Atualiza o contexto com a nova alteração
+                _context.MaterialMatriculaMestre.Remove(materialMatriculaMestre);
                 await _context.SaveChangesAsync();
+                return Ok(); // Retornar OK para indicar sucesso
             }
 
-            return RedirectToAction(nameof(MateriaisEnviados));
+            return NotFound(); // Retornar NotFound caso não encontre o registro
         }
 
 
-       [Authorize]
+        [Authorize]
         public IActionResult Download(int materialId)
         {
             var material = _context.Material.Find(materialId);

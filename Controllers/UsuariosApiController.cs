@@ -33,8 +33,7 @@ namespace Inveni.Controllers {
             if (usu != null)
             {
                 // Verificar se as credenciais correspondem aos perfis permitidos
-                if ((login.Opcoes == "2" && _context.UsuarioPerfil.Any(up => up.UsuarioId == usu.Id && (up.PerfilId == 2 || up.PerfilId == 1))) ||
-                    (login.Opcoes != "2" && _context.UsuarioPerfil.Any(up => up.UsuarioId == usu.Id && (up.PerfilId == 3 || up.PerfilId == 1))))
+                if (login.Opcoes == "3" && _context.UsuarioPerfil.Any(up => up.UsuarioId == usu.Id && (up.PerfilId == 3)))
                 {
                     // Verificar se a senha fornecida corresponde ao hash armazenado no banco de dados
                     if (BCrypt.Net.BCrypt.Verify(login.Senha, usu.Senha))

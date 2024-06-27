@@ -2,7 +2,7 @@
 
 <div class="">
     <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;">
-        <form asp-action="CompartilharMaterial" asp-route-id="@Model.MaterialId" method="post">
+        <form id="compartilharMaterialForm"  asp-action="CompartilharMaterial" asp-route-id="@Model.MaterialId" method="post">
             <h5>Matrículas por Temática</h5>
             <div class="form-group mt-2 mb-2">
                 <label>@Model.MaterialNome</label>
@@ -43,3 +43,41 @@
         </form>
     </div>
 </div>
+<script>
+    $(document).ready(function () {
+        $("#compartilharMaterialForm").submit(function (event) {
+            event.preventDefault();
+
+            var formData = $(this).serialize();
+
+            $.ajax({
+                type: "POST",
+                url: $(this).attr("action"),
+                data: formData,
+                success: function (response) {
+                    if (response.success) {
+                        Swal.fire({
+                            title: 'Sucesso!',
+                            text: response.message,
+                            icon: 'success',
+                            timer: 60000,
+                            showConfirmButton: false
+                        }).then(() => {
+                            window.location.href = '/Material/Index';
+                        });
+                    } else {
+                        Swal.fire({
+                            title: 'Erro!',
+                            text: response.message,
+                            icon: 'error',
+                            timer: 50000, // Duração do alerta em milissegundos
+                            showConfirmButton: false // Remove o botão de confirmação
+                        }).then(() => {
+                            window.location.href = '/Material/Index';
+                        });
+                    }
+                }
+            });
+        });
+    });
+</script>

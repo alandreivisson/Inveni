@@ -7,7 +7,7 @@ namespace Inveni.Persistence {
         //{
         //}
         public Contexto(DbContextOptions<Contexto> contextOptions) : base(contextOptions) {
-             //Database.EnsureCreated();
+           //  Database.EnsureCreated();
         }
         public DbSet<Usuario> Usuario { get; set; }
         public DbSet<Perfil> Perfil { get; set; }

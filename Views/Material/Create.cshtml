@@ -38,7 +38,7 @@
     <div class="col-6">
         <div class="card blue-bordered-card">
             <div class="card-body">
-                <form asp-action="Create" enctype="multipart/form-data" onsubmit="return validateForm()" class="mx-auto align-items-center text-center">
+                <form id="createForm" asp-action="Create" enctype="multipart/form-data" onsubmit="return validateForm()" class="mx-auto align-items-center text-center">
                     <div class="form-group text-center">
                         <label asp-for="Arquivo" class="control-label"></label>
                         <div class="custom-file mt-3">
@@ -93,6 +93,46 @@
                 fileNameLabel.textContent = '';
             }
         }
+    </script>
+    <script>
+        $(document).ready(function () {
+            $("#createForm").submit(function (event) {
+                event.preventDefault(); // Evita o envio padrão do formulário
+
+                var formData = new FormData(this);
+
+                $.ajax({
+                    type: "POST",
+                    url: $(this).attr("action"),
+                    data: formData,
+                    contentType: false,
+                    processData: false,
+                    success: function (response) {
+                        if (response.success) {
+                            Swal.fire({
+                                title: 'Sucesso!',
+                                text: 'Material carregado com sucesso.',
+                                icon: 'success',
+                                timer: 60000, // Duração do alerta em milissegundos
+                                showConfirmButton: false // Remove o botão de confirmação
+                            }).then(() => {
+                                window.location.href = '/Material/Index';
+                            });
+                        } else {
+                            Swal.fire({
+                                title: 'Erro!',
+                                text: response.message,
+                                icon: 'error',
+                                timer: 50000, // Duração do alerta em milissegundos
+                                showConfirmButton: false // Remove o botão de confirmação
+                            }).then(() => {
+                                window.location.href = '/Material/Create';
+                            });
+                        }
+                    }
+                });
+            });
+        });
     </script>
 
     <script>

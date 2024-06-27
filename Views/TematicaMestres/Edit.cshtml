@@ -41,7 +41,7 @@
     <div class="col-6">
         <div class="card">
             <div class="card-body">
-                <form asp-action="Edit">
+                <form id="editForm" asp-action="Edit">
                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
                         <div class="form-group">
@@ -79,6 +79,43 @@
 
 
 <script>
+    $(document).ready(function () {
+        $("#editForm").submit(function (event) {
+            event.preventDefault();
+
+            var formData = $(this).serialize();
+
+            $.ajax({
+                type: "POST",
+                url: $(this).attr("action"),
+                data: formData,
+                success: function (response) {
+                    if (response.success) {
+                        Swal.fire({
+                            title: 'Sucesso!',
+                            text: response.message,
+                            icon: 'success',
+                            timer: 60000,
+                            showConfirmButton: false
+                        }).then(() => {
+                            window.location.href = '/TematicaMestres/Index';
+                        });
+                    } else {
+                        Swal.fire({
+                            title: 'Erro!',
+                            text: response.message,
+                            icon: 'error',
+                            timer: 50000,
+                            showConfirmButton: false
+                        }).then(() => {
+                            window.location.href = '/TematicaMestres/Index';
+                        });
+                    }
+                }
+            });
+        });
+    });
+
     document.getElementById("voltar-imagem").addEventListener("click", function () {
         // Quando a imagem for clicada, redirecionar para a ação "Create"
         window.location.href = "/TematicaMestres/Index"; // Substitua "ControllerName" pelo nome real do seu controlador

@@ -70,22 +70,23 @@ namespace Inveni.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Biografia,TematicaId,UsuarioId,ModeloId,Ativo")] TematicaMestre tematicaMestre)
-        {
+        public async Task<IActionResult> Create([Bind("Id,Biografia,TematicaId,UsuarioId,ModeloId,Ativo")] TematicaMestre tematicaMestre) {
             if (ModelState.IsValid)
             {
                 var userId = User.Identity.Name;
                 tematicaMestre.UsuarioId = int.Parse(userId);
                 _context.Add(tematicaMestre);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return Json(new { success = true, message = "Temática cadastrada com sucesso." });
             }
+
             ViewData["TematicaId"] = new SelectList(_context.Tematica, "Id", "Descricao", tematicaMestre.TematicaId);
             ViewData["UsuarioId"] = new SelectList(_context.Usuario, "Id", "Nome", tematicaMestre.UsuarioId);
             ViewData["ModeloId"] = new SelectList(_context.Modelo, "Id", "Descricao", tematicaMestre.ModeloId);
             ViewBag.TematicaDescricao = _context.Tematica.FirstOrDefault(t => t.Id == tematicaMestre.TematicaId)?.Descricao;
-            return View(tematicaMestre);
+            return Json(new { success = false, message = "Erro ao cadastrar temática." });
         }
+
         // GET: TematicaMestres/Edit/5
         // GET: TematicaMestres/Edit/5
         // GET: TematicaMestres/Edit/5
@@ -118,34 +119,35 @@ namespace Inveni.Controllers
             // Decodifique o ID
             int decodeId = Funcoes.DecodeId(id);
             tematicaMestre.Id = decodeId;
-                       
+
             if (tematicaMestre.Id == decodeId)
             {
                 try
                 {
                     _context.Update(tematicaMestre);
                     await _context.SaveChangesAsync();
+                    return Json(new { success = true, message = "Temática editada com sucesso." });
                 }
                 catch (DbUpdateConcurrencyException)
                 {
                     if (!TematicaMestreExists(tematicaMestre.Id))
                     {
-                        return NotFound();
+                        return Json(new { success = false, message = "Temática não encontrada." });
                     }
                     else
                     {
-                        throw;
+                        return Json(new { success = false, message = "Erro ao editar temática." });
                     }
                 }
-                return RedirectToAction(nameof(Index));
             }
             ViewData["TematicaId"] = new SelectList(_context.Tematica, "Id", "Descricao", tematicaMestre.TematicaId);
             ViewData["UsuarioId"] = new SelectList(_context.Usuario, "Id", "Id", tematicaMestre.UsuarioId);
             ViewData["ModeloId"] = new SelectList(_context.Modelo, "Id", "Descricao", tematicaMestre.ModeloId);
             ViewData["TematicaDescricao"] = _context.Tematica.FirstOrDefault(t => t.Id == tematicaMestre.TematicaId)?.Descricao;
 
-            return View(tematicaMestre);
+            return Json(new { success = false, message = "Erro ao salvar as alterações." });
         }
+
 
 
 
@@ -184,7 +186,7 @@ namespace Inveni.Controllers
 
             if (tematicaMestre == null)
             {
-                return NotFound();
+                return Json(new { success = false, message = "Temática não encontrada." });
             }
 
             try
@@ -195,7 +197,6 @@ namespace Inveni.Controllers
                     var mensagem = $"A temática {tematicaMestre.Tematica.Descricao}, ministrada pelo(a) Mestre {tematicaMestre.Usuario.Nome} foi excluída e assim sua matrícula e todos os materiais enviados por ele(a) também!";
 
                     var aprendizId = matriculaMestre.AprendizId;
-
 
                     foreach (var materialMatriculaMestre in matriculaMestre.MaterialMatriculaMestre.ToList())
                     {
@@ -217,13 +218,13 @@ namespace Inveni.Controllers
                 _context.TematicaMestre.Remove(tematicaMestre);
                 await _context.SaveChangesAsync();
 
-                return RedirectToAction(nameof(Index));
+                return Json(new { success = true, message = "Temática excluída com sucesso." });
             }
             catch (Exception ex)
             {
                 // Tratar exceções, se necessário
                 Console.WriteLine($"Erro ao deletar temática mestre: {ex.Message}");
-                return StatusCode(500, "Erro ao deletar temática mestre.");
+                return Json(new { success = false, message = "Erro ao excluir temática mestre." });
             }
         }
 

@@ -19,7 +19,7 @@
                     </div>
                 }
             </div>
-            <form asp-action="Cadastrar" asp-controller="Usuarios">
+            <form id="cadastroForm" asp-action="Cadastrar" asp-controller="Usuarios">
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                 <div class="form-group mb-3">
                     <label asp-for="@Model.Nome" class="control-label">Nome:</label>
@@ -74,7 +74,49 @@
     </div>
 </div>
 
+<script>
+    $(document).ready(function () {
+        $('#cadastroForm').submit(function (event) {
+            event.preventDefault();
 
+            $.ajax({
+                url: '/Usuarios/Cadastrar',
+                type: 'POST',
+                dataType: 'json',
+                data: $(this).serialize(),
+                success: function (response) {
+                    if (response.success) {
+                        Swal.fire({
+                            title: 'Sucesso!',
+                            text: response.message,
+                            icon: 'success',
+                            timer: 60000,
+                            showConfirmButton: false
+                        }).then(() => {
+                            window.location.href = '/Home/Index'; // Redireciona para a página inicial
+                        });
+                    } else {
+                        Swal.fire({
+                            title: 'Erro!',
+                            text: response.message,
+                            icon: 'error',
+                            timer: 50000,
+                            showConfirmButton: false
+                        });
+                    }
+                },
+                error: function () {
+                    Swal.fire({
+                        title: 'Erro!',
+                        text: 'Ocorreu um erro ao processar sua requisição.',
+                        icon: 'error',
+                        confirmButtonText: 'OK'
+                    });
+                }
+            });
+        });
+    });
+</script>
 @section Scripts {
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");

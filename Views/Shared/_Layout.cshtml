@@ -95,22 +95,15 @@
 
                         @if (User.Identity.IsAuthenticated)
                         {
-                            <!--Notificacao-->
-                            <li class="nav-item dropdown" style="margin-left: 57%;">
+  
+
+                            <li class="nav-item dropdown ms-auto ms-sm-auto ms-md-auto ">
                                 <a class="nav-link position-relative" href="#" id="notificationDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                     <i class="fa fa-bell text-white" style="font-size: 1.5em;"></i>
                                     <span id="notificationBadge" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="display: none;">
                                         •
                                     </span>
                                 </a>
-                                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="notificationDropdown">
-                                    <li>
-                                        <div class="dropdown-item" id="notificationContainer">Carregando...</div>
-                                    </li>
-                                </ul>
-                            </li>
-
-                            <li class="nav-item dropdown ms-auto ms-sm-auto ms-md-auto ">
                                 <ul class="nav-link dropdown-toggle text-info text-white text-end" href="#" role="button" data-bs-toggle="dropdown">
                                     <img src="@Url.Content(User.Claims.FirstOrDefault(c => c.Type == "CaminhoFoto").Value)" alt="Foto do Usuário" style="width: 35px; height: 35px; border-radius: 50%;" />
                                 </ul>
@@ -169,9 +162,9 @@
     <div class="modal fade" id="notificationModal" tabindex="-1" role="dialog" aria-labelledby="notificationModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
-                <div class="modal-header">
+                <div class="modal-header header-azul">
                     <h5 class="modal-title" id="notificationModalLabel">Notificações</h5>
-                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                    <button type="button" class="close header-azul" data-bs-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>

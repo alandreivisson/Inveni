@@ -55,9 +55,10 @@
                         <input asp-for="@Model.Email" class="form-control" disabled />
                         <span asp-validation-for="@Model.Email" class="text-danger"></span>
                     </div>
+
                     <div class="form-group mt-3">
                         <label asp-for="@Model.Telefone" class="control-label"></label>
-                        <input asp-for="@Model.Telefone" class="form-control" />
+                        <input asp-for="@Model.Telefone" class="form-control" id="Telefone"/>
                         <span asp-validation-for="@Model.Telefone" class="text-danger"></span>
                     </div>
                     <div class="form-group mt-3">
@@ -143,5 +144,11 @@
         document.getElementById('imageContainer').addEventListener('click', function () {
             document.getElementById('fileInput').click();
         });
+    </script>
+
+    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+    <script src=" https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.js" integrity="sha512-0XDfGxFliYJPFrideYOoxdgNIvrwGTLnmK20xZbCAvPfLGQMzHUsaqZK8ZoH+luXGRxTrS46+Aq400nCnAT0/w==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script>
+        $('#Telefone').mask('(00) 00000-0000');
     </script>
 }

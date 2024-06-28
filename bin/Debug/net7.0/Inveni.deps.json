@@ -9,6 +9,7 @@
       "Inveni/1.0.0": {
         "dependencies": {
           "BCrypt.Net": "0.1.0",
+          "inputmask": "5.0.9",
           "MailKit": "4.6.0",
           "Microsoft.AspNetCore.Authentication.JwtBearer": "7.0.12",
           "Microsoft.EntityFrameworkCore": "7.0.12",
@@ -16,7 +17,8 @@
           "Microsoft.EntityFrameworkCore.SqlServer": "7.0.12",
           "Microsoft.EntityFrameworkCore.Tools": "7.0.12",
           "Microsoft.VisualStudio.Web.CodeGeneration.Design": "7.0.10",
-          "System.IdentityModel.Tokens.Jwt": "7.6.2"
+          "System.IdentityModel.Tokens.Jwt": "7.6.2",
+          "jQuery.InputMask": "5.0.9"
         },
         "runtime": {
           "Inveni.dll": {}
@@ -612,6 +614,8 @@
           }
         }
       },
+      "inputmask/5.0.9": {},
+      "jQuery.InputMask/5.0.9": {},
       "MailKit/4.6.0": {
         "dependencies": {
           "MimeKit": "4.6.0"
@@ -2949,6 +2953,20 @@
       "sha512": "sha512-VIXB7HCUC34OoaGnO3HJVtSv2/wljPhjV7eKH4+TFPgQdJj2lvHNKY41Dtg0Bphu7X5UaXFR4zrYYyo+GNOjbA==",
       "path": "humanizer.core.zh-hant/2.14.1",
       "hashPath": "humanizer.core.zh-hant.2.14.1.nupkg.sha512"
+    },
+    "inputmask/5.0.9": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-hn+FmRMSpOnLLsVMYag2LFVlii9iCDNtPgZBpe/FuPrw6U6tEnzwhasYFjXqVXWEYutdFMIR1gKrhDN8f0yfuQ==",
+      "path": "inputmask/5.0.9",
+      "hashPath": "inputmask.5.0.9.nupkg.sha512"
+    },
+    "jQuery.InputMask/5.0.9": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-5YjQgmoFGZRZ2dv1/oS4k8PqeiAH6Vz0u6eNrasNwtCkNeZuLBVQWieyuH+6ZmTnzLoTveLvfBb31uwTSEIwog==",
+      "path": "jquery.inputmask/5.0.9",
+      "hashPath": "jquery.inputmask.5.0.9.nupkg.sha512"
     },
     "MailKit/4.6.0": {
       "type": "package",

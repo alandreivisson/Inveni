@@ -1,7 +1,7 @@
 ﻿@model IEnumerable<Inveni.Models.Usuario>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Usuários";
 }
 
 <div class="row">
@@ -101,7 +101,11 @@
 <script type="text/javascript">
     var js = jQuery.noConflict(true);
     js(document).ready(function () {
-        js('#tabela-usuarios').DataTable();
+        js('#tabela-usuarios').DataTable({
+            language: {
+                url: '//cdn.datatables.net/plug-ins/2.0.8/i18n/pt-BR.json'
+            }
+        });
     });
 </script>
 

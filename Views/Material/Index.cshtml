@@ -1,7 +1,7 @@
 ﻿@model IEnumerable<Inveni.Models.Material>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Materiais";
 }
 
 <div class="row">
@@ -44,8 +44,8 @@
     <div class="col-3"></div>
 </div>
 <div class="row">
-    <div class="col-3"></div>
-    <div    class="col-6">
+    <div class="col-2"></div>
+    <div class="col-8">
         <div class="card blue-bordered-card">
             <div class="card-body">
                 <table id="tabela-material" class="table">
@@ -66,23 +66,22 @@
                                 <td>
                                     @Html.DisplayFor(modelItem => item.NomeArquivo)
                                 </td>
-                                <td class="text-right align-items-end text-end">
-                                    <a data-material-id="@item.Id" class="mx-3 compartilhar-link" style="text-decoration: none; color: inherit;">
+                                <td class="align-middle">
+                                    <a data-material-id="@item.Id" class="compartilhar-link" style="text-decoration: none; color: inherit;">
                                         <img width="20" height="20" src="https://img.icons8.com/ios-filled/50/0d6efd/forward-arrow.png" alt="forward-arrow" />
                                     </a>
-                                    |
+                                    
                                 </td>
-                                <td class="text-right align-items-end text-end">
+                                <td class="align-middle">
                                     
                                     <a href="@Url.Action("Download", "Material", new { materialId = @item.Id })">
                                         <img width="20" height="20" src="https://img.icons8.com/material-sharp/24/007BFF/download--v1.png" alt="Ícone de Download" />
                                     </a>
-                                    |
+                                    
                                 </td>
-                                <td class="text-right align-items-end text-end">
-                                    <a asp-action="Delete" asp-route-id="@Funcoes.EncodeId(item.Id)" class="mx-3">
-                                        <img width="20" height="20" src="https://img.icons8.com/ios-filled/50/FD7E14/trash.png" alt="filled-trash" />
-
+                                <td class="align-middle">
+                                    <a asp-action="Delete" asp-route-id="@Funcoes.EncodeId(item.Id)">
+                                        <img width="20" height="20" src="https://img.icons8.com/ios-filled/50/007BFF/trash.png" alt="filled-trash" />
                                     </a>
                                 </td>
                             </tr>
@@ -92,7 +91,7 @@
             </div>
         </div>
     </div>
-    <div class="col-3"></div>
+    <div class="col-2"></div>
 </div>
 
 
@@ -114,13 +113,18 @@
 
 <link rel="stylesheet" href="https://cdn.datatables.net/2.0.3/css/dataTables.dataTables.css" />
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+<script src="https://cdn.datatables.net/2.0.3/js/dataTables.js"></script>
 
 
 
 <script type="text/javascript">
     var js = jQuery.noConflict(true);
     js(document).ready(function () {
-        js('#tabela-material').DataTable();
+        js('#tabela-material').DataTable({
+            language: {
+                url: '//cdn.datatables.net/plug-ins/2.0.8/i18n/pt-BR.json'
+            }
+        });
     });
 
     $(document).ready(function () {

@@ -48,7 +48,7 @@
                         @foreach (var item in Model)
                         {
                             <tr>
-                                <td class="align-middle">
+                                <td id="tdid" class="align-middle text-center">
                                     <img src="@Url.Content(item.Aprendiz.CaminhoFoto)" alt="User Icon" style="height: 50px; border-radius: 50%;" />
                                 </td>
                                 <td class="align-middle">
@@ -60,7 +60,7 @@
                                 </td>
                                 <td class="align-middle">
                                     <a href="#" class="delete-material" data-material-id="@item.MaterialId" data-toggle="modal">
-                                        <img width="20" height="20" src="https://img.icons8.com/ios-filled/50/FD7E14/trash.png" alt="filled-trash" />
+                                        <img width="20" height="20" src="https://img.icons8.com/ios-filled/50/007BFF/trash.png" alt="filled-trash" />
                                     </a>
                                 </td>
                             </tr>
@@ -82,7 +82,11 @@
 <script type="text/javascript">
     var js = jQuery.noConflict(true);
     js(document).ready(function () {
-        js('#tabela-material').DataTable();
+        js('#tabela-material').DataTable({
+            language: {
+                url: '//cdn.datatables.net/plug-ins/2.0.8/i18n/pt-BR.json'
+            }
+        });
     });
 
     document.querySelectorAll('.toggle-group').forEach(button => {

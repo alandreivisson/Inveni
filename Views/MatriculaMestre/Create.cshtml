@@ -1,7 +1,7 @@
 ﻿@model IEnumerable<Inveni.Models.MatriculaMestre>
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Solicitações";
 }
 
 <div class="row">
@@ -20,7 +20,16 @@
     </div>
     <div class="col-6">
         <div class="d-flex flex-column align-items-center mt-4">
-            <h1>Matrículas - Solicitações </h1>
+            <h1>Matrículas</h1>
+        </div>
+    </div>
+    <div class="col-3"></div>
+    <div class="col-3"></div>
+    <div class="col-6">
+        <div class="d-flex flex-column align-items-center mt-2 mb-1">
+            <p class="d-flex align-items-center" style="font-size: 25px">
+                Solicitações
+            </p>
         </div>
     </div>
     <div class="col-3"></div>
@@ -46,7 +55,7 @@
                             @foreach (var item in Model)
                             {
                                 <tr>
-                                    <td class="align-middle">
+                                    <td class="align-middle text-center">
                                         <img src="@Url.Content(item.Aprendiz.CaminhoFoto)" alt="User Icon" style="height: 50px; border-radius: 50%;" />
                                     </td>
                                     <td class="align-middle">
@@ -59,8 +68,8 @@
                                         @item.TematicaMestre.Tematica.Descricao
                                     </td>
                                     <td class="align-middle">
-                                        <button class="btn btn-success" onclick="confirmarMatricula(@item.Id)">Confirmar</button>
-                                        <button class="btn btn-danger" onclick="rejeitarMatricula(@item.Id)">Rejeitar</button>
+                                        <button class="btn btn-outline-primary" onclick="confirmarMatricula(@item.Id)">Confirmar</button>
+                                        <button class="btn btn-outline-danger" onclick="rejeitarMatricula(@item.Id)">Rejeitar</button>
                                     </td>
                                 </tr>
                             }
@@ -78,6 +87,20 @@
     <div class="col-2">
     </div>
 </div>
+
+<link rel="stylesheet" href="https://cdn.datatables.net/2.0.3/css/dataTables.dataTables.css" />
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+<script src="https://cdn.datatables.net/2.0.3/js/dataTables.js"></script>
+
+<script type="text/javascript">
+    var js = jQuery.noConflict(true);
+    js(document).ready(function () {
+        js('#tabela-pendente').DataTable({
+            language: {
+                url: '//cdn.datatables.net/plug-ins/2.0.8/i18n/pt-BR.json'
+            }
+        });
+</script>
 
 <script>
     document.getElementById("voltar-imagem").addEventListener("click", function () {
@@ -129,10 +152,3 @@
 
 
 
-
-<script type="text/javascript">
-    var js = jQuery.noConflict(true);
-    js(document).ready(function () {
-        js('#tabela-pendentes').DataTable();
-    });
-</script>

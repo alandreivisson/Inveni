@@ -201,3 +201,17 @@ body {
 .offcanvas-start {
     background-color: white; /* Change the background color of the offcanvas menu */
 }
+#tabela-material tr td:last-child a {
+    float: left;
+    margin-right: .5rem;
+}
+
+
+#tabela-material tr td:last-child a {
+    margin-right: -5px;
+}
+
+.card-body .form-group label::after {
+    content: "* ";
+    color: red;
+}

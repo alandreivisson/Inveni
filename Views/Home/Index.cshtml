@@ -1,7 +1,7 @@
 ﻿@using System.Security.Claims;
 @model IEnumerable<Inveni.Models.TematicaMestre>
 @{
-    ViewData["Title"] = "Estude Facil";
+    ViewData["Title"] = "Home";
 }
 
 
@@ -255,16 +255,7 @@
         }
     }
 </script>
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        var biografiaElement = document.getElementById("biografia");
-        var biografiaText = biografiaElement.textContent;
 
-        if (biografiaText.length > 10) {
-            biografiaElement.textContent = biografiaText.substring(0, 50) + "...";
-        }
-    });
-</script>
 <script>
     function verificarMatriculaWrapper(id, aprendizId) {
         verificarMatricula(id, aprendizId);

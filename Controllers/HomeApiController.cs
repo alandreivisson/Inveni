@@ -6,6 +6,8 @@ using System.Text.Json;
 using Inveni.ViewModel;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
+using Microsoft.AspNetCore.Authorization;
+using Inveni.Models;
 
 namespace Inveni.Controllers {
     [Route("api/[controller]")]
@@ -19,6 +21,167 @@ namespace Inveni.Controllers {
             _logger = logger;
             _context = context;
         }
+        [HttpPost("SolicitarMatriculaJson")]
+        public async Task<IActionResult> SolicitarMatricula([FromBody] SolicitarMatriculaRequest solicitacao) {
+
+            var tematicaMestre = await _context.TematicaMestre
+            .Include(t => t.Tematica)
+                .ThenInclude(t => t.Categoria)
+            .Include(t => t.Usuario)
+            .Include(t => t.Modelo)
+            .FirstOrDefaultAsync(tm => tm.Id == solicitacao.IdTematicaMestre && tm.Ativo);
+
+            var matriculaMestre = new MatriculaMestre
+            {
+                MestreId = tematicaMestre.UsuarioId,
+                AprendizId = (int)solicitacao.IdAprendiz,
+                TematicaMestreId = tematicaMestre.Id,
+                Status = MatriculaStatus.Pendente
+            };
+
+            _context.MatriculaMestre.Add(matriculaMestre);
+            var usuario = _context.Usuario
+                .FirstOrDefault(m => m.Id == (int)solicitacao.IdAprendiz);
+            var mensagem = $"Matricula solicitada - Usuário(a): {usuario.Nome} - Temática: {tematicaMestre.Tematica.Descricao}";
+
+            var notificacao = new Notificacao
+            {
+                Descricao = mensagem,
+                Aberto = true,
+                UsuarioId = matriculaMestre.MestreId // Define o aprendiz como destinatário da notificação
+            };
+
+            _context.Notificacao.Add(notificacao);
+
+            await _context.SaveChangesAsync();
+
+            var matricula = _context.MatriculaMestre
+                                    .FirstOrDefault(m => m.TematicaMestreId == solicitacao.IdTematicaMestre && m.AprendizId == (int)solicitacao.IdAprendiz);
+            if (matricula != null)
+            {
+                return Json(new { status = 1 }); // Retorne o novo status
+            }
+
+            return Json(new { status = 0 }); // Retorne um status de erro se não encontrado
+        }
+        [HttpPost("VerificarFavoritado")]
+        public ActionResult VerificarFavoritado([FromBody] VerificarFavoritadoRequest request) {
+            
+            if (request != null)
+            {
+                var favoritado = _context.Favoritado
+                                                .FirstOrDefault(m => m.TematicasMestreId == request.Id && m.AprendizId == request.AprendizId);
+                if (favoritado != null)
+                {
+                    return Json(new
+                    {
+                        status = 0
+                    });
+                }
+                else
+                {
+                    return Json(new
+                    {
+                        status = 1
+                    });
+                }
+            }
+            else
+            {
+                // Usuário não autenticado, lidar com isso de acordo com a sua lógica de negócios
+                return Json(null);
+            }
+        }
+        [HttpPost("FavoritarJson")]
+        
+        public async Task<IActionResult> FavoritarTematicaMestre([FromBody] VerificarFavoritadoRequest request) {
+
+            var favoritado = new Favoritado
+            {
+                AprendizId = (int)request.AprendizId,
+                TematicasMestreId = (int)request.Id
+                // Define o aprendiz como destinatário da notificação
+            };
+
+            _context.Favoritado.Add(favoritado);
+
+            await _context.SaveChangesAsync();
+
+            var favoritadoVerifica = _context.Favoritado
+                                             .FirstOrDefault(m => m.TematicasMestreId == request.Id && m.AprendizId == request.AprendizId);
+
+            if (favoritadoVerifica != null)
+            {
+                return Json(new { status = 0 }); // Retorne o novo status
+            }
+
+            return Json(new { status = 1 }); // Retorne um status de erro se não encontrado
+        }
+
+        [HttpPost("DesfavoritarJson")]
+        public async Task<IActionResult> DesfavoritarTematicaMestre([FromBody] VerificarFavoritadoRequest request) {
+
+            var favoritado = _context.Favoritado
+                                            .FirstOrDefault(m => m.TematicasMestreId == request.Id && m.AprendizId == request.AprendizId);
+
+            _context.Favoritado.Remove(favoritado);
+
+            await _context.SaveChangesAsync();
+
+            var favoritadoVerifica = _context.Favoritado
+                                             .FirstOrDefault(m => m.TematicasMestreId == request.Id && m.AprendizId == request.AprendizId);
+
+            if (favoritadoVerifica != null)
+            {
+                return Json(new { status = 1 }); // Retorne o novo status
+            }
+
+            return Json(new { status = 0 }); // Retorne um status de erro se não encontrado
+        }
+
+        [HttpPost("VerificarMatriculaJson")]
+        public ActionResult VerificarMatricula([FromBody] VerificarMatriculaRequest request) {
+
+            if (request != null)
+            {
+                var matricula = _context.MatriculaMestre
+                                        .FirstOrDefault(m => m.TematicaMestreId == request.Id && m.AprendizId == request.IdAprendiz);
+
+                if (matricula != null)
+                {
+
+                    var result = matricula.Status;
+                    if (result == MatriculaStatus.Matriculado)
+                    {
+                        return Json(new
+                        {
+                            status = 0
+                        });
+                    }
+                    else
+                    {
+                        return Json(new
+                        {
+                            status = 1
+                        });
+                    }
+                }
+                else
+                {
+                    // Se não existir, devolve 3
+                    return Json(new
+                    {
+                        status = 3
+                    });
+                }
+            }
+            else
+            {
+                // Usuário não autenticado, lidar com isso de acordo com a sua lógica de negócios
+                return Json(null);
+            }
+        }
+
 
         [HttpGet("IndexJson")]
         public async Task<IActionResult> GetIndexJson(int? categoriaId, int? tematicaId, int? modeloId) {

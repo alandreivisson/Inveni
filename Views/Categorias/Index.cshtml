@@ -1,7 +1,7 @@
 ﻿@model IEnumerable<Inveni.Models.Categoria>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "EstudeFacil - Categorias";
 }
 
 <div class="row">
@@ -73,7 +73,11 @@
 <script type="text/javascript">
     var js = jQuery.noConflict(true);
     js(document).ready(function () {
-        js('#tabela-categorias').DataTable();
+        js('#tabela-categorias').DataTable({
+            language: {
+                url: '//cdn.datatables.net/plug-ins/2.0.8/i18n/pt-BR.json'
+            }
+        });
     });
     document.getElementById("cadastrar-imagem").addEventListener("click", function () {
         // Quando a imagem for clicada, redirecionar para a ação "Create"

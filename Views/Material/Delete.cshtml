@@ -1,7 +1,7 @@
 ﻿@model Inveni.Models.Material
 
 @{
-    ViewData["Title"] = "Delete";
+    ViewData["Title"] = "Exclusão";
 }
 
 <div class="row">
@@ -19,8 +19,8 @@
                         </dd>
                         <div class="form-group col-12 mt-3 text-center">
                             <input type="hidden" asp-for="Id" />
-                            <input type="submit" value="Deletar" class="btn text-white btn-primary" />
-                            <a asp-action="Index" class="btn btn-secondary ms-2">Voltar</a>
+                            <input type="submit" value="Deletar" class="btn text-white btn-outline-primary" />
+                            <a asp-action="Index" class="btn btn-outline-secondary ms-2">Voltar</a>
                         </div>
                     </dl>
                 </form>

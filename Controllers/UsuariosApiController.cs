@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.EntityFrameworkCore;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace Inveni.Controllers {
     [Route("api/[controller]")]
@@ -18,6 +20,40 @@ namespace Inveni.Controllers {
             _logger = logger;
             _context = context;
         }
+
+        [HttpPost("NotificacoesJson")]
+        public async Task<IActionResult> GetNotificationsJson([FromBody] NotificacaoRequest request) {
+            var notifications = _context.Notificacao
+                .Where(n => n.UsuarioId == request.Id && n.Aberto);
+
+            var result = await notifications
+               .Select(t => new
+               {
+                  t.Id,
+                  t.Descricao
+               })
+               .OrderBy(t => t.Id)
+               .ToListAsync();
+
+
+            return Ok(result);
+        }
+
+        [HttpPost("FecharNotificacao")]
+        public async Task<IActionResult> MarkAsReadJson([FromBody]NotificacaoRequest request) {
+            var notification = _context.Notificacao.Find(request.Id);
+            if (notification != null)
+            {
+                notification.Aberto = false;
+                _context.SaveChanges();
+                return Json(new { status = true });
+            }
+            else {
+                return Json(new { status = false });
+            }
+        }
+
+
 
         [HttpPost("LoginApiJson")]
         public async Task<IActionResult> Acesso([FromBody] UsuarioVM login) {

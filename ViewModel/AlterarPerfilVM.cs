@@ -12,7 +12,7 @@ namespace Inveni.ViewModel {
 
         [DataType(DataType.PhoneNumber)]
         [Required(ErrorMessage = "O campo {0} é de preenchimento obrigatório.")]
-        [MaxLength(11, ErrorMessage = "O tamanho máximo do campo {0} é de {1} caracteres.")]
+        [MaxLength(14, ErrorMessage = "O tamanho máximo do campo {0} é de {1} caracteres.")]
         public required string Telefone { get; set; }
 
         [Display(Name = "Biografia")]

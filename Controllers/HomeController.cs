@@ -217,7 +217,7 @@ namespace Inveni.Controllers {
         //    return View("Index", await contexto.ToListAsync());
         //}
         public IActionResult Detalhes(int id) 
-        {
+            {
 
             if (!User.Identity.IsAuthenticated)
             {

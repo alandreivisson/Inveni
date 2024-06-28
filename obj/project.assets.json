@@ -666,6 +666,12 @@
           }
         }
       },
+      "inputmask/5.0.9": {
+        "type": "package"
+      },
+      "jQuery.InputMask/5.0.9": {
+        "type": "package"
+      },
       "MailKit/4.6.0": {
         "type": "package",
         "dependencies": {
@@ -4742,6 +4748,48 @@
         "lib/netstandard1.0/zh-Hant/Humanizer.resources.dll",
         "lib/netstandard2.0/zh-Hant/Humanizer.resources.dll",
         "logo.png"
+      ]
+    },
+    "inputmask/5.0.9": {
+      "sha512": "hn+FmRMSpOnLLsVMYag2LFVlii9iCDNtPgZBpe/FuPrw6U6tEnzwhasYFjXqVXWEYutdFMIR1gKrhDN8f0yfuQ==",
+      "type": "package",
+      "path": "inputmask/5.0.9",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "Readme.txt",
+        "content/Scripts/inputmask/bindings/inputmask.binding.js",
+        "content/Scripts/inputmask/colormask.css",
+        "content/Scripts/inputmask/colormask.js",
+        "content/Scripts/inputmask/colormask.min.js",
+        "content/Scripts/inputmask/inputmask.es6.js",
+        "content/Scripts/inputmask/inputmask.js",
+        "content/Scripts/inputmask/inputmask.min.js",
+        "content/Scripts/inputmask/jquery.inputmask.js",
+        "content/Scripts/inputmask/jquery.inputmask.min.js",
+        "inputmask.5.0.9.nupkg.sha512",
+        "inputmask.nuspec"
+      ]
+    },
+    "jQuery.InputMask/5.0.9": {
+      "sha512": "5YjQgmoFGZRZ2dv1/oS4k8PqeiAH6Vz0u6eNrasNwtCkNeZuLBVQWieyuH+6ZmTnzLoTveLvfBb31uwTSEIwog==",
+      "type": "package",
+      "path": "jquery.inputmask/5.0.9",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "Readme.txt",
+        "content/Scripts/inputmask/bindings/inputmask.binding.js",
+        "content/Scripts/inputmask/colormask.css",
+        "content/Scripts/inputmask/colormask.js",
+        "content/Scripts/inputmask/colormask.min.js",
+        "content/Scripts/inputmask/inputmask.es6.js",
+        "content/Scripts/inputmask/inputmask.js",
+        "content/Scripts/inputmask/inputmask.min.js",
+        "content/Scripts/inputmask/jquery.inputmask.js",
+        "content/Scripts/inputmask/jquery.inputmask.min.js",
+        "jquery.inputmask.5.0.9.nupkg.sha512",
+        "jquery.inputmask.nuspec"
       ]
     },
     "MailKit/4.6.0": {
@@ -11346,6 +11394,7 @@
   "projectFileDependencyGroups": {
     "net7.0": [
       "BCrypt.Net >= 0.1.0",
+      "InputMask >= 5.0.9",
       "MailKit >= 4.6.0",
       "Microsoft.AspNetCore.Authentication.JwtBearer >= 7.0.12",
       "Microsoft.EntityFrameworkCore >= 7.0.12",
@@ -11353,28 +11402,24 @@
       "Microsoft.EntityFrameworkCore.SqlServer >= 7.0.12",
       "Microsoft.EntityFrameworkCore.Tools >= 7.0.12",
       "Microsoft.VisualStudio.Web.CodeGeneration.Design >= 7.0.10",
-      "System.IdentityModel.Tokens.Jwt >= 7.6.2"
+      "System.IdentityModel.Tokens.Jwt >= 7.6.2",
+      "jQuery.InputMask >= 5.0.9"
     ]
   },
   "packageFolders": {
-    "C:\\Users\\marqu\\.nuget\\packages\\": {},
-    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
+    "C:\\Users\\Leon Freitas\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\marqu\\source\\repos\\TCC-Conflitos\\Inveni\\Inveni.csproj",
+      "projectUniqueName": "C:\\Users\\Leon Freitas\\source\\repos\\alandreivisson\\Inveni\\Inveni.csproj",
       "projectName": "Inveni",
-      "projectPath": "C:\\Users\\marqu\\source\\repos\\TCC-Conflitos\\Inveni\\Inveni.csproj",
-      "packagesPath": "C:\\Users\\marqu\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\marqu\\source\\repos\\TCC-Conflitos\\Inveni\\obj\\",
+      "projectPath": "C:\\Users\\Leon Freitas\\source\\repos\\alandreivisson\\Inveni\\Inveni.csproj",
+      "packagesPath": "C:\\Users\\Leon Freitas\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\Leon Freitas\\source\\repos\\alandreivisson\\Inveni\\obj\\",
       "projectStyle": "PackageReference",
-      "fallbackFolders": [
-        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-      ],
       "configFilePaths": [
-        "C:\\Users\\marqu\\AppData\\Roaming\\NuGet\\NuGet.Config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+        "C:\\Users\\Leon Freitas\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -11382,7 +11427,7 @@
       ],
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-        "C:\\Program Files\\dotnet\\library-packs": {},
+        "C:\\Program Files\\dotnet\\sdk\\7.0.304\\Sdks\\Microsoft.NET.Sdk.Web\\library-packs": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
@@ -11404,6 +11449,10 @@
           "BCrypt.Net": {
             "target": "Package",
             "version": "[0.1.0, )"
+          },
+          "InputMask": {
+            "target": "Package",
+            "version": "[5.0.9, )"
           },
           "MailKit": {
             "target": "Package",
@@ -11440,6 +11489,10 @@
           "System.IdentityModel.Tokens.Jwt": {
             "target": "Package",
             "version": "[7.6.2, )"
+          },
+          "jQuery.InputMask": {
+            "target": "Package",
+            "version": "[5.0.9, )"
           }
         },
         "imports": [
@@ -11461,7 +11514,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.201\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.304\\RuntimeIdentifierGraph.json"
       }
     }
   },
